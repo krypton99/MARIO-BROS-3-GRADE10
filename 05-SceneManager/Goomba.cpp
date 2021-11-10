@@ -72,7 +72,7 @@ void CGoomba::Render()
 	}
 
 	CAnimations::GetInstance()->Get(aniId)->Render(x,y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CGoomba::SetState(int state)
@@ -88,7 +88,7 @@ void CGoomba::SetState(int state)
 			ay = 0; 
 			break;
 		case GOOMBA_STATE_WALKING: 
-			vx = -GOOMBA_WALKING_SPEED;
+			vx = GOOMBA_WALKING_SPEED;
 			break;
 	}
 }

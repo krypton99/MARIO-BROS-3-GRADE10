@@ -6,8 +6,11 @@
 
 #include "Goomba.h"
 #include "Coin.h"
+#include "Portal.h"
 
 #include "Collision.h"
+#include "VenusFireTrap.h"
+#include "Koopas.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
@@ -51,6 +54,12 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithGoomba(e);
 	else if (dynamic_cast<CCoin*>(e->obj))
 		OnCollisionWithCoin(e);
+	else if (dynamic_cast<CPortal*>(e->obj))
+		OnCollisionWithPortal(e);
+	else if (dynamic_cast<CVenusFireTrap*>(e->obj))
+		OnCollisionWithVenusPlant(e);
+	else if (dynamic_cast<CKoopas*>(e->obj))
+		OnCollisionWithKoopas(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -86,11 +95,96 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 		}
 	}
 }
+void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
+{
+	CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
+
+	// jump on top >> kill Goomba and deflect a bit 
+	if (koopas->GetType() == KOOPAS_TYPE_GREEN_WING) {
+		if (e->ny < 0)
+		{
+			if (koopas->GetState() != TROOPA_STATE_DIE)
+			{
+				koopas->SetType(KOOPAS_TYPE_GREEN);
+				vy = -MARIO_JUMP_DEFLECT_SPEED;
+			}
+			
+			
+		}
+	} else 
+	if (e->ny < 0)
+	{
+		if (koopas->GetState() != TROOPA_STATE_DIE)
+		{
+			koopas->SetState(TROOPA_STATE_DIE);
+			vy = -MARIO_JUMP_DEFLECT_SPEED;
+		}
+		else {
+			koopas->SetState(TROOPA_STATE_ROLL);
+		}
+	}
+	else if(koopas->GetState()==TROOPA_STATE_DIE)
+	{
+		koopas->SetState(TROOPA_STATE_ROLL);
+	}
+	else // hit by Koopas
+	{
+		if (untouchable == 0)
+		{
+			if (koopas->GetState() != TROOPA_STATE_DIE)
+			{
+				if (level > MARIO_LEVEL_SMALL)
+				{
+					level = MARIO_LEVEL_SMALL;
+					StartUntouchable();
+				}
+				else
+				{
+					DebugOut(L">>> Mario DIE >>> \n");
+					SetState(MARIO_STATE_DIE);
+				}
+			}
+			
+		}
+	}
+}
+void CMario::OnCollisionWithVenusPlant(LPCOLLISIONEVENT e)
+{
+	CVenusFireTrap* venus = dynamic_cast<CVenusFireTrap*>(e->obj);
+
+	// jump on top >> kill Goomba and deflect a bit 
+	
+	//Mario hit Venus
+	{
+		if (untouchable == 0)
+		{
+			if (venus->GetState() != VENUS_STATE_HIDDEN)
+			{
+				if (level > MARIO_LEVEL_SMALL)
+				{
+					level = MARIO_LEVEL_SMALL;
+					StartUntouchable();
+				}
+				else
+				{
+					DebugOut(L">>> Mario DIE >>> \n");
+					SetState(MARIO_STATE_DIE);
+				}
+			}
+		}
+	}
+}
 
 void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
 {
 	e->obj->Delete();
 	coin++;
+}
+
+void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
+{
+	CPortal* p = (CPortal*)e->obj;
+	CGame::GetInstance()->InitiateSwitchScene(p->GetSceneId());
 }
 
 //
@@ -230,7 +324,7 @@ void CMario::Render()
 
 	animations->Get(aniId)->Render(x, y);
 
-	RenderBoundingBox();
+	//RenderBoundingBox();
 	
 	DebugOutTitle(L"Coins: %d", coin);
 }

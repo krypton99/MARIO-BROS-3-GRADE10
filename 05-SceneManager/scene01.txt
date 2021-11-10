@@ -1,0 +1,55 @@
+# list of object assets to load in this scene
+[ASSETS]
+assets\mario.txt
+assets\brick.txt
+assets\coin.txt
+assets\goomba.txt
+assets\cloud.txt
+assets\background_1-1.txt
+assets\venus.txt
+assets\funnel.txt
+assets\koopas.txt
+[OBJECTS]
+# type	x	y	extra_settings per object type
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas
+# See OBJECT_TYPE constants in AssetIDs.h
+
+# MARIO
+0	0	0
+
+#Venus
+7	360	378
+
+# FUNNEL
+6	360	386
+
+# BRICKS
+
+
+#COIN
+4	100	120
+4	120	120
+4	140	120
+4	160	120
+4	180	120
+
+#Goomba
+2	300	10
+2	400	10
+
+#Koopas
+8	16	16	3000
+
+#Platform
+5	0	416	16	16	39	87	88	89
+5	624	416	16	16	20	91	92	93
+5	624	400	16	16	20	91	92	93
+
+#Portal 
+50	300	120	316	160	2
+
+#
+#map_id	matrix_path	width	height
+[MAPS]
+10000	map\matrix_1-1.txt	3392	432
+#
