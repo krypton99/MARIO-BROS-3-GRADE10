@@ -60,7 +60,7 @@ protected:
 	virtual void OnNoCollision(DWORD dt);
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
-
+	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 public:
 	CKoopas(float x, float y,float type);
 	int GetLevel() { return level; };

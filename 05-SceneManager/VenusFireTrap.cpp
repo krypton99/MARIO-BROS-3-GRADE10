@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "AnimationSet.h"
 #include "debug.h"
+#include "AssetIDs.h"
 
 CVenusFireTrap::CVenusFireTrap(float x, float y) :CGameObject(x, y)
 {
@@ -11,6 +12,7 @@ CVenusFireTrap::CVenusFireTrap(float x, float y) :CGameObject(x, y)
 	attackTimer = new Timer(ATTACK_TIME);
 	GetPosition(this->start_x, this->start_y);
 	SetState(VENUS_STATE_UP);
+	type = OBJECT_TYPE_VENUS;
 }
 
 void CVenusFireTrap::GetBoundingBox(float& left, float& top, float& right, float& bottom)

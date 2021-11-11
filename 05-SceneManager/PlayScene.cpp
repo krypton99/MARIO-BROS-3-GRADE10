@@ -14,6 +14,8 @@
 #include "VenusFireTrap.h"
 #include "Koopas.h"
 #include "SampleKeyEventHandler.h"
+#include "Item.h"
+#include "Mushroom.h"
 
 using namespace std;
 
@@ -142,8 +144,16 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
-	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(x,y); break;
-	case OBJECT_TYPE_BRICK: obj = new CBrick(x,y); break;
+	case OBJECT_TYPE_GOOMBA: 
+	{
+		float type = (float)atof(tokens[3].c_str());
+		obj = new CGoomba(x, y,type); break;
+	}
+	case OBJECT_TYPE_BRICK: {
+		float type = (float)atof(tokens[3].c_str());
+		float itemType = (float)atof(tokens[4].c_str());
+		obj = new CBrick(x, y,type,itemType); break;
+	}
 	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
 	case OBJECT_TYPE_FUNNEL: obj = new CFunnel(x, y); break;
 	case OBJECT_TYPE_VENUS:obj = new CVenusFireTrap(x, y); break;
@@ -163,11 +173,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int sprite_begin = atoi(tokens[6].c_str());
 		int sprite_middle = atoi(tokens[7].c_str());
 		int sprite_end = atoi(tokens[8].c_str());
-
+		bool isThrough = atoi(tokens[9].c_str());
 		obj = new CPlatform(
 			x, y,
 			cell_width, cell_height, length,
-			sprite_begin, sprite_middle, sprite_end
+			sprite_begin, sprite_middle, sprite_end, isThrough
 		);
 
 		break;
@@ -287,18 +297,63 @@ void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
+	for (size_t i = 0; i < objects.size(); i++) {
 
+		if (objects[i]->GetType() == OBJECT_TYPE_BRICK) {
+			CBrick* brick = dynamic_cast<CBrick*>(objects[i]);
+
+
+			if (brick->isFallingItem) {
+				//CREATE ITEM FOLLOW MARIO LEVEL
+				CMushroom* item=NULL;
+				if (brick->GetItemType() == CONTAIN_MUSHROOM) {
+					item = new CMushroom(brick->GetPosX(), brick->GetPosY() - ITEM_BBOX , ITEM_RED_MUSHROOM);
+				}
+				/*else {
+					if (player->GetLevel() >= MARIO_LEVEL_BIG)
+						item = new SuperLeaf({ brick->x, brick->y - BRICK_BBOX_SIZE });
+					else
+						item = new SuperMushroom({ brick->x, brick->y - BRICK_BBOX_SIZE }, ITEM_RED_MUSHROOM);
+				}*/
+				if (item != NULL) {
+					listItems.push_back(item);
+				}
+				else return;
+				brick->isFallingItem = false;
+			}
+		}
+	}
 	vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 1; i < objects.size(); i++)
 	{
+		/*if (objects[i]->GetType() == OBJECT_TYPE_PLATFORM ) {
+			CPlatform* brick = dynamic_cast<CPlatform*>(objects[i]);
+			if (brick->isThrough) { 
+				return; 
+			}
+			else coObjects.push_back(objects[i]);
+
+		} else*/
 		coObjects.push_back(objects[i]);
 	}
-
+	for (size_t i = 0; i < listItems.size(); i++)
+	{
+		coObjects.push_back(listItems[i]);
+	}
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		objects[i]->Update(dt, &coObjects);
 	}
-
+	for (size_t i = 0; i < listItems.size(); i++) {
+		listItems[i]->Update(dt, &coObjects);
+	}
+	
+	for (size_t i = 0; i < listItems.size(); i++) {
+		if (listItems[i]->GetState() == STATE_ERASE) {
+			listItems.erase(listItems.begin() + i);
+			i--;
+		}
+	}
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return; 
 
@@ -322,7 +377,8 @@ void CPlayScene::Render()
 	map->Render();
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
-	
+	for (int i = 0; i < listItems.size(); i++)
+		listItems[i]->Render();
 }
 
 /*
@@ -369,10 +425,21 @@ void CPlayScene::PurgeDeletedObjects()
 			*it = NULL;
 		}
 	}
-
+	for (it = listItems.begin(); it != listItems.end(); it++)
+	{
+		LPGAMEOBJECT o = *it;
+		if (o->IsDeleted())
+		{
+			delete o;
+			*it = NULL;
+		}
+	}
 	// NOTE: remove_if will swap all deleted items to the end of the vector
 	// then simply trim the vector, this is much more efficient than deleting individual items
 	objects.erase(
 		std::remove_if(objects.begin(), objects.end(), CPlayScene::IsGameObjectDeleted),
 		objects.end());
+	listItems.erase(
+			std::remove_if(listItems.begin(), listItems.end(), CPlayScene::IsGameObjectDeleted),
+		listItems.end());
 }

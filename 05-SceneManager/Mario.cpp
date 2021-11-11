@@ -11,6 +11,10 @@
 #include "Collision.h"
 #include "VenusFireTrap.h"
 #include "Koopas.h"
+#include "Platform.h"
+#include "Brick.h"
+#include "Item.h"
+#include "Mushroom.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
@@ -39,10 +43,12 @@ void CMario::OnNoCollision(DWORD dt)
 
 void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 {
+
 	if (e->ny != 0 && e->obj->IsBlocking())
 	{
 		vy = 0;
 		if (e->ny < 0) isOnPlatform = true;
+
 	}
 	else 
 	if (e->nx != 0 && e->obj->IsBlocking())
@@ -60,12 +66,59 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithVenusPlant(e);
 	else if (dynamic_cast<CKoopas*>(e->obj))
 		OnCollisionWithKoopas(e);
+	else if (dynamic_cast<CBrick*>(e->obj))
+		OnCollisionWithBrick(e);
+	else if (dynamic_cast<CMushroom*>(e->obj))
+		OnCollisionWithMushroom(e);
+	else if (dynamic_cast<CPlatform*>(e->obj))
+		OnCollisionWithPlatform(e);
+		
 }
-
+void CMario::OnCollisionWithPlatform(LPCOLLISIONEVENT e) {
+	CPlatform* platform = dynamic_cast<CPlatform*>(e->obj);
+	if (e->ny > 0) {
+		if (platform->isThrough) {
+			vy = MARIO_JUMP_SPEED_Y;
+		}
+	} if (e->nx != 0) {
+		if (platform->isThrough) {
+			vx= MARIO_WALKING_SPEED;
+			DebugOut(L"[ERROR] speed ID %f \n", vx);
+		}
+	}
+}
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 {
 	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+	if (goomba->GetType() == GOOMBA_TYPE_RED_WING) {
 
+		if (e->ny < 0)
+		{
+			if (goomba->GetState() != TROOPA_STATE_DIE)
+			{
+				goomba->SetType(GOOMBA_TYPE_RED);
+				vy = -MARIO_JUMP_DEFLECT_SPEED;
+			}
+		}
+		else if (untouchable == 0)
+		{
+			if (goomba->GetState() != TROOPA_STATE_DIE)
+			{
+				if (level > MARIO_LEVEL_SMALL)
+				{
+					level = MARIO_LEVEL_SMALL;
+					StartUntouchable();
+				}
+				else
+				{
+					DebugOut(L">>> Mario DIE >>> \n");
+					SetState(MARIO_STATE_DIE);
+				}
+			}
+
+		}
+	}
+	else
 	// jump on top >> kill Goomba and deflect a bit 
 	if (e->ny < 0)
 	{
@@ -101,6 +154,7 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 
 	// jump on top >> kill Goomba and deflect a bit 
 	if (koopas->GetType() == KOOPAS_TYPE_GREEN_WING) {
+		
 		if (e->ny < 0)
 		{
 			if (koopas->GetState() != TROOPA_STATE_DIE)
@@ -108,8 +162,22 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 				koopas->SetType(KOOPAS_TYPE_GREEN);
 				vy = -MARIO_JUMP_DEFLECT_SPEED;
 			}
-			
-			
+		} else if (untouchable == 0)
+		{
+			if (koopas->GetState() != TROOPA_STATE_DIE)
+			{
+				if (level > MARIO_LEVEL_SMALL)
+				{
+					level = MARIO_LEVEL_SMALL;
+					StartUntouchable();
+				}
+				else
+				{
+					DebugOut(L">>> Mario DIE >>> \n");
+					SetState(MARIO_STATE_DIE);
+				}
+			}
+
 		}
 	} else 
 	if (e->ny < 0)
@@ -174,7 +242,41 @@ void CMario::OnCollisionWithVenusPlant(LPCOLLISIONEVENT e)
 		}
 	}
 }
+void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e) {
+	CMushroom* item = dynamic_cast<CMushroom*>(e->obj);
+	if (item->GetItemType() == ITEM_RED_MUSHROOM) {
+		if (level > MARIO_LEVEL_SMALL)
+		{
+			e->obj->SetState(STATE_ERASE);
+			return;
+		}
+		else
+		{
+			e->obj->SetState(STATE_ERASE);
+			SetLevel(MARIO_LEVEL_BIG);
+			
+		}
+	}
+}
+void CMario::OnCollisionWithBrick(LPCOLLISIONEVENT e)
+{
+	CBrick* brick = dynamic_cast<CBrick*>(e->obj);
 
+	// jump on top >> kill Goomba and deflect a bit 
+
+	//Mario hit Venus
+	if (brick->GetState() == BRICK_STATE_ACTIVE) {
+		if (e->ny > 0) {
+			
+			//brick->SetState(BRICK_STATE_EMPTY);
+			switch (brick->GetItemType()) {
+
+			}
+			brick->SetState(BRICK_STATE_BOUND);
+		}
+		
+	}
+}
 void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
 {
 	e->obj->Delete();

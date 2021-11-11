@@ -17,6 +17,7 @@ protected:
 	LPGAMEOBJECT player;					
 	LPMAP map;
 	vector<LPGAMEOBJECT> objects;
+	vector<LPGAMEOBJECT> listItems;
 
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_ANIMATIONS(string line);

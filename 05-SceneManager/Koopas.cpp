@@ -1,10 +1,15 @@
 #include "Koopas.h"
+#include "AssetIDs.h"
+#include "Goomba.h"
+#include "Mario.h"
+#include "Platform.h"
 
 CKoopas::CKoopas(float x, float y, float type) : CGameObject(x, y)
 {
 	//this->ax = 0;
 	this->ay = TROOPA_GRAVITY ;
 	this->type = type;
+	type = OBJECT_TYPE_KOOPAS;
 	die_start = -1;
 	SetState(TROOPA_STATE_WALKING);
 }
@@ -35,9 +40,11 @@ void CKoopas::OnNoCollision(DWORD dt)
 
 void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (!e->obj->IsBlocking()) return;
-	if (dynamic_cast<CKoopas*>(e->obj)) return;
-
+	if (state != TROOPA_STATE_ROLL) {
+		if (!e->obj->IsBlocking()) return;
+		if (dynamic_cast<CKoopas*>(e->obj)) return;
+	}
+	
 	if (e->ny != 0)
 	{
 		vy = 0;
@@ -46,8 +53,23 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 	{
 		vx = -vx;
 	}
+	if (dynamic_cast<CGoomba*>(e->obj))
+		OnCollisionWithGoomba(e);
 }
+void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e) {
+	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+	if (state == TROOPA_STATE_ROLL) {
+		goomba->SetState( GOOMBA_STATE_DIE_BY_OBJECT);
+	}
 
+}
+//void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e) {
+//	CMario* goomba = dynamic_cast<CMario*>(e->obj);
+//	if (state == TROOPA_STATE_ROLL) {
+//		goomba->SetState(GOOMBA_STATE_DIE_BY_OBJECT);
+//	}
+//
+//}
 void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 
@@ -73,7 +95,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		return;
 	}*/
 
-	CGameObject::Update(dt, coObjects);
+	//CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
