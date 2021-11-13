@@ -12,6 +12,7 @@ CGoomba::CGoomba(float x, float y,float type):CGameObject(x, y)
 	type = OBJECT_TYPE_GOOMBA;
 	die_start = -1;
 	SetState(GOOMBA_STATE_WALKING);
+	timeStartJump->Start();
 }
 
 void CGoomba::GetBoundingBox(float &left, float &top, float &right, float &bottom)
@@ -62,6 +63,10 @@ void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (e->ny != 0 )
 	{
 		vy = 0;
+		if (e->ny < 0) // va cham ground
+		{
+			isOnGround = true;
+		}
 	}
 	else if (e->nx != 0)
 	{
@@ -86,7 +91,15 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		isDeleted = true;
 		return;
 	}
-
+	if (type== GOOMBA_TYPE_RED_WING) {
+		if (timeStartJump->IsTimeUp() && timeStartJump->GetStartTime()) { // bd tinh time nhay
+			timeStartJump->Stop();
+			SetState(GOOMBA_STATE_JUMP);
+		}
+		if (state == GOOMBA_STATE_JUMP && isOnGround) {
+			SetState(GOOMBA_STATE_FLY);
+		}
+	}
 	//CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
@@ -94,7 +107,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 void CGoomba::Render()
 {
-	if (type == GOOMBA_TYPE_RED_WING) {
+	if (type == GOOMBA_TYPE_RED_WING ) {
 		int aniId = ID_ANI_RED_GOOMBA_FLY;
 		CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	}
@@ -145,5 +158,15 @@ void CGoomba::SetState(int state)
 			vx = 0;
 			ax = 0;
 			break;
+		case GOOMBA_STATE_FLY:
+			timeStartJump->Start();
+			isOnGround = false;
+			vy = -GOOMBA_JUMP_SPEED * 2 ;
+			vx = -GOOMBA_WALKING_SPEED;
+			
+		case GOOMBA_STATE_JUMP:
+			isOnGround = false;
+			vy = -GOOMBA_JUMP_SPEED;
+			
 	}
 }

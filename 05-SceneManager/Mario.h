@@ -54,8 +54,8 @@
 #define ID_ANI_MARIO_SIT_RIGHT 900
 #define ID_ANI_MARIO_SIT_LEFT 901
 
-#define ID_ANI_MARIO_BRACE_RIGHT 1000
-#define ID_ANI_MARIO_BRACE_LEFT 1001
+#define ID_ANI_MARIO_BRACE_RIGHT 1103
+#define ID_ANI_MARIO_BRACE_LEFT 1104
 
 #define ID_ANI_MARIO_DIE 999
 
@@ -113,7 +113,7 @@ class CMario : public CGameObject
 	ULONGLONG untouchable_start;
 	BOOLEAN isOnPlatform;
 	int coin; 
-
+	
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
@@ -142,12 +142,19 @@ public:
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
 	void SetState(int state);
-
+	int IsCollidableX()
+	{
+		return collideX;
+	}
+	int IsCollidableY()
+	{
+		return collideY;
+	}
 	int IsCollidable()
-	{ 
+	{	
 		return (state != MARIO_STATE_DIE); 
 	}
-
+	LPGAMEOBJECT collidePlatform;
 	int IsBlocking() { return (state != MARIO_STATE_DIE && untouchable==0) ; }
 
 	void OnNoCollision(DWORD dt);
@@ -156,6 +163,8 @@ public:
 	void SetLevel(int l);
 	int GetLevel() { return level; };
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
-
+	boolean isThrough=0;
+	boolean collideX = 0;
+	boolean collideY = 0;
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };

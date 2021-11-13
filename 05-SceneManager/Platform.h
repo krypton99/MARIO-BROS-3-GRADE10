@@ -27,11 +27,33 @@ public:
 		this->isThrough = isThrough;
 		type = OBJECT_TYPE_PLATFORM;
 	}
+	/*int IsCollidableX()
+	{
+		return collideX;
+	}
+	int IsCollidableY()
+	{
+		return collideY;
+	}
+	int IsCollidable()
+	{
+		return (!collideX && !collideY);
+	}*/
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	int IsBlocking() {
+		return isBlocking;
+	}
 	bool isThrough;
+	
 	void Render();
-	void Update(DWORD dt) {}
+	//void Update(DWORD dt) {}
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
 	void RenderBoundingBox();
+	//boolean isThrough = 0;
+	boolean collideX = 0;
+	boolean collideY = 0;
+	boolean isBlocking = 1;
+	boolean isOnY = 0;
 };
 
 typedef CPlatform* LPPLATFORM;

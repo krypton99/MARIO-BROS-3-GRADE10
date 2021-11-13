@@ -4,6 +4,7 @@
 #include "Sprites.h"
 
 #include "Textures.h"
+#include "debug.h"
 
 void CPlatform::RenderBoundingBox()
 {
@@ -46,7 +47,34 @@ void CPlatform::Render()
 
 	RenderBoundingBox();*/
 }
+void CPlatform::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{
+	/*vy += ay * dt;
+	vx += ax * dt;*/
 
+	//if (abs(vx) > abs(maxVx)) vx = maxVx;
+
+	// reset untouchable timer if untouchable time has passed
+	/*if (GetTickCount64() - untouchable_start > MARIO_UNTOUCHABLE_TIME)
+	{
+		untouchable_start = 0;
+		untouchable = 0;
+	}
+
+	isOnPlatform = false;*/
+	DebugOut(L"[ERROR] isOnY %d \n", isOnY);
+	/*if (isThrough && !isOnY) {
+		isBlocking = 0;
+	}
+	else  {
+		isBlocking = 1;
+	}*/
+	/*else {
+		collideY = 0;
+		collideX = 1;
+	}*/
+	CCollision::GetInstance()->Process(this, dt, coObjects);
+}
 void CPlatform::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	float cellWidth_div_2 = this->cellWidth / 2;

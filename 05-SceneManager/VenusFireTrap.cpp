@@ -69,8 +69,8 @@ void CVenusFireTrap::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		hiddenTimer->Stop();
 		SetState(VENUS_STATE_UP);
 	}
-	DebugOut(L"[ERROR] state ID %ld \n", hiddenTimer->GetEndTime());
-	DebugOut(L"[ERROR] state ID %ld \n", IsCollidable());
+	//DebugOut(L"[ERROR] state ID %ld \n", hiddenTimer->GetEndTime());
+	//DebugOut(L"[ERROR] state ID %ld \n", IsCollidable());
 	
 	//else SetState(VENUS_STATE_DOWN);
 	/*if ((state == GOOMBA_STATE_DIE) && (GetTickCount64() - die_start > GOOMBA_DIE_TIMEOUT))

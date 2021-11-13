@@ -1,10 +1,10 @@
 #pragma once
 #include "GameObject.h"
-
+#include "Timer.h"
 #define TROOPA_GRAVITY 0.002f
 #define TROOPA_WALKING_SPEED 0.05f
 #define TROOPA_ROLLING_SPEED 0.1f
-
+#define TROOPA_JUMP_SPEED 0.4f
 
 #define TROOPA_BBOX_WIDTH 16
 #define TROOPA_BBOX_HEIGHT 25
@@ -16,7 +16,7 @@
 #define TROOPA_STATE_ROLL 300
 #define TROOPA_STATE_DIE 200
 #define TROOPA_STATE_ROLL 400
-#define TROOPA_STATE_FLYING 500
+#define TROOPA_STATE_JUMP 500
 
 #define KOOPAS_TYPE_RED 1000
 #define KOOPAS_TYPE_GREEN 2000
@@ -68,4 +68,6 @@ public:
 	int GetType() { return type; };
 	void SetType(int type) { this->type = type; };
 	virtual void SetState(int state);
+	Timer* timeStartJump = new Timer(2000);
+	bool isOnGround = false;
 };

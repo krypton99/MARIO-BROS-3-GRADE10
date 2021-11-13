@@ -323,6 +323,36 @@ void CPlayScene::Update(DWORD dt)
 			}
 		}
 	}
+	// check collision of platform when mario is jump on top
+	for (size_t i = 0; i < objects.size(); i++) {
+
+		if (objects[i]->GetType() == OBJECT_TYPE_PLATFORM) {
+			CPlatform* platform = dynamic_cast<CPlatform*>(objects[i]);
+
+
+			if (platform->isThrough) {
+				//CREATE ITEM FOLLOW MARIO LEVEL
+				//CMushroom* item = NULL;
+				float x, y;
+				float l, r, b, t;
+				platform->GetBoundingBox(l,t,r,b);
+				player->GetPosition(x, y);
+				if (y < t) {
+					platform->isBlocking = 1;
+				}
+				else {
+					platform->isBlocking = 0;
+				}
+				
+				/*else {
+					if (player->GetLevel() >= MARIO_LEVEL_BIG)
+						item = new SuperLeaf({ brick->x, brick->y - BRICK_BBOX_SIZE });
+					else
+						item = new SuperMushroom({ brick->x, brick->y - BRICK_BBOX_SIZE }, ITEM_RED_MUSHROOM);
+				}*/
+			}
+		}
+	}
 	vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 1; i < objects.size(); i++)
 	{

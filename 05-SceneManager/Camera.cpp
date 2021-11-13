@@ -32,16 +32,16 @@ void Camera::Update(DWORD dt, D3DXVECTOR2 playerPos, D3DXVECTOR2 start, D3DXVECT
 	DebugOut(L"position y ==== %f \n", position.y);*/
 
 	// Check if camera out of screen map
-	if (position.x > end.x)
-		position.x = end.x;
-	if (position.x < start.x)
-		position.x = start.x;
+	//if (position.x > end.x)
+	//	position.x = end.x;
+	//if (position.x < start.x)
+	//	position.x = start.x;
 
 	// Check lock_y
-	if (playerPos.y < end.y && isFlying)
+	/*if (playerPos.y < end.y && isFlying)
 		islockY = false;
 	if (playerPos.y > end.y && isOnGround && !isFlying)
-		islockY = true;
+		islockY = true;*/
 
 	// Update pos_cam_y
 	if (!islockY) { // pos_mario in center cam  < end.y (map) -> pos_cam = pos_mario...

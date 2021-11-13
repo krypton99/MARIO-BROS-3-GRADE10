@@ -9,6 +9,7 @@ CKoopas::CKoopas(float x, float y, float type) : CGameObject(x, y)
 	//this->ax = 0;
 	this->ay = TROOPA_GRAVITY ;
 	this->type = type;
+	timeStartJump->Start();
 	type = OBJECT_TYPE_KOOPAS;
 	die_start = -1;
 	SetState(TROOPA_STATE_WALKING);
@@ -48,6 +49,10 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (e->ny != 0)
 	{
 		vy = 0;
+		if (e->ny < 0) // va cham ground
+		{
+			isOnGround = true;
+		}
 	}
 	else if (e->nx != 0)
 	{
@@ -88,6 +93,16 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	else {
 		vy += ay * dt;
 		vx += ax * dt;
+	}
+	if (type == KOOPAS_TYPE_GREEN_WING && state!=TROOPA_STATE_DIE) {
+		if (timeStartJump->IsTimeUp() && timeStartJump->GetStartTime()) { // bd tinh time nhay
+			timeStartJump->Stop();
+			SetState(TROOPA_STATE_JUMP);
+			timeStartJump->Start();
+		}
+		/*if (state == GOOMBA_STATE_JUMP && isOnGround) {
+			SetState(GOOMBA_STATE_FLY);
+		}*/
 	}
 	/*if ((state == TR_STATE_DIE) && (GetTickCount64() - die_start > GOOMBA_DIE_TIMEOUT))
 	{
@@ -146,7 +161,11 @@ void CKoopas::Render()
 
 void CKoopas::SetState(int state)
 {
+	if (this->state == TROOPA_STATE_ROLL ) {
+		return;
+	}
 	CGameObject::SetState(state);
+	
 	switch (state)
 	{
 	case TROOPA_STATE_DIE:
@@ -154,11 +173,17 @@ void CKoopas::SetState(int state)
 		vx = 0;
 		vy = 0;
 		ay = 0;
+		//timeStartJump->Stop();
 		break;
 	case TROOPA_STATE_WALKING:
 		vx = TROOPA_WALKING_SPEED;
 		break;
 	case TROOPA_STATE_ROLL:
 		vx = TROOPA_ROLLING_SPEED;
+		break;
+	case TROOPA_STATE_JUMP:
+		isOnGround = false;
+		vy = -TROOPA_JUMP_SPEED;
+		break;
 	}
 }

@@ -70,22 +70,47 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithBrick(e);
 	else if (dynamic_cast<CMushroom*>(e->obj))
 		OnCollisionWithMushroom(e);
-	else if (dynamic_cast<CPlatform*>(e->obj))
-		OnCollisionWithPlatform(e);
+	/*else if (dynamic_cast<CPlatform*>(e->obj))
+		OnCollisionWithPlatform(e);*/
 		
 }
 void CMario::OnCollisionWithPlatform(LPCOLLISIONEVENT e) {
 	CPlatform* platform = dynamic_cast<CPlatform*>(e->obj);
+	float l, r, t, b;
+	platform->GetBoundingBox(l, t, r, b);
 	if (e->ny > 0) {
+		//platform->isOnY = 1;
 		if (platform->isThrough) {
-			vy = MARIO_JUMP_SPEED_Y;
-		}
-	} if (e->nx != 0) {
-		if (platform->isThrough) {
-			vx= MARIO_WALKING_SPEED;
-			DebugOut(L"[ERROR] speed ID %f \n", vx);
+			if (y > l) {
+				platform->isOnY = 0;
+				platform->isBlocking = 1;
+			}
 		}
 	}
+	else if(e->ny<0){
+		if (platform->isThrough) {
+			//platform->isOnY = 1;
+			if (y > l) {
+				platform->isOnY = 0;
+				platform->isBlocking = 1;
+			}
+			//platform->isBlocking = 1;
+		}
+	}
+	if (e->nx != 0) {
+		//platform->isOnY = 0;
+		if (platform->isThrough) {
+			/*isThrough = 1;
+			collideX = 0;
+			collideY = 1;*/
+			//x+=1;
+			//DebugOut(L"[ERROR] speed ID %f \n", vx);
+			platform->isBlocking = 0;
+		}
+		
+		//else isThrough = 0;
+	}
+
 }
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 {
