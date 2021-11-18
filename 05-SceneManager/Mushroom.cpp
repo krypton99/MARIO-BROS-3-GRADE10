@@ -19,7 +19,7 @@ void CMushroom::OnNoCollision(DWORD dt)
 
 void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (!e->obj->IsBlocking()) return;
+	if (!e->obj->IsBlockingX() && !e->obj->IsBlockingY()) return;
 	if (dynamic_cast<CMushroom*>(e->obj)) return;
 
 	if (e->ny != 0)

@@ -40,9 +40,8 @@ public:
 		return (!collideX && !collideY);
 	}*/
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
-	int IsBlocking() {
-		return isBlocking;
-	}
+	virtual int IsBlockingX() { return !isThrough; };
+	virtual int IsBlockingY() { return isBlocking; };
 	bool isThrough;
 	
 	void Render();

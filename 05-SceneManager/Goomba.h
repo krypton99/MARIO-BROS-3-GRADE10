@@ -5,7 +5,8 @@
 #define GOOMBA_GRAVITY 0.002f
 #define GOOMBA_WALKING_SPEED 0.05f
 #define GOOMBA_DIE_DEFLECT_SPEED 0.4f
-#define GOOMBA_JUMP_SPEED			0.2f
+#define GOOMBA_JUMP_SPEED			0.4f
+#define GOOMBA_FLY_SPEED			0.2f
 
 #define GOOMBA_TYPE_BROWN 1000
 #define GOOMBA_TYPE_RED 2000
@@ -47,7 +48,8 @@ protected:
 	virtual void Render();
 
 	virtual int IsCollidable() { return (state != GOOMBA_STATE_DIE_BY_OBJECT); };
-	virtual int IsBlocking() { return 0; };
+	virtual int IsBlockingX() { return 0; };
+	virtual int IsBlockingY() { return 0; };
 	virtual void OnNoCollision(DWORD dt);
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);

@@ -19,5 +19,6 @@ public:
 	void Render();
 	void Update(DWORD dt) {}
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
-	int IsBlocking() { return 0; }
+	virtual int IsBlockingX() { return 0; };
+	virtual int IsBlockingY() { return 0; };
 };

@@ -126,19 +126,19 @@ class CMario : public CGameObject
 	int GetAniIdSmall();
 
 public:
-	CMario(float x, float y) : CGameObject(x, y)
-	{
-		isSitting = false;
-		maxVx = 0.0f;
-		ax = 0.0f;
-		ay = MARIO_GRAVITY; 
-		type = OBJECT_TYPE_MARIO;
-		level = MARIO_LEVEL_BIG;
-		untouchable = 0;
-		untouchable_start = -1;
-		isOnPlatform = false;
-		coin = 0;
-	}
+	CMario(float x, float y);
+	//{
+	//	/*isSitting = false;
+	//	maxVx = 0.0f;
+	//	ax = 0.0f;
+	//	ay = MARIO_GRAVITY;
+	//	type = OBJECT_TYPE_MARIO;
+	//	level = MARIO_LEVEL_BIG;
+	//	untouchable = 0;
+	//	untouchable_start = -1;
+	//	isOnPlatform = false;
+	//	coin = 0;*/
+	//}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
 	void SetState(int state);
@@ -155,8 +155,8 @@ public:
 		return (state != MARIO_STATE_DIE); 
 	}
 	LPGAMEOBJECT collidePlatform;
-	int IsBlocking() { return (state != MARIO_STATE_DIE && untouchable==0) ; }
-
+	int IsBlockingX() { return (state != MARIO_STATE_DIE && untouchable==0) ; }
+	int IsBlockingY() { return (state != MARIO_STATE_DIE && untouchable==0); }
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e);
 

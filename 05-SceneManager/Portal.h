@@ -19,5 +19,6 @@ public:
 	void RenderBoundingBox(void);
 
 	int GetSceneId() { return scene_id; }
-	int IsBlocking() { return 0; }
+	virtual int IsBlockingX() { return 0; };
+	virtual int IsBlockingY() { return 0; };
 };

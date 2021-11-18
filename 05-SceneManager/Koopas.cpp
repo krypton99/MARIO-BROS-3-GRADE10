@@ -6,7 +6,7 @@
 
 CKoopas::CKoopas(float x, float y, float type) : CGameObject(x, y)
 {
-	//this->ax = 0;
+	this->ax = 0;
 	this->ay = TROOPA_GRAVITY ;
 	this->type = type;
 	timeStartJump->Start();
@@ -17,7 +17,7 @@ CKoopas::CKoopas(float x, float y, float type) : CGameObject(x, y)
 
 void CKoopas::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (state == TROOPA_STATE_DIE)
+	if (state == TROOPA_STATE_DIE||  state == TROOPA_STATE_ROLL_LEFT || state == TROOPA_STATE_ROLL_RIGHT)
 	{
 		left = x - TROOPA_BBOX_WIDTH / 2;
 		top = y - TROOPA_BBOX_HEIGHT_DIE / 2;
@@ -41,10 +41,14 @@ void CKoopas::OnNoCollision(DWORD dt)
 
 void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (state != TROOPA_STATE_ROLL) {
-		if (!e->obj->IsBlocking()) return;
-		if (dynamic_cast<CKoopas*>(e->obj)) return;
+	if (state == TROOPA_STATE_ROLL_LEFT || state == TROOPA_STATE_ROLL_RIGHT) {
+		if (dynamic_cast<CGoomba*>(e->obj))
+			OnCollisionWithGoomba(e);
 	}
+	/*if (state != TROOPA_STATE_ROLL) {*/
+		if (!e->obj->IsBlockingX() && !e->obj->IsBlockingY()) return; 
+		if (dynamic_cast<CKoopas*>(e->obj)) return;
+	/*}*/
 	
 	if (e->ny != 0)
 	{
@@ -60,13 +64,28 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 	if (dynamic_cast<CGoomba*>(e->obj))
 		OnCollisionWithGoomba(e);
+	else
+	if (dynamic_cast<CPlatform*>(e->obj))
+		OnCollisionWithPlatform(e);
 }
 void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e) {
 	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
-	if (state == TROOPA_STATE_ROLL) {
+	if (state == TROOPA_STATE_ROLL_LEFT || state == TROOPA_STATE_ROLL_RIGHT) {
 		goomba->SetState( GOOMBA_STATE_DIE_BY_OBJECT);
 	}
 
+}
+void CKoopas::OnCollisionWithPlatform(LPCOLLISIONEVENT e) {
+	CPlatform* platform = dynamic_cast<CPlatform*>(e->obj);
+	if (e->ny < 0) {
+		float l, r, t, b;
+		platform->GetBoundingBox(l, t, r, b);
+		if (x <= l || x >= r)
+		{
+			
+			vx = -vx;
+		}
+	}
 }
 //void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e) {
 //	CMario* goomba = dynamic_cast<CMario*>(e->obj);
@@ -78,7 +97,7 @@ void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e) {
 void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 
-	if (state == TROOPA_STATE_ROLL)
+	/*if (state == TROOPA_STATE_ROLL)
 	{
 		
 		if (nx > 0) {
@@ -90,10 +109,10 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 		vy += ay * dt;
 	}
-	else {
+	else {*/
 		vy += ay * dt;
 		vx += ax * dt;
-	}
+	
 	if (type == KOOPAS_TYPE_GREEN_WING && state!=TROOPA_STATE_DIE) {
 		if (timeStartJump->IsTimeUp() && timeStartJump->GetStartTime()) { // bd tinh time nhay
 			timeStartJump->Stop();
@@ -125,7 +144,7 @@ void CKoopas::Render()
 		if (state == TROOPA_STATE_DIE && vx == 0) {
 			aniId = ID_ANI_RED_TROOPA_DIE_DOWN_IDLE;
 		}
-		else if (state == TROOPA_STATE_ROLL) {
+		else if (state == TROOPA_STATE_ROLL_LEFT || state == TROOPA_STATE_ROLL_RIGHT) {
 			aniId = ID_ANI_RED_TROOPA_DIE_DOWN_RUN;
 		}
 		else if (vx > 0) aniId = ID_ANI_RED_TROOPA_WALKING_RIGHT;
@@ -148,7 +167,7 @@ void CKoopas::Render()
 		if (state == TROOPA_STATE_DIE && vx == 0) {
 			aniId = ID_ANI_GREEN_TROOPA_DIE_DOWN_IDLE;
 		}
-		else if (state == TROOPA_STATE_ROLL) {
+		else if (state == TROOPA_STATE_ROLL_LEFT || state== TROOPA_STATE_ROLL_RIGHT) {
 			aniId = ID_ANI_GREEN_TROOPA_DIE_DOWN_RUN;
 		}
 		else if (vx > 0) aniId = ID_ANI_GREEN_TROOPA_WALKING_RIGHT;
@@ -161,7 +180,7 @@ void CKoopas::Render()
 
 void CKoopas::SetState(int state)
 {
-	if (this->state == TROOPA_STATE_ROLL ) {
+	if (this->state == TROOPA_STATE_ROLL_LEFT || this->state==TROOPA_STATE_ROLL_RIGHT ) {
 		return;
 	}
 	CGameObject::SetState(state);
@@ -178,7 +197,10 @@ void CKoopas::SetState(int state)
 	case TROOPA_STATE_WALKING:
 		vx = TROOPA_WALKING_SPEED;
 		break;
-	case TROOPA_STATE_ROLL:
+	case TROOPA_STATE_ROLL_LEFT:
+		vx = -TROOPA_ROLLING_SPEED;
+		break;
+	case TROOPA_STATE_ROLL_RIGHT:
 		vx = TROOPA_ROLLING_SPEED;
 		break;
 	case TROOPA_STATE_JUMP:

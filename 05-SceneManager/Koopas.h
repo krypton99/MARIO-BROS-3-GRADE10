@@ -7,15 +7,16 @@
 #define TROOPA_JUMP_SPEED 0.4f
 
 #define TROOPA_BBOX_WIDTH 16
-#define TROOPA_BBOX_HEIGHT 25
-#define TROOPA_BBOX_HEIGHT_DIE 14
+#define TROOPA_BBOX_HEIGHT 26
+#define TROOPA_BBOX_HEIGHT_DIE 16
 
 
 
 #define TROOPA_STATE_WALKING 100
-#define TROOPA_STATE_ROLL 300
+//#define TROOPA_STATE_ROLL 300
 #define TROOPA_STATE_DIE 200
-#define TROOPA_STATE_ROLL 400
+#define TROOPA_STATE_ROLL_LEFT 400
+#define TROOPA_STATE_ROLL_RIGHT 600
 #define TROOPA_STATE_JUMP 500
 
 #define KOOPAS_TYPE_RED 1000
@@ -56,11 +57,13 @@ protected:
 	virtual void Render();
 
 	virtual int IsCollidable() { return 1; };
-	virtual int IsBlocking() { return 0; }
+	virtual int IsBlockingX() { return 0; }
+	virtual int IsBlockingY() { return 0; }
 	virtual void OnNoCollision(DWORD dt);
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
+	void OnCollisionWithPlatform(LPCOLLISIONEVENT e);
 public:
 	CKoopas(float x, float y,float type);
 	int GetLevel() { return level; };

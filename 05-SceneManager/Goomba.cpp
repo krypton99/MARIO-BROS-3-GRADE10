@@ -49,17 +49,14 @@ void CGoomba::OnNoCollision(DWORD dt)
 
 void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (!e->obj->IsBlocking())
-	{
-		return;
-	};
+	if (!e->obj->IsBlockingX() && !e->obj->IsBlockingY()) return;
 	if (dynamic_cast<CGoomba*>(e->obj)) return; 
-	if (dynamic_cast<CPlatform*>(e->obj)) {
+	/*if (dynamic_cast<CPlatform*>(e->obj)) {
 		CPlatform* platform = dynamic_cast<CPlatform*>(e->obj);
 		if (platform->isThrough) {
 			isBlocking=false;
 		}
-	};
+	};*/
 	if (e->ny != 0 )
 	{
 		vy = 0;
@@ -77,7 +74,7 @@ void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 }
 void CGoomba::OnCollisionWithKoopa(LPCOLLISIONEVENT e) {
 	CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
-	if (koopas->GetState() == TROOPA_STATE_ROLL) {
+	if (koopas->GetState() == TROOPA_STATE_ROLL_LEFT || koopas->GetState() == TROOPA_STATE_ROLL_RIGHT) {
 		state = GOOMBA_STATE_DIE_BY_OBJECT;
 	}
 }
@@ -115,10 +112,10 @@ void CGoomba::Render()
 		int aniId = ID_ANI_RED_GOOMBA_WALKING;
 		if (state == GOOMBA_STATE_DIE)
 		{
-			aniId = ID_ANI_BROWN_GOOMBA_DIE;
+			aniId = ID_ANI_RED_GOOMBA_DIE;
 		}
 		else if (state == GOOMBA_STATE_DIE_BY_OBJECT) {
-			aniId = ID_ANI_BROWN_GOOMBA_DIE_BY_OBJECT;
+			aniId = ID_ANI_RED_GOOMBA_DIE_BY_OBJECT;
 		}
 		CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	}
@@ -129,12 +126,12 @@ void CGoomba::Render()
 			aniId = ID_ANI_BROWN_GOOMBA_DIE;
 		}
 		else if (state == GOOMBA_STATE_DIE_BY_OBJECT) {
-			aniId = ID_ANI_RED_GOOMBA_DIE_BY_OBJECT;
+			aniId = ID_ANI_BROWN_GOOMBA_DIE_BY_OBJECT;
 		}
 
 		CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	}
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CGoomba::SetState(int state)
@@ -161,8 +158,8 @@ void CGoomba::SetState(int state)
 		case GOOMBA_STATE_FLY:
 			timeStartJump->Start();
 			isOnGround = false;
-			vy = -GOOMBA_JUMP_SPEED * 2 ;
-			vx = -GOOMBA_WALKING_SPEED;
+			vy = -GOOMBA_FLY_SPEED ;
+			vx = vx;
 			
 		case GOOMBA_STATE_JUMP:
 			isOnGround = false;

@@ -15,13 +15,28 @@
 #include "Brick.h"
 #include "Item.h"
 #include "Mushroom.h"
-
+CMario::CMario(float x, float y) : CGameObject(x, y)
+{
+	isSitting = false;
+	maxVx = 1.0f;
+	ax = 0.5f;
+	ay = MARIO_GRAVITY;
+	type = OBJECT_TYPE_MARIO;
+	level = MARIO_LEVEL_BIG;
+	untouchable = 0;
+	untouchable_start = -1;
+	isOnPlatform = false;
+	coin = 0;
+}
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	vy += ay * dt;
 	vx += ax * dt;
 
-	if (abs(vx) > abs(maxVx)) vx = maxVx;
+	if (abs(vx) > abs(maxVx))
+	{
+		vx = maxVx;
+	}
 
 	// reset untouchable timer if untouchable time has passed
 	if ( GetTickCount64() - untouchable_start > MARIO_UNTOUCHABLE_TIME) 
@@ -44,18 +59,20 @@ void CMario::OnNoCollision(DWORD dt)
 void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 
-	if (e->ny != 0 && e->obj->IsBlocking())
+	if (e->ny != 0 && e->obj->IsBlockingY())
 	{
 		vy = 0;
-		if (e->ny < 0) isOnPlatform = true;
+		if (e->ny < 0) { 
+			isOnPlatform = true; 
+		}
 
 	}
 	else 
-	if (e->nx != 0 && e->obj->IsBlocking())
+	if (e->nx != 0 && e->obj->IsBlockingX())
 	{
 		vx = 0;
 	}
-
+    
 	if (dynamic_cast<CGoomba*>(e->obj))
 		OnCollisionWithGoomba(e);
 	else if (dynamic_cast<CCoin*>(e->obj))
@@ -119,7 +136,7 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 
 		if (e->ny < 0)
 		{
-			if (goomba->GetState() != TROOPA_STATE_DIE)
+			if (goomba->GetState() != GOOMBA_STATE_DIE)
 			{
 				goomba->SetType(GOOMBA_TYPE_RED);
 				vy = -MARIO_JUMP_DEFLECT_SPEED;
@@ -127,7 +144,7 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 		}
 		else if (untouchable == 0)
 		{
-			if (goomba->GetState() != TROOPA_STATE_DIE)
+			if (goomba->GetState() != GOOMBA_STATE_DIE)
 			{
 				if (level > MARIO_LEVEL_SMALL)
 				{
@@ -213,14 +230,19 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
 		}
 		else {
-			koopas->SetState(TROOPA_STATE_ROLL);
+			if (e->nx<=0) {
+				koopas->SetState(TROOPA_STATE_ROLL_RIGHT);
+			} else { koopas->SetState(TROOPA_STATE_ROLL_LEFT); }
 		}
 	}
 	else if(koopas->GetState()==TROOPA_STATE_DIE)
 	{
-		koopas->SetState(TROOPA_STATE_ROLL);
+		if (e->nx <= 0) {
+			koopas->SetState(TROOPA_STATE_ROLL_RIGHT);
+		}
+		else { koopas->SetState(TROOPA_STATE_ROLL_LEFT); }
 	}
-	else // hit by Koopas
+	else  // hit by Koopas
 	{
 		if (untouchable == 0)
 		{

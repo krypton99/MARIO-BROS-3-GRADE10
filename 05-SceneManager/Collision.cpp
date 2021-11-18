@@ -196,18 +196,28 @@ void CCollision::Filter( LPGAMEOBJECT objSrc,
 		if (c->obj->IsDeleted()) continue; 
 
 		// ignore collision event with object having IsBlocking = 0 (like coin, mushroom, etc)
-		if (filterBlock == 1 && !c->obj->IsBlocking()) 
+		if (filterBlock == 1 && !c->obj->IsBlockingX() && !c->obj->IsBlockingY()) 
 		{
 			continue;
 		}
-
-		if (c->t < min_tx && c->nx != 0 && filterX == 1) {
+		else {
+			if (filterBlock == 1 && c->obj->IsBlockingX()) {
+				if (c->t < min_tx && c->nx != 0 && filterX == 1) {
+					min_tx = c->t; min_ix = i;
+				}
+			}
+			if (filterBlock == 1 && c->obj->IsBlockingY()) {
+				if (c->t < min_ty && c->ny != 0 && filterY == 1) {
+					min_ty = c->t; min_iy = i;
+				}
+			}
+		}
+		/*if (c->t < min_tx && c->nx != 0 && filterX == 1) {
 			min_tx = c->t; min_ix = i;
 		}
-
 		if (c->t < min_ty && c->ny != 0 && filterY == 1) {
 			min_ty = c->t; min_iy = i;
-		}
+		}*/
 	}
 
 	if (min_ix >= 0) colX = coEvents[min_ix];
@@ -485,7 +495,7 @@ Filter(objSrc, coEvents, colX, colY);
 	{
 		LPCOLLISIONEVENT e = coEvents[i];
 		if (e->isDeleted) continue;
-		if (e->obj->IsBlocking()) continue;  // blocking collisions were handled already, skip them
+		if (e->obj->IsBlockingX() || e->obj->IsBlockingY()) continue;  // blocking collisions were handled already, skip them
 
 		objSrc->OnCollisionWith(e);			
 	}
