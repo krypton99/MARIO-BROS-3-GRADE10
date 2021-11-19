@@ -47,6 +47,7 @@ protected:
 	float ax;
 	float ay;
 
+	float start_vx;
 	int level;
 	float type;
 
@@ -63,7 +64,7 @@ protected:
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
-	void OnCollisionWithPlatform(LPCOLLISIONEVENT e);
+	void OnCollisionWithBrick(LPCOLLISIONEVENT e);
 public:
 	CKoopas(float x, float y,float type);
 	int GetLevel() { return level; };

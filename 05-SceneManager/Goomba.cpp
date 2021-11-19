@@ -49,7 +49,9 @@ void CGoomba::OnNoCollision(DWORD dt)
 
 void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (!e->obj->IsBlockingX() && !e->obj->IsBlockingY()) return;
+	if (!e->obj->IsBlockingX() && !e->obj->IsBlockingY()) {
+		return;
+	}
 	if (dynamic_cast<CGoomba*>(e->obj)) return; 
 	/*if (dynamic_cast<CPlatform*>(e->obj)) {
 		CPlatform* platform = dynamic_cast<CPlatform*>(e->obj);

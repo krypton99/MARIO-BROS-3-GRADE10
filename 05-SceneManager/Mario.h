@@ -93,7 +93,7 @@
 #define MARIO_BIG_SITTING_BBOX_WIDTH  14
 #define MARIO_BIG_SITTING_BBOX_HEIGHT 16
 
-#define MARIO_SIT_HEIGHT_ADJUST ((MARIO_BIG_BBOX_HEIGHT-MARIO_BIG_SITTING_BBOX_HEIGHT)/2)
+#define MARIO_SIT_HEIGHT_ADJUST ((MARIO_BIG_BBOX_HEIGHT-MARIO_BIG_SITTING_BBOX_HEIGHT)/2)+1
 
 #define MARIO_SMALL_BBOX_WIDTH  13
 #define MARIO_SMALL_BBOX_HEIGHT 13
@@ -152,11 +152,11 @@ public:
 	}
 	int IsCollidable()
 	{	
-		return (state != MARIO_STATE_DIE); 
+		return (state != MARIO_STATE_DIE && (!collideX || !collideY)); 
 	}
 	LPGAMEOBJECT collidePlatform;
-	int IsBlockingX() { return (state != MARIO_STATE_DIE && untouchable==0) ; }
-	int IsBlockingY() { return (state != MARIO_STATE_DIE && untouchable==0); }
+	int IsBlockingX() { return (state != MARIO_STATE_DIE && untouchable==0 ) ; }
+	int IsBlockingY() { return (state != MARIO_STATE_DIE && untouchable==0 ); }
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e);
 
@@ -166,5 +166,6 @@ public:
 	boolean isThrough=0;
 	boolean collideX = 0;
 	boolean collideY = 0;
+	boolean isBlocking = 1;
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };

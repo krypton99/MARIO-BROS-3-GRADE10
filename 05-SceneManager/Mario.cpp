@@ -32,7 +32,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	vy += ay * dt;
 	vx += ax * dt;
-
+	
 	if (abs(vx) > abs(maxVx))
 	{
 		vx = maxVx;
@@ -54,11 +54,25 @@ void CMario::OnNoCollision(DWORD dt)
 {
 	x += vx * dt;
 	y += vy * dt;
+	collideX = 0;
+	collideY = 0;
 }
 
 void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-
+	if (dynamic_cast<CBrick*>(e->obj)) {
+		//isBlocking = 0;
+		//if(brick->)
+		CBrick* brick = dynamic_cast<CBrick*>(e->obj);
+		if (brick->GetBrickType() == BRICK_TYPE_HIDDEN) {
+			collideX = 1;
+			collideY = 1;
+		}
+	}
+	else {
+		collideX = 0;
+		collideY = 0;
+	}
 	if (e->ny != 0 && e->obj->IsBlockingY())
 	{
 		vy = 0;
@@ -312,17 +326,21 @@ void CMario::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 	// jump on top >> kill Goomba and deflect a bit 
 
 	//Mario hit Venus
-	if (brick->GetState() == BRICK_STATE_ACTIVE) {
-		if (e->ny > 0) {
-			
-			//brick->SetState(BRICK_STATE_EMPTY);
-			switch (brick->GetItemType()) {
+	if (brick->GetBrickType() != BRICK_TYPE_HIDDEN) {
+		if (brick->GetState() == BRICK_STATE_ACTIVE) {
+			if (e->ny > 0) {
 
+				//brick->SetState(BRICK_STATE_EMPTY);
+				switch (brick->GetItemType()) {
+
+				}
+				brick->SetState(BRICK_STATE_BOUND);
 			}
-			brick->SetState(BRICK_STATE_BOUND);
+
 		}
-		
 	}
+	else brick->isBlocking = 0;
+	
 }
 void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
 {
@@ -529,7 +547,8 @@ void CMario::SetState(int state)
 		{
 			state = MARIO_STATE_IDLE;
 			isSitting = true;
-			vx = 0; vy = 0.0f;
+			vx = 0.0f; vy = 0.0f;
+			ax = 0.0f;
 			y +=MARIO_SIT_HEIGHT_ADJUST;
 		}
 		break;

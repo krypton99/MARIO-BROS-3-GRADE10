@@ -3,6 +3,7 @@
 #include "Goomba.h"
 #include "Mario.h"
 #include "Platform.h"
+#include "Brick.h"
 
 CKoopas::CKoopas(float x, float y, float type) : CGameObject(x, y)
 {
@@ -13,6 +14,7 @@ CKoopas::CKoopas(float x, float y, float type) : CGameObject(x, y)
 	type = OBJECT_TYPE_KOOPAS;
 	die_start = -1;
 	SetState(TROOPA_STATE_WALKING);
+	start_vx = vx;
 }
 
 void CKoopas::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -20,9 +22,9 @@ void CKoopas::GetBoundingBox(float& left, float& top, float& right, float& botto
 	if (state == TROOPA_STATE_DIE||  state == TROOPA_STATE_ROLL_LEFT || state == TROOPA_STATE_ROLL_RIGHT)
 	{
 		left = x - TROOPA_BBOX_WIDTH / 2;
-		top = y - TROOPA_BBOX_HEIGHT_DIE / 2;
+		top = y - TROOPA_BBOX_HEIGHT / 2;
 		right = left + TROOPA_BBOX_WIDTH;
-		bottom = top + TROOPA_BBOX_HEIGHT_DIE;
+		bottom = top + TROOPA_BBOX_HEIGHT;
 	}
 	else
 	{
@@ -35,6 +37,7 @@ void CKoopas::GetBoundingBox(float& left, float& top, float& right, float& botto
 
 void CKoopas::OnNoCollision(DWORD dt)
 {
+	DebugOut(L"no collision");
 	x += vx * dt;
 	y += vy * dt;
 };
@@ -46,8 +49,10 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 			OnCollisionWithGoomba(e);
 	}
 	/*if (state != TROOPA_STATE_ROLL) {*/
-		if (!e->obj->IsBlockingX() && !e->obj->IsBlockingY()) return; 
+
+		if (!e->obj->IsBlockingX() && !e->obj->IsBlockingY()) return;
 		if (dynamic_cast<CKoopas*>(e->obj)) return;
+	
 	/*}*/
 	
 	if (e->ny != 0)
@@ -60,13 +65,14 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 	else if (e->nx != 0)
 	{
+		
 		vx = -vx;
 	}
 	if (dynamic_cast<CGoomba*>(e->obj))
 		OnCollisionWithGoomba(e);
-	else
-	if (dynamic_cast<CPlatform*>(e->obj))
-		OnCollisionWithPlatform(e);
+	/*else 
+	if (dynamic_cast<CBrick*>(e->obj))
+		if (type == KOOPAS_TYPE_RED) { OnCollisionWithBrick(e); }*/
 }
 void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e) {
 	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
@@ -75,17 +81,15 @@ void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e) {
 	}
 
 }
-void CKoopas::OnCollisionWithPlatform(LPCOLLISIONEVENT e) {
-	CPlatform* platform = dynamic_cast<CPlatform*>(e->obj);
-	if (e->ny < 0) {
-		float l, r, t, b;
-		platform->GetBoundingBox(l, t, r, b);
-		if (x <= l || x >= r)
-		{
-			
-			vx = -vx;
+void CKoopas::OnCollisionWithBrick(LPCOLLISIONEVENT e) {
+	//vx = -vx;
+	/*CBrick* brick = dynamic_cast<CBrick*>(e->obj);
+	if (state == TROOPA_STATE_ROLL_LEFT || state == TROOPA_STATE_ROLL_RIGHT) {
+		if (brick->GetBrickType() == BRICK_TYPE_HIDDEN) {
+			brick->isBlocking = 0;
 		}
-	}
+	}*/
+	/*else brick->isBlocking = 1;*/
 }
 //void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e) {
 //	CMario* goomba = dynamic_cast<CMario*>(e->obj);
@@ -191,7 +195,7 @@ void CKoopas::SetState(int state)
 		y += ((TROOPA_BBOX_HEIGHT - TROOPA_BBOX_HEIGHT_DIE) / 2)-5;
 		vx = 0;
 		vy = 0;
-		ay = 0;
+		//ay = 0;
 		//timeStartJump->Stop();
 		break;
 	case TROOPA_STATE_WALKING:

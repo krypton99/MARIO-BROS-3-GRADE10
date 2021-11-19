@@ -2,6 +2,7 @@
 #include "GameObject.h"
 
 #include "debug.h"
+#include "AssetIDs.h"
 
 #define BLOCK_PUSH_FACTOR 0.4f
 
@@ -196,7 +197,7 @@ void CCollision::Filter( LPGAMEOBJECT objSrc,
 		if (c->obj->IsDeleted()) continue; 
 
 		// ignore collision event with object having IsBlocking = 0 (like coin, mushroom, etc)
-		if (filterBlock == 1 && !c->obj->IsBlockingX() && !c->obj->IsBlockingY()) 
+		if (filterBlock == 1 && !c->obj->IsBlockingX() && !c->obj->IsBlockingY() ) 
 		{
 			continue;
 		}

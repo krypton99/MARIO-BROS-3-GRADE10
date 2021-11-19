@@ -150,9 +150,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CGoomba(x, y,type); break;
 	}
 	case OBJECT_TYPE_BRICK: {
-		float type = (float)atof(tokens[3].c_str());
+		float brickType = (float)atof(tokens[3].c_str());
 		float itemType = (float)atof(tokens[4].c_str());
-		obj = new CBrick(x, y,type,itemType); break;
+		obj = new CBrick(x, y, brickType,itemType); break;
 	}
 	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
 	case OBJECT_TYPE_FUNNEL: obj = new CFunnel(x, y); break;
@@ -337,12 +337,12 @@ void CPlayScene::Update(DWORD dt)
 				float l, r, b, t;
 				platform->GetBoundingBox(l,t,r,b);
 				player->GetPosition(x, y);
-				if (y < t) {
+				if (y < t ) {
 					platform->isBlocking = 1;
 				}
-				else {
-					platform->isBlocking = 0;
-				}
+				/*else if (x > l && x < r) {
+					platform->isBlocking = 1;
+				}*/
 				
 				/*else {
 					if (player->GetLevel() >= MARIO_LEVEL_BIG)
@@ -351,6 +351,16 @@ void CPlayScene::Update(DWORD dt)
 						item = new SuperMushroom({ brick->x, brick->y - BRICK_BBOX_SIZE }, ITEM_RED_MUSHROOM);
 				}*/
 			}
+		} 
+		if (objects[i]->GetType() == OBJECT_TYPE_BRICK) {
+			CBrick* brick = dynamic_cast<CBrick*>(objects[i]);
+			if (brick->GetBrickType() == BRICK_TYPE_HIDDEN) {
+
+				brick->isBlocking = 0;
+
+			}
+			else
+				brick->isBlocking = 1;
 		}
 	}
 	vector<LPGAMEOBJECT> coObjects;
