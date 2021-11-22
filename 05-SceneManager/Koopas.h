@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Timer.h"
+#include "Ghost.h"
 #define TROOPA_GRAVITY 0.002f
 #define TROOPA_WALKING_SPEED 0.05f
 #define TROOPA_ROLLING_SPEED 0.1f
@@ -49,8 +50,8 @@ protected:
 
 	float start_vx;
 	int level;
-	float type;
-
+	float koopa_type;
+	
 	ULONGLONG die_start;
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
@@ -58,14 +59,16 @@ protected:
 	virtual void Render();
 
 	virtual int IsCollidable() { return 1; };
-	virtual int IsBlockingX() { return 0; }
-	virtual int IsBlockingY() { return 0; }
+	virtual int IsBlockingX() { return 1; }
+	virtual int IsBlockingY() { return 1; }
 	virtual void OnNoCollision(DWORD dt);
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithBrick(LPCOLLISIONEVENT e);
 public:
+	CGhost* ghost = NULL;
+	bool isGhostFollow = false;
 	CKoopas(float x, float y,float type);
 	int GetLevel() { return level; };
 	void SetLevel(int level) { this->level = level; };

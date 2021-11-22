@@ -4,27 +4,32 @@
 #include "Mario.h"
 #include "Platform.h"
 #include "Brick.h"
+#include "PlayScene.h"
 
 CKoopas::CKoopas(float x, float y, float type) : CGameObject(x, y)
 {
 	this->ax = 0;
 	this->ay = TROOPA_GRAVITY ;
-	this->type = type;
+	this->koopa_type = type;
+	this->type = OBJECT_TYPE_TROOPA;
 	timeStartJump->Start();
 	type = OBJECT_TYPE_KOOPAS;
 	die_start = -1;
 	SetState(TROOPA_STATE_WALKING);
 	start_vx = vx;
+	isGhostFollow = true;
+	/*ghost = new CGhost(x+16, y);*/
+	//ghost->Render();
 }
 
 void CKoopas::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	if (state == TROOPA_STATE_DIE||  state == TROOPA_STATE_ROLL_LEFT || state == TROOPA_STATE_ROLL_RIGHT)
 	{
-		left = x - TROOPA_BBOX_WIDTH / 2;
-		top = y - TROOPA_BBOX_HEIGHT / 2;
+		left = x - TROOPA_BBOX_WIDTH/2;
+		top = y - TROOPA_BBOX_HEIGHT_DIE/2;
 		right = left + TROOPA_BBOX_WIDTH;
-		bottom = top + TROOPA_BBOX_HEIGHT;
+		bottom = top + TROOPA_BBOX_HEIGHT_DIE;
 	}
 	else
 	{
@@ -100,39 +105,28 @@ void CKoopas::OnCollisionWithBrick(LPCOLLISIONEVENT e) {
 //}
 void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-
-	/*if (state == TROOPA_STATE_ROLL)
-	{
-		
-		if (nx > 0) {
-			vx = vx;
-		}
-		else if (nx < 0)
-		{
-			vx = -vx;
-		}
-		vy += ay * dt;
-	}
-	else {*/
-		vy += ay * dt;
-		vx += ax * dt;
 	
-	if (type == KOOPAS_TYPE_GREEN_WING && state!=TROOPA_STATE_DIE) {
+	vy += ay * dt;
+	vx += ax * dt;
+	
+	if (koopa_type == KOOPAS_TYPE_GREEN_WING && state != TROOPA_STATE_DIE) {
 		if (timeStartJump->IsTimeUp() && timeStartJump->GetStartTime()) { // bd tinh time nhay
 			timeStartJump->Stop();
 			SetState(TROOPA_STATE_JUMP);
 			timeStartJump->Start();
 		}
-		/*if (state == GOOMBA_STATE_JUMP && isOnGround) {
-			SetState(GOOMBA_STATE_FLY);
-		}*/
 	}
-	/*if ((state == TR_STATE_DIE) && (GetTickCount64() - die_start > GOOMBA_DIE_TIMEOUT))
-	{
-		isDeleted = true;
-		return;
-	}*/
-
+	if (ghost->isOnGround == false && (state!=TROOPA_STATE_DIE && state!=TROOPA_STATE_ROLL_LEFT && state!=TROOPA_STATE_ROLL_RIGHT)) {
+		vx = -vx;
+		if (vx > 0) {
+			ghost->SetSpeed(vx, vy);
+			ghost->SetPos(this->x + 17, y+4);
+		}
+		else if (vx < 0) {
+			ghost->SetSpeed(vx, vy);
+			ghost->SetPos(this->x - 17, y+4);
+		}
+	}
 	//CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
@@ -140,7 +134,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CKoopas::Render()
 {
-	if (type == KOOPAS_TYPE_RED) {
+	if (koopa_type == KOOPAS_TYPE_RED) {
 		
 		int	aniId = ID_ANI_RED_TROOPA_WALKING_LEFT;
 		
@@ -155,7 +149,7 @@ void CKoopas::Render()
 		else if (vx < 0) aniId = ID_ANI_RED_TROOPA_WALKING_LEFT;
 		CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	}
-	else if (type == KOOPAS_TYPE_GREEN_WING) {
+	else if (koopa_type == KOOPAS_TYPE_GREEN_WING) {
 		
 			int aniId = 0;
 			if (vx > 0) {
@@ -165,7 +159,7 @@ void CKoopas::Render()
 				aniId = ID_ANI_GREEN_TROOPA_FLY_LEFT;
 			}
 			CAnimations::GetInstance()->Get(aniId)->Render(x, y);
-	} else if(type == KOOPAS_TYPE_GREEN){
+	} else if(koopa_type == KOOPAS_TYPE_GREEN){
 		int aniId = ID_ANI_GREEN_TROOPA_WALKING_LEFT;
 		//int ani = KOOPA_TROOPA_ANI_WALKING_LEFT;
 		if (state == TROOPA_STATE_DIE && vx == 0) {
@@ -179,7 +173,7 @@ void CKoopas::Render()
 		CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	}
 	
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CKoopas::SetState(int state)
@@ -192,7 +186,7 @@ void CKoopas::SetState(int state)
 	switch (state)
 	{
 	case TROOPA_STATE_DIE:
-		y += ((TROOPA_BBOX_HEIGHT - TROOPA_BBOX_HEIGHT_DIE) / 2)-5;
+		y += ((TROOPA_BBOX_HEIGHT - TROOPA_BBOX_HEIGHT_DIE) / 2)-20;
 		vx = 0;
 		vy = 0;
 		//ay = 0;

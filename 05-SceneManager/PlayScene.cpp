@@ -16,7 +16,7 @@
 #include "SampleKeyEventHandler.h"
 #include "Item.h"
 #include "Mushroom.h"
-
+#include "Ghost.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath):
@@ -163,7 +163,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CKoopas(x, y, type); break;
 		break;
 	}
-
+	
 	case OBJECT_TYPE_PLATFORM:
 	{
 
@@ -361,6 +361,19 @@ void CPlayScene::Update(DWORD dt)
 			}
 			else
 				brick->isBlocking = 1;
+		}
+		if (objects[i]->GetType() == OBJECT_TYPE_TROOPA) {
+			CKoopas* koopas = dynamic_cast<CKoopas*>(objects[i]);
+			float x, y;
+			koopas->GetPosition(x, y);
+			if (koopas->isGhostFollow) {
+				koopas->ghost = new CGhost(x + 16, y);
+				if (koopas->ghost != NULL) {
+					objects.push_back(koopas->ghost);
+				}
+				else return;
+				koopas->isGhostFollow = false;
+			}
 		}
 	}
 	vector<LPGAMEOBJECT> coObjects;
