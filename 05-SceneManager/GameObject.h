@@ -43,7 +43,7 @@ public:
 	int GetState() { return this->state; }
 	virtual void Delete() { isDeleted = true; }
 	bool IsDeleted() { return isDeleted; }
-
+	bool isInGrid;
 	void RenderBoundingBox();
 
 	CGameObject();

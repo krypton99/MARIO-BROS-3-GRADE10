@@ -20,6 +20,7 @@
 #define OBJECT_TYPE_TROOPA 8
 #define OBJECT_TYPE_PORTAL	50
 
+#define STATE_REMOVE 999
 
 #pragma region MARIO 
 
