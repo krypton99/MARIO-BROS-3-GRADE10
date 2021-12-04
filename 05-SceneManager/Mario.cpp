@@ -28,6 +28,7 @@ CMario::CMario(float x, float y) : CGameObject(x, y)
 	isOnPlatform = false;
 	coin = 0;
 	attackTime = new Timer(500);
+	
 }
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
@@ -397,21 +398,30 @@ int CMario::GetAniIdSmall()
 			}
 			else if (vx > 0)
 			{
-				if (ax < 0)
+				if (ax < 0 && nx < 0)
 					aniId = ID_ANI_MARIO_SMALL_BRACE_RIGHT;
-				else if (ax == MARIO_ACCEL_RUN_X)
-					aniId = ID_ANI_MARIO_SMALL_RUNNING_RIGHT;
-				else if (ax == MARIO_ACCEL_WALK_X)
-					aniId = ID_ANI_MARIO_SMALL_WALKING_RIGHT;
+				else if (ax == MARIO_ACCEL_RUN_X) {
+					if (nx > 0) aniId = ID_ANI_MARIO_SMALL_RUNNING_RIGHT;
+					else  aniId = ID_ANI_MARIO_SMALL_RUNNING_LEFT;
+				}
+				else if (ax <= MARIO_ACCEL_WALK_X) {
+					if (nx > 0) aniId = ID_ANI_MARIO_SMALL_WALKING_RIGHT;
+					else aniId = ID_ANI_MARIO_SMALL_WALKING_LEFT;
+				}
 			}
-			else // vx < 0
+			else if (vx < 0)// vx < 0
 			{
-				if (ax > 0)
+
+				if (ax > 0 && nx > 0)
 					aniId = ID_ANI_MARIO_SMALL_BRACE_LEFT;
-				else if (ax == -MARIO_ACCEL_RUN_X)
-					aniId = ID_ANI_MARIO_SMALL_RUNNING_LEFT;
-				else if (ax == -MARIO_ACCEL_WALK_X)
-					aniId = ID_ANI_MARIO_SMALL_WALKING_LEFT;
+				else if (ax == -MARIO_ACCEL_RUN_X) {
+					if (nx < 0) aniId = ID_ANI_MARIO_SMALL_RUNNING_LEFT;
+					else  aniId = ID_ANI_MARIO_SMALL_RUNNING_RIGHT;
+				}
+				else if (ax >= -MARIO_ACCEL_WALK_X) {
+					if (nx < 0) aniId = ID_ANI_MARIO_SMALL_WALKING_LEFT;
+					else aniId = ID_ANI_MARIO_SMALL_WALKING_RIGHT;
+				}
 			}
 
 	if (aniId == -1) aniId = ID_ANI_MARIO_SMALL_IDLE_RIGHT;
@@ -459,21 +469,30 @@ int CMario::GetAniIdBig()
 			}
 			else if (vx > 0)
 			{
-				if (ax < 0)
+				if (ax < 0 && nx < 0)
 					aniId = ID_ANI_MARIO_BRACE_RIGHT;
-				else if (ax == MARIO_ACCEL_RUN_X)
-					aniId = ID_ANI_MARIO_RUNNING_RIGHT;
-				else if (ax == MARIO_ACCEL_WALK_X)
-					aniId = ID_ANI_MARIO_WALKING_RIGHT;
+				else if (ax == MARIO_ACCEL_RUN_X) {
+					if (nx > 0) aniId = ID_ANI_MARIO_RUNNING_RIGHT;
+					else  aniId = ID_ANI_MARIO_RUNNING_LEFT;
+				}
+				else if (ax <= MARIO_ACCEL_WALK_X) {
+					if (nx > 0) aniId = ID_ANI_MARIO_WALKING_RIGHT;
+					else aniId = ID_ANI_MARIO_WALKING_LEFT;
+				}
 			}
-			else // vx < 0
+			else if (vx < 0)// vx < 0
 			{
-				if (ax > 0)
+
+				if (ax > 0 && nx > 0)
 					aniId = ID_ANI_MARIO_BRACE_LEFT;
-				else if (ax == -MARIO_ACCEL_RUN_X)
-					aniId = ID_ANI_MARIO_RUNNING_LEFT;
-				else if (ax == -MARIO_ACCEL_WALK_X)
-					aniId = ID_ANI_MARIO_WALKING_LEFT;
+				else if (ax == -MARIO_ACCEL_RUN_X) {
+					if (nx < 0) aniId = ID_ANI_MARIO_RUNNING_LEFT;
+					else  aniId = ID_ANI_MARIO_RUNNING_RIGHT;
+				}
+				else if (ax >= -MARIO_ACCEL_WALK_X) {
+					if (nx < 0) aniId = ID_ANI_MARIO_WALKING_LEFT;
+					else aniId = ID_ANI_MARIO_WALKING_RIGHT;
+				}
 			}
 
 	if (aniId == -1) aniId = ID_ANI_MARIO_IDLE_RIGHT;
@@ -521,23 +540,32 @@ int CMario::GetAniIdRacoon()
 				if (nx > 0) aniId = ID_ANI_RACOON_MARIO_IDLE_RIGHT;
 				else aniId = ID_ANI_RACOON_MARIO_IDLE_LEFT;
 			}
-			else if (vx > 0)
+			else if (vx > 0 )
 			{
-				if (ax < 0)
+				if (ax < 0 && nx<0)
 					aniId = ID_ANI_RACOON_MARIO_BRACE_RIGHT;
-				else if (ax == MARIO_ACCEL_RUN_X)
-					aniId = ID_ANI_RACOON_MARIO_RUNNING_RIGHT;
-				else if (ax == MARIO_ACCEL_WALK_X)
-					aniId = ID_ANI_RACOON_MARIO_WALKING_RIGHT;
+				else if (ax == MARIO_ACCEL_RUN_X) {
+					if(nx>0) aniId = ID_ANI_RACOON_MARIO_RUNNING_RIGHT;
+					else  aniId = ID_ANI_RACOON_MARIO_RUNNING_LEFT;
+				}
+				else if (ax <= MARIO_ACCEL_WALK_X ) {
+					if (nx > 0) aniId = ID_ANI_RACOON_MARIO_WALKING_RIGHT;
+					else aniId = ID_ANI_RACOON_MARIO_WALKING_LEFT;
+				}
 			}
-			else // vx < 0
+			else if(vx < 0 )// vx < 0
 			{
-				if (ax > 0)
+				
+				if (ax > 0 && nx > 0)
 					aniId = ID_ANI_RACOON_MARIO_BRACE_LEFT;
-				else if (ax == -MARIO_ACCEL_RUN_X)
-					aniId = ID_ANI_RACOON_MARIO_RUNNING_LEFT;
-				else if (ax == -MARIO_ACCEL_WALK_X)
-					aniId = ID_ANI_RACOON_MARIO_WALKING_LEFT;
+				else if (ax == -MARIO_ACCEL_RUN_X) {
+					if (nx < 0) aniId = ID_ANI_RACOON_MARIO_RUNNING_LEFT;
+					else  aniId = ID_ANI_RACOON_MARIO_RUNNING_RIGHT;
+				}
+				else if (ax >= -MARIO_ACCEL_WALK_X ) {
+					if (nx < 0) aniId = ID_ANI_RACOON_MARIO_WALKING_LEFT;
+					else aniId = ID_ANI_RACOON_MARIO_WALKING_RIGHT;
+				}
 			}
 
 	if (aniId == -1) aniId = ID_ANI_RACOON_MARIO_IDLE_RIGHT;
@@ -632,8 +660,24 @@ void CMario::SetState(int state)
 		break;
 
 	case MARIO_STATE_IDLE:
-		ax = 0.0f;
-		vx = 0.0f;
+		if (vx < 0 && nx == 1) {
+			vx = 0;
+			ax = 0;
+		}
+		else if (vx > 0 && nx == -1) {
+			vx = 0;
+			ax = 0;
+		}
+		else if (vx > 0 && nx == 1) {
+			ax = -MARIO_ACCEL_STOP_X;
+		}
+		else if (vx < 0 && nx == -1) {
+			ax = MARIO_ACCEL_STOP_X;
+		}
+		else {
+			vx = 0;
+			ax = 0;
+		}
 		break;
 	case MARIO_STATE_ATTACK:
 		if (level == MARIO_LEVEL_RACOON) {
