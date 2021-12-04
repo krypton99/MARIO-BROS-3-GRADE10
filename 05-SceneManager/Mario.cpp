@@ -27,12 +27,16 @@ CMario::CMario(float x, float y) : CGameObject(x, y)
 	untouchable_start = -1;
 	isOnPlatform = false;
 	coin = 0;
+	attackTime = new Timer(500);
 }
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	vy += ay * dt;
 	vx += ax * dt;
-	
+	if (attackTime->GetStartTime() != 0 && attackTime->IsTimeUp()) {
+		attackTime->Stop();
+		isAttack=false;
+	}
 	if (abs(vx) > abs(maxVx))
 	{
 		vx = maxVx;
@@ -479,7 +483,7 @@ int CMario::GetAniIdBig()
 int CMario::GetAniIdRacoon()
 {
 	int aniId = -1;
-	if (!isOnPlatform)
+	if (!isOnPlatform && !isAttack)
 	{
 		if (abs(ax) == MARIO_ACCEL_RUN_X)
 		{
@@ -503,6 +507,13 @@ int CMario::GetAniIdRacoon()
 				aniId = ID_ANI_RACOON_MARIO_SIT_RIGHT;
 			else
 				aniId = ID_ANI_RACOON_MARIO_SIT_LEFT;
+		}
+		else if (isAttack)
+		{
+			if (nx > 0)
+				aniId = ID_ANI_RACOON_MARIO_ATTACK_RIGHT;
+			else
+				aniId = ID_ANI_RACOON_MARIO_ATTACK_LEFT;
 		}
 		else
 			if (vx == 0)
@@ -624,7 +635,13 @@ void CMario::SetState(int state)
 		ax = 0.0f;
 		vx = 0.0f;
 		break;
-
+	case MARIO_STATE_ATTACK:
+		if (level == MARIO_LEVEL_RACOON) {
+			isAttack=true;
+			attackTime->Start();
+			
+		}
+		break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_JUMP_DEFLECT_SPEED;
 		vx = 0;

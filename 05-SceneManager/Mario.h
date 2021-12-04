@@ -5,7 +5,7 @@
 #include "Animations.h"
 #include "AssetIDs.h"
 #include "debug.h"
-
+#include "Timer.h"
 #define MARIO_WALKING_SPEED		0.1f
 #define MARIO_RUNNING_SPEED		0.2f
 
@@ -33,8 +33,7 @@
 #define MARIO_STATE_SIT				600
 #define MARIO_STATE_SIT_RELEASE		601
 
-#define MARIO_STATE_ATTACK_RIGHT	700
-#define MARIO_STATE_ATTACK_LEFT		701
+#define MARIO_STATE_ATTACK	700
 
 
 #pragma region ANIMATION_ID
@@ -104,6 +103,8 @@
 #define ID_ANI_RACOON_MARIO_BRACE_RIGHT 2101
 #define ID_ANI_RACOON_MARIO_BRACE_LEFT 2100
 
+#define ID_ANI_RACOON_MARIO_ATTACK_RIGHT	2301
+#define ID_ANI_RACOON_MARIO_ATTACK_LEFT		2300
 #pragma endregion
 
 #define GROUND_Y 160.0f
@@ -138,7 +139,8 @@ class CMario : public CGameObject
 	float maxVx;
 	float ax;				// acceleration on x 
 	float ay;				// acceleration on y 
-
+	BOOLEAN isAttack;
+	Timer* attackTime;
 	int level; 
 	int untouchable; 
 	ULONGLONG untouchable_start;
