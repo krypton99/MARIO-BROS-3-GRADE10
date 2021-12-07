@@ -18,8 +18,8 @@
 CMario::CMario(float x, float y) : CGameObject(x, y)
 {
 	isSitting = false;
-	maxVx = 1.0f;
-	ax = 0.5f;
+	maxVx = 2.0f;
+	ax = 0.0f;
 	ay = MARIO_GRAVITY;
 	type = OBJECT_TYPE_MARIO;
 	level = MARIO_LEVEL_RACOON;
@@ -41,7 +41,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	if (abs(vx) > abs(maxVx))
 	{
 		vx = maxVx;
+		
 	}
+	if (abs(vx) >= 0.2f) {
+		isFly = true;
+	}
+	else isFly = false;
 
 	// reset untouchable timer if untouchable time has passed
 	if ( GetTickCount64() - untouchable_start > MARIO_UNTOUCHABLE_TIME) 
@@ -590,7 +595,7 @@ void CMario::Render()
 
 	//RenderBoundingBox();
 	
-	DebugOutTitle(L"Coins: %d", coin);
+	DebugOutTitle(L"isFly: %d", isFly);
 }
 
 void CMario::SetState(int state)
@@ -625,6 +630,7 @@ void CMario::SetState(int state)
 		nx = -1;
 		break;
 	case MARIO_STATE_JUMP:
+		if (this->state == MARIO_STATE_FLY) break;
 		if (isSitting) break;
 		if (isOnPlatform)
 		{
@@ -636,7 +642,7 @@ void CMario::SetState(int state)
 		break;
 
 	case MARIO_STATE_RELEASE_JUMP:
-		if (vy < 0) vy += MARIO_JUMP_SPEED_Y / 2;
+		if (vy < 0) { vy += MARIO_JUMP_SPEED_Y / 2; ay = MARIO_GRAVITY; }
 		break;
 
 	case MARIO_STATE_SIT:
@@ -691,7 +697,14 @@ void CMario::SetState(int state)
 		vx = 0;
 		ax = 0;
 		break;
+	case MARIO_STATE_FLY:
+		if (isSitting) break;
+		if (level == MARIO_LEVEL_RACOON ) {
+				ay = -0.0002f;
+				vy = 0;
+		}
 	}
+	
 
 	CGameObject::SetState(state);
 }

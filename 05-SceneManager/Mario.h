@@ -36,6 +36,8 @@
 
 #define MARIO_STATE_ATTACK	700
 
+#define MARIO_STATE_FLY		800
+
 
 #pragma region ANIMATION_ID
 
@@ -137,7 +139,7 @@
 class CMario : public CGameObject
 {
 	BOOLEAN isSitting;
-	float maxVx;
+	
 	float ax;				// acceleration on x 
 	float ay;				// acceleration on y 
 	BOOLEAN isAttack;
@@ -203,4 +205,6 @@ public:
 	boolean collideY = 0;
 	boolean isBlocking = 1;
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+	float maxVx;
+	BOOLEAN isFly;
 };
