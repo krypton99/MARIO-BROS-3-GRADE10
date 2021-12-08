@@ -17,6 +17,7 @@
 #include "Item.h"
 #include "Mushroom.h"
 #include "Ghost.h"
+#include "Leaf.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath):
@@ -141,13 +142,23 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		obj = new CMario(x,y); 
 		player = (CMario*)obj;  
-
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
 	case OBJECT_TYPE_GOOMBA: 
 	{
 		float type = (float)atof(tokens[3].c_str());
-		obj = new CGoomba(x, y,type); break;
+		int top = atoi(tokens[4].c_str());
+		int bot = atoi(tokens[5].c_str());
+		int left = atoi(tokens[6].c_str());
+		int right = atoi(tokens[7].c_str());
+		obj = new CGoomba(x, y,type); 
+		obj->SetPosition(x, y);
+		listMoving.push_back(obj);
+		for (int row = top; row < bot; row++) {
+			for (int col = left; col < right; col++)
+				grid->PushObjectsIntoGrid(obj, row, col);
+		}
+		break;
 	}
 	case OBJECT_TYPE_BRICK: {
 		float brickType = (float)atof(tokens[3].c_str());
@@ -199,10 +210,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 
 	// General object setup
-	obj->SetPosition(x, y);
+	if (object_type != OBJECT_TYPE_GOOMBA) {
+		obj->SetPosition(x, y);
 
-
-	objects.push_back(obj);
+		objects.push_back(obj);
+	}
 }
 
 void CPlayScene::LoadAssets(LPCWSTR assetFile)
@@ -254,6 +266,9 @@ void CPlayScene::_ParseSection_MAPS(string line)
 
 	map = new CMap(map_id, matrix_path.c_str(), widthMap, heightMap);
 	CMaps::GetInstance()->Add(map_id, map);
+	if (map) {
+		grid = new CGrid(map->getWidthMap(), map->getHeighthMap());
+	}
 }
 
 void CPlayScene::Load()
@@ -292,9 +307,22 @@ void CPlayScene::Load()
 
 	DebugOut(L"[INFO] Done loading scene  %s\n", sceneFilePath);
 }
+void CPlayScene::GetObjectToGrid() {
+	// xoa het cac object
+	//listItems.clear();
+	//objects.clear();
+	listGrid.clear();
 
+	grid->GetObjectFromGrid(listGrid);
+
+	for (UINT i = 0; i < listGrid.size(); i++) {
+			objects.push_back(listGrid[i]);
+	}
+}
 void CPlayScene::Update(DWORD dt)
 {
+	//grid->ResetGrid(listMoving);
+	GetObjectToGrid();
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 	for (size_t i = 0; i < objects.size(); i++) {
@@ -305,16 +333,13 @@ void CPlayScene::Update(DWORD dt)
 
 			if (brick->isFallingItem) {
 				//CREATE ITEM FOLLOW MARIO LEVEL
-				CMushroom* item=NULL;
+				Item* item=NULL;
 				if (brick->GetItemType() == CONTAIN_MUSHROOM) {
-					item = new CMushroom(brick->GetPosX(), brick->GetPosY() - ITEM_BBOX , ITEM_RED_MUSHROOM);
+				if (player->GetLevel() == MARIO_LEVEL_BIG)
+						item = new CLeaf({ brick->GetPosX(), brick->GetPosY() - ITEM_BBOX*3 , ITEM_LEAF });
+				else item = new CMushroom(brick->GetPosX(), brick->GetPosY() - ITEM_BBOX, ITEM_RED_MUSHROOM);
 				}
-				/*else {
-					if (player->GetLevel() >= MARIO_LEVEL_BIG)
-						item = new SuperLeaf({ brick->x, brick->y - BRICK_BBOX_SIZE });
-					else
-						item = new SuperMushroom({ brick->x, brick->y - BRICK_BBOX_SIZE }, ITEM_RED_MUSHROOM);
-				}*/
+				
 				if (item != NULL) {
 					listItems.push_back(item);
 				}
@@ -323,6 +348,7 @@ void CPlayScene::Update(DWORD dt)
 			}
 		}
 	}
+
 	// check collision of platform when mario is jump on top
 	for (size_t i = 0; i < objects.size(); i++) {
 
@@ -409,7 +435,7 @@ void CPlayScene::Update(DWORD dt)
 	}
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return; 
-
+	
 	// Update camera to follow mario
 	float cx, cy;
 	player->GetPosition(cx, cy);
@@ -420,14 +446,15 @@ void CPlayScene::Update(DWORD dt)
 
 	if (cx < 0) cx = 0;
 
-	CGame::GetInstance()->SetCamPos(cx, cy /*cy*/);
-
+	CGame::GetInstance()->SetCamPos(cx, 206 /*cy*/);
+	grid->UpdateOnGrid(listMoving);
 	PurgeDeletedObjects();
 }
 
 void CPlayScene::Render()
 {
 	map->Render();
+	DebugOut(L"objects %d \n", objects.size());
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
 	for (int i = 0; i < listItems.size(); i++)
@@ -469,6 +496,15 @@ bool CPlayScene::IsGameObjectDeleted(const LPGAMEOBJECT& o) { return o == NULL; 
 void CPlayScene::PurgeDeletedObjects()
 {
 	vector<LPGAMEOBJECT>::iterator it;
+	for (it = listMoving.begin(); it != listMoving.end(); it++)
+	{
+		LPGAMEOBJECT o = *it;
+		if (o->IsDeleted())
+		{
+			delete o;
+			*it = NULL;
+		}
+	}
 	for (it = objects.begin(); it != objects.end(); it++)
 	{
 		LPGAMEOBJECT o = *it;
@@ -487,12 +523,17 @@ void CPlayScene::PurgeDeletedObjects()
 			*it = NULL;
 		}
 	}
+	
 	// NOTE: remove_if will swap all deleted items to the end of the vector
 	// then simply trim the vector, this is much more efficient than deleting individual items
+	listMoving.erase(
+		std::remove_if(listMoving.begin(), listMoving.end(), CPlayScene::IsGameObjectDeleted),
+		listMoving.end());
 	objects.erase(
 		std::remove_if(objects.begin(), objects.end(), CPlayScene::IsGameObjectDeleted),
 		objects.end());
 	listItems.erase(
 			std::remove_if(listItems.begin(), listItems.end(), CPlayScene::IsGameObjectDeleted),
 		listItems.end());
+
 }

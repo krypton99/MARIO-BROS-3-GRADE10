@@ -7,6 +7,7 @@
 #include "Mario.h"
 #include "Goomba.h"
 #include "Map.h"
+#include "Grid.h"
 //#include "Koopas.h"
 
 
@@ -14,11 +15,14 @@ class CPlayScene: public CScene
 {
 protected: 
 	// A play scene has to have player, right? 
-	LPGAMEOBJECT player;					
+	CMario* player;					
 	LPMAP map;
 	vector<LPGAMEOBJECT> objects;
 	vector<LPGAMEOBJECT> listItems;
+	vector<LPGAMEOBJECT> listGrid;
 
+	vector<LPGAMEOBJECT> listMoving;
+	LPGRID grid;
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_ANIMATIONS(string line);
 	void _ParseSection_ANIMATION_SETS(string line);
@@ -41,6 +45,7 @@ public:
 	void PurgeDeletedObjects();
 
 	static bool IsGameObjectDeleted(const LPGAMEOBJECT& o);
+	void GetObjectToGrid();
 };
 
 typedef CPlayScene* LPPLAYSCENE;
