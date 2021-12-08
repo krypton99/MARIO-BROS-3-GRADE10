@@ -21,7 +21,7 @@
 
 #define CONTAIN_NONE			0
 #define CONTAIN_MUSHROOM		1 
-
+#define CONTAIN_LEAF	2
 
 class CBrick : public CGameObject {
 private:
