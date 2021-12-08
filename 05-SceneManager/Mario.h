@@ -6,6 +6,7 @@
 #include "AssetIDs.h"
 #include "debug.h"
 #include "Timer.h"
+#include "Tail.h"
 #define MARIO_WALKING_SPEED		0.1f
 #define MARIO_RUNNING_SPEED		0.2f
 
@@ -150,6 +151,7 @@ class CMario : public CGameObject
 	BOOLEAN isOnPlatform;
 	int coin; 
 	
+	CTail* tail = CTail::GetInstance(x,y);
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);

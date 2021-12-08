@@ -28,15 +28,19 @@ CMario::CMario(float x, float y) : CGameObject(x, y)
 	isOnPlatform = false;
 	coin = 0;
 	attackTime = new Timer(500);
+	tail = new CTail(x,y);
 	
 }
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+
 	vy += ay * dt;
 	vx += ax * dt;
 	if (attackTime->GetStartTime() != 0 && attackTime->IsTimeUp()) {
 		attackTime->Stop();
 		isAttack=false;
+		tail->SetPosition(x, y);
+		tail->Update(dt, coObjects, x,y);
 	}
 	if (abs(vx) > abs(maxVx))
 	{
@@ -47,7 +51,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		isFly = true;
 	}
 	else isFly = false;
-
+	
+	//tail->Render();
 	// reset untouchable timer if untouchable time has passed
 	if ( GetTickCount64() - untouchable_start > MARIO_UNTOUCHABLE_TIME) 
 	{
@@ -594,8 +599,9 @@ void CMario::Render()
 	animations->Get(aniId)->Render(x, y);
 
 	//RenderBoundingBox();
-	
-	DebugOutTitle(L"isFly: %d", isFly);
+	float x, y;
+	tail->GetPosition(x, y);
+	DebugOutTitle(L"X: %f", x);
 }
 
 void CMario::SetState(int state)
