@@ -135,15 +135,22 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	switch (object_type)
 	{
 	case OBJECT_TYPE_MARIO:
-		if (player!=NULL) 
+	{
+		if (player != NULL)
 		{
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
 		}
-		obj = new CMario(x,y); 
-		player = (CMario*)obj;  
+		obj = new CMario(x, y);
+		player = (CMario*)obj;
+		obj->SetPosition(x, y);
+		objects.push_back(obj);
+		player->tail->GetInstance(x, y);
+		/*player->tail->SetPosition(x, y);*/
+		objects.push_back(player->tail);
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
+	}
 	case OBJECT_TYPE_GOOMBA: 
 	{
 		float type = (float)atof(tokens[3].c_str());
@@ -210,7 +217,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 
 	// General object setup
-	if (object_type != OBJECT_TYPE_GOOMBA) {
+	if (object_type != OBJECT_TYPE_GOOMBA && object_type !=OBJECT_TYPE_MARIO) {
 		obj->SetPosition(x, y);
 
 		objects.push_back(obj);
@@ -401,6 +408,7 @@ void CPlayScene::Update(DWORD dt)
 				koopas->isGhostFollow = false;
 			}
 		}
+		
 	}
 	vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 1; i < objects.size(); i++)

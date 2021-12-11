@@ -3,6 +3,8 @@
 #include "AssetIDs.h"
 #include "Mario.h"
 #include "Koopas.h"
+#include "Goomba.h"
+#include "Brick.h"
 
 CTail* CTail::__instance = nullptr;
 
@@ -19,7 +21,7 @@ CTail::CTail(float x, float y) :CGameObject(x, y)
 void CTail::Render()
 {
 	/*if (brickType != BRICK_TYPE_HIDDEN) {
-		CAnimations* animations = CAnimations::GetInstance();
+		
 		int ani = ID_ANI_QUESTION_BRICK_ACTIVE;
 		if (state == BRICK_STATE_EMPTY) {
 			ani = ID_ANI_QUESTION_BRICK_EMPTY;
@@ -27,37 +29,101 @@ void CTail::Render()
 		else ani = ID_ANI_QUESTION_BRICK_ACTIVE;
 		animations->Get(ani)->Render(x, y);
 	}*/
+	/*CAnimations* animations = CAnimations::GetInstance();
+	int ani = ID_ANI_GOOMBA_DIE;
+	animations->Get(ani)->Render(x, y);*/
 	RenderBoundingBox();
 }
 
 void CTail::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	l = x - TAIL_BBOX_WIDTH / 2;
-	t = y - TAIL_BBOX_HEIGHT / 2;
-	r = l + TAIL_BBOX_WIDTH;
-	b = t + TAIL_BBOX_HEIGHT;
+	if (ani) {
+		CAnimations* animations = CAnimations::GetInstance();
+		int frame = 0;
+		if (animations->Get(ani)->getCurrentFrame() != NULL) {
+			frame = animations->Get(ani)->getCurrentFrame();
+		}
+		if (frame == 3 && isAttack) {
+			if (nx > 0) {
+				l = x + TAIL_BBOX_WIDTH / 2 ;
+			}
+			else 
+				l = x - TAIL_BBOX_WIDTH / 2 ;
+		}
+		else
+		if (frame == 1 && isAttack) {
+				if (nx > 0) {
+					l = x - TAIL_BBOX_WIDTH / 2;
+				}
+				else l = x + TAIL_BBOX_WIDTH / 2;
+		}
+		else l = x - TAIL_BBOX_WIDTH / 2;
+		t = y - TAIL_BBOX_HEIGHT / 2;
+		r = l + TAIL_BBOX_WIDTH;
+		b = t + TAIL_BBOX_HEIGHT;
+	}
 }
 void CTail::OnNoCollision(DWORD dt)
 {
-	x += vx * dt;
-	y += vy * dt;
+	/*x += vx * dt;
+	y += vy * dt;*/
 }
-void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects, float x, float y) {
-	//CGameObject::Update(dt);
-	this->x = x;
-	this->y = y;
+void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects, float x, float y, float nx) {
+	CGameObject::Update(dt);
+	if (ani) {
+		CAnimations* animations = CAnimations::GetInstance();
+		int frame = 0;
+		if (animations->Get(ani)->getCurrentFrame() != NULL) {
+			frame = animations->Get(ani)->getCurrentFrame();
+		}
+		if (frame == 3 && isAttack) {
+			if (nx > 0) {
+				this->x = x + MARIO_RACOON_BBOX_WIDTH / 2;
+			}
+			else
+				this->x = x - MARIO_RACOON_BBOX_WIDTH / 2;
+		}
+		/*else
+			if (frame == 1 && isAttack) {
+				if (nx > 0) {
+					this->x = x - MARIO_RACOON_BBOX_WIDTH / 2;
+				}
+				else this->x = x + MARIO_RACOON_BBOX_WIDTH / 2;
+			}*/
+			else {
+				if (nx > 0) {
+					this->x = x - MARIO_RACOON_BBOX_WIDTH / 2;
+				}
+				else this->x = x + MARIO_RACOON_BBOX_WIDTH / 2;
+			}
+	}
 	
+	this->y = y + MARIO_RACOON_BBOX_HEIGHT/4;
+	this->nx = nx;
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 void CTail::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (dynamic_cast<CMario*>(e->obj)) {
-		//isBlocking = 0;
-		/*CBrick* brick = dynamic_cast<CBrick*>(e->obj);*/
-		//isBlocking = 0;
+	if (dynamic_cast<CGoomba*>(e->obj) && isAttack) {
+		OnCollisionWithGoomba(e);
 	}
-	
+	if (dynamic_cast<CBrick*>(e->obj)) {
+		return;
+	}
 
+}
+void CTail::OnCollisionWithGoomba(LPCOLLISIONEVENT e) {
+	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+	if (goomba->GetType() == GOOMBA_TYPE_RED_WING) {
+			if (goomba->GetState() != GOOMBA_STATE_DIE)
+			{
+				goomba->SetType(GOOMBA_TYPE_RED);
+			}
+	}
+	else 
+	{
+		goomba->SetState(GOOMBA_STATE_DIE_BY_OBJECT);
+	}
 }
 void CTail::SetState(int state) {
 	CGameObject::SetState(state);

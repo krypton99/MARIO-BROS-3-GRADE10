@@ -15,8 +15,9 @@ private:
 	static CTail* __instance;
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 	virtual void OnNoCollision(DWORD dt);
+	virtual void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 public:
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects, float x, float y);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects, float x, float y, float nx);
 	CTail(float x, float y);
 	void Render();
 	virtual int IsCollidable() { return 1; };
@@ -25,4 +26,6 @@ public:
 	virtual void SetState(int state);
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
 	static CTail* GetInstance(float x, float y);
+	BOOLEAN isAttack = false;
+	int ani;
 };

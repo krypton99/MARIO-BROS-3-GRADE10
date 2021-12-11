@@ -39,9 +39,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	if (attackTime->GetStartTime() != 0 && attackTime->IsTimeUp()) {
 		attackTime->Stop();
 		isAttack=false;
-		tail->SetPosition(x, y);
-		tail->Update(dt, coObjects, x,y);
+		tail->isAttack = false;
+		//if (tail) tail->Render();
 	}
+	tail->Update(dt, coObjects, x, y,nx);
 	if (abs(vx) > abs(maxVx))
 	{
 		vx = maxVx;
@@ -61,7 +62,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 
 	isOnPlatform = false;
-
+	
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
@@ -594,14 +595,18 @@ void CMario::Render()
 		aniId = GetAniIdBig();
 	else if (level == MARIO_LEVEL_SMALL)
 		aniId = GetAniIdSmall();
-	else if (level == MARIO_LEVEL_RACOON)
+	else if (level == MARIO_LEVEL_RACOON) {
 		aniId = GetAniIdRacoon();
+		
+	}
+	tail->ani = aniId;
 	animations->Get(aniId)->Render(x, y);
+	
 
-	//RenderBoundingBox();
+	RenderBoundingBox();
 	float x, y;
 	tail->GetPosition(x, y);
-	DebugOutTitle(L"X: %f", x);
+	DebugOutTitle(L"Y: %f",y);
 }
 
 void CMario::SetState(int state)
@@ -695,7 +700,8 @@ void CMario::SetState(int state)
 		if (level == MARIO_LEVEL_RACOON) {
 			isAttack=true;
 			attackTime->Start();
-			
+			tail->SetPosition(x, y);
+			tail->isAttack = true;
 		}
 		break;
 	case MARIO_STATE_DIE:

@@ -130,9 +130,9 @@
 #define MARIO_SMALL_BBOX_WIDTH  13
 #define MARIO_SMALL_BBOX_HEIGHT 13
 
-#define MARIO_RACOON_BBOX_WIDTH  22
+#define MARIO_RACOON_BBOX_WIDTH  14
 #define MARIO_RACOON_BBOX_HEIGHT 28
-#define MARIO_RACOON_SITTING_BBOX_WIDTH  22
+#define MARIO_RACOON_SITTING_BBOX_WIDTH  14
 #define MARIO_RACOON_SITTING_BBOX_HEIGHT 18
 
 #define MARIO_UNTOUCHABLE_TIME 2500
@@ -151,7 +151,7 @@ class CMario : public CGameObject
 	BOOLEAN isOnPlatform;
 	int coin; 
 	
-	CTail* tail = CTail::GetInstance(x,y);
+	
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
@@ -198,7 +198,7 @@ public:
 	int IsBlockingY() { return (state != MARIO_STATE_DIE && untouchable==0 ); }
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e);
-
+	CTail* tail = CTail::GetInstance(x, y);
 	void SetLevel(int l);
 	int GetLevel() { return level; };
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
