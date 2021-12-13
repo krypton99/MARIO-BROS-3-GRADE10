@@ -15,7 +15,7 @@ assets\hud.txt
 #
 #map_id	matrix_path	width	height
 [MAPS]
-10000	map\matrix_1-1.txt	3392	432
+10000	map\matrix_1-1.txt	2832	432
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
