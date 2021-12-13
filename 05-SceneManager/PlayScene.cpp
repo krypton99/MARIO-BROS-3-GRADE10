@@ -149,6 +149,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		/*player->tail->SetPosition(x, y);*/
 		objects.push_back(player->tail);
 		DebugOut(L"[INFO] Player object has been created!\n");
+		hud = new HUD();
 		break;
 	}
 	case OBJECT_TYPE_GOOMBA: 
@@ -454,7 +455,7 @@ void CPlayScene::Update(DWORD dt)
 
 	if (cx < 0) cx = 0;
 
-	CGame::GetInstance()->SetCamPos(cx, 206 /*cy*/);
+	CGame::GetInstance()->SetCamPos(cx, cy /*cy*/);
 	grid->UpdateOnGrid(listMoving);
 	PurgeDeletedObjects();
 }
@@ -467,6 +468,7 @@ void CPlayScene::Render()
 		objects[i]->Render();
 	for (int i = 0; i < listItems.size(); i++)
 		listItems[i]->Render();
+	hud->Render(CGame::GetInstance()->GetCamPosX(), CGame::GetInstance()->GetCamPosY() , player);
 }
 
 /*
@@ -495,7 +497,7 @@ void CPlayScene::Unload()
 
 	objects.clear();
 	player = NULL;
-
+	delete hud;
 	DebugOut(L"[INFO] Scene %d unloaded! \n", id);
 }
 

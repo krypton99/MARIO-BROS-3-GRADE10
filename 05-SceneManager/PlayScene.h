@@ -8,6 +8,7 @@
 #include "Goomba.h"
 #include "Map.h"
 #include "Grid.h"
+#include "HUD.h"
 //#include "Koopas.h"
 
 
@@ -17,6 +18,7 @@ protected:
 	// A play scene has to have player, right? 
 	CMario* player;					
 	LPMAP map;
+	LPHUD hud;
 	vector<LPGAMEOBJECT> objects;
 	vector<LPGAMEOBJECT> listItems;
 	vector<LPGAMEOBJECT> listGrid;
