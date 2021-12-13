@@ -11,6 +11,12 @@ assets\funnel.txt
 assets\koopas.txt
 assets\flat.txt
 assets\items.txt
+assets\hud.txt
+#
+#map_id	matrix_path	width	height
+[MAPS]
+10000	map\matrix_1-1.txt	3392	432
+#
 [OBJECTS]
 # type	x	y	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas
@@ -26,7 +32,7 @@ assets\items.txt
 6	360	386
 
 # BRICKS
-1	192	352	100	0
+1	192	352	100	1
 1	177	352	100	1
 1	224	304	100	0
 1	240	304	100	0
@@ -34,8 +40,6 @@ assets\items.txt
 1	656	384	100	0
 1	704	347	100	0
 1	1473	360	100	0
-1	496	368	200	0
-1	608	368	200	0
 
 #COIN
 4	100	120
@@ -45,14 +49,8 @@ assets\items.txt
 4	180	120
 
 #Goomba
-2	240	386	1000
-2	544	400	1000
-2	608	400	1000
-2	1030	370	1000
-2	930	370	1000
-2	848	386	1000
-2	896	386	1000
-2	960	386	1000
+2	608	400	1000	3	5	4	5
+2	930	370	3000	3	5	7	8
 
 #Koopas
 8	577	360	1000
@@ -79,8 +77,3 @@ assets\items.txt
 #Portal 
 50	300	120	316	160	2
 
-#
-#map_id	matrix_path	width	height
-[MAPS]
-10000	map\matrix_1-1.txt	3392	432
-#

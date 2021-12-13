@@ -20,4 +20,7 @@ height	240
 30	textures\misc-2.png
 40	textures\plant.png
 50	textures\enemy.png
+60	textures\board.png
+70	textures\speedbar.png
+80	textures\black.png
 10000	map\tile_background_1-1.png
