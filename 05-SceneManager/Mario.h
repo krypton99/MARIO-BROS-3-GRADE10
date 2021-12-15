@@ -7,6 +7,7 @@
 #include "debug.h"
 #include "Timer.h"
 #include "Tail.h"
+#include "Koopas.h"
 #define MARIO_WALKING_SPEED		0.1f
 #define MARIO_RUNNING_SPEED		0.2f
 
@@ -226,4 +227,7 @@ public:
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	float maxVx;
 	BOOLEAN isFly;
+	CKoopas* shell;
+	BOOLEAN holding=false;
+	BOOLEAN isHolding = false;
 };

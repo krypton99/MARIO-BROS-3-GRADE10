@@ -33,9 +33,44 @@ CMario::CMario(float x, float y) : CGameObject(x, y)
 }
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
-
 	vy += ay * dt;
 	vx += ax * dt;
+	if (shell != nullptr) {
+		if (isHolding == true) {
+			if (level == MARIO_LEVEL_SMALL) {
+				if (nx > 0) {
+					shell->SetPosition(x+10, y-5);
+				}
+				else shell->SetPosition(x-10, y-5);
+			}
+			else if (level == MARIO_LEVEL_BIG) {
+				if (nx > 0) {
+					shell->SetPosition(x + 12, y - 5);
+				}
+				else shell->SetPosition(x - 12, y - 5);
+			}
+			else {
+				if (nx > 0) {
+					shell->SetPosition(x + 12, y - 5);
+				}
+				else shell->SetPosition(x - 12, y - 5);
+			}
+		}
+	}
+	if (isHolding == false) {
+	
+		if (shell != nullptr) {
+			shell->isMariohold=false;
+			if(nx>0)
+			{
+				shell->SetState(TROOPA_STATE_ROLL_RIGHT);
+			}
+			else shell->SetState(TROOPA_STATE_ROLL_LEFT);
+		}
+	}
+
+
+	// Xu ly mario attack bang duoi
 	if (attackTime->GetStartTime() != 0 && attackTime->IsTimeUp()) {
 		attackTime->Stop();
 		isAttack=false;
@@ -223,7 +258,7 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 {
 	CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
-
+	shell = koopas;
 	// jump on top >> kill Goomba and deflect a bit 
 	if (koopas->GetType() == KOOPAS_TYPE_GREEN_WING) {
 		
@@ -267,6 +302,10 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 	}
 	else if(koopas->GetState()==TROOPA_STATE_DIE)
 	{
+		if (holding == true) {
+			isHolding = true;
+			shell->isMariohold = true;
+		} else
 		if (e->nx <= 0) {
 			koopas->SetState(TROOPA_STATE_ROLL_RIGHT);
 		}
@@ -401,6 +440,22 @@ int CMario::GetAniIdSmall()
 			else
 				aniId = ID_ANI_MARIO_SIT_LEFT;
 		}
+		else if (isHolding) {
+			if (vx == 0)
+			{
+				if (nx > 0) aniId = ID_ANI_MARIO_SMALL_IDLE_HOLDING_RIGHT;
+				else aniId = ID_ANI_MARIO_SMALL_IDLE_HOLDING_LEFT;
+			}
+			else if (vx > 0)
+			{
+				if (nx > 0) aniId = ID_ANI_MARIO_SMALL_WALK_HOLDING_RIGHT;
+				else aniId = ID_ANI_MARIO_SMALL_WALK_HOLDING_LEFT;
+			}
+			else {
+				if (nx < 0) aniId = ID_ANI_MARIO_SMALL_WALK_HOLDING_LEFT;
+				else aniId = ID_ANI_MARIO_SMALL_WALK_HOLDING_RIGHT;
+			}
+		}
 		else
 			if (vx == 0)
 			{
@@ -471,6 +526,22 @@ int CMario::GetAniIdBig()
 				aniId = ID_ANI_MARIO_SIT_RIGHT;
 			else
 				aniId = ID_ANI_MARIO_SIT_LEFT;
+		}
+		else if (isHolding) {
+			if (vx == 0)
+			{
+				if (nx > 0) aniId = ID_ANI_MARIO_IDLE_HOLDING_RIGHT;
+				else aniId = ID_ANI_MARIO_IDLE_HOLDING_LEFT;
+			}
+			else if (vx > 0)
+			{
+				if (nx > 0) aniId = ID_ANI_MARIO_WALK_HOLDING_RIGHT;
+				else aniId = ID_ANI_MARIO_SMALL_WALK_HOLDING_LEFT;
+			}
+			else {
+				if (nx < 0) aniId = ID_ANI_MARIO_WALK_HOLDING_LEFT;
+				else aniId = ID_ANI_MARIO_WALK_HOLDING_RIGHT;
+			}
 		}
 		else
 			if (vx == 0)
@@ -545,7 +616,22 @@ int CMario::GetAniIdRacoon()
 			else
 				aniId = ID_ANI_RACOON_MARIO_ATTACK_LEFT;
 		}
-		else
+		else if (isHolding) {
+			if (vx == 0)
+			{
+				if (nx > 0) aniId = ID_ANI_MARIO_RACOON_IDLE_HOLDING_RIGHT;
+				else aniId = ID_ANI_MARIO_RACOON_IDLE_HOLDING_LEFT;
+			}
+			else if (vx > 0)
+			{
+				if (nx > 0) aniId = ID_ANI_MARIO_RACOON_WALK_HOLDING_RIGHT;
+				else aniId = ID_ANI_MARIO_RACOON_WALK_HOLDING_LEFT;
+			}
+			else {
+				if (nx < 0) aniId = ID_ANI_MARIO_RACOON_WALK_HOLDING_LEFT;
+				else aniId = ID_ANI_MARIO_RACOON_WALK_HOLDING_RIGHT;
+			}
+		} else
 			if (vx == 0)
 			{
 				if (nx > 0) aniId = ID_ANI_RACOON_MARIO_IDLE_RIGHT;

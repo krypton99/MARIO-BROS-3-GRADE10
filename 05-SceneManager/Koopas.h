@@ -77,4 +77,5 @@ public:
 	virtual void SetState(int state);
 	Timer* timeStartJump = new Timer(2000);
 	bool isOnGround = false;
+	BOOLEAN isMariohold = false;
 };

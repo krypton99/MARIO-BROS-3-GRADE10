@@ -15,7 +15,7 @@ CKoopas::CKoopas(float x, float y, float type) : CGameObject(x, y)
 	timeStartJump->Start();
 	type = OBJECT_TYPE_KOOPAS;
 	die_start = -1;
-	SetState(TROOPA_STATE_WALKING);
+	SetState(TROOPA_STATE_DIE);
 	start_vx = vx;
 	isGhostFollow = true;
 	/*ghost = new CGhost(x+16, y);*/
@@ -108,7 +108,10 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	
 	vy += ay * dt;
 	vx += ax * dt;
-	
+	if (isMariohold) {
+		ay = 0;
+	}
+	else ay = TROOPA_GRAVITY;
 	if (koopa_type == KOOPAS_TYPE_GREEN_WING && state != TROOPA_STATE_DIE) {
 		if (timeStartJump->IsTimeUp() && timeStartJump->GetStartTime()) { // bd tinh time nhay
 			timeStartJump->Stop();
