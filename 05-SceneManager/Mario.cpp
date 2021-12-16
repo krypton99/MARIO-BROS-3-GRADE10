@@ -60,12 +60,14 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	if (isHolding == false) {
 	
 		if (shell != nullptr) {
-			shell->isMariohold=false;
-			if(nx>0)
-			{
-				shell->SetState(TROOPA_STATE_ROLL_RIGHT);
+			if (shell->isMariohold == true) {
+				shell->isMariohold = false;
+				if (nx > 0)
+				{
+					shell->SetState(TROOPA_STATE_ROLL_RIGHT);
+				}
+				else shell->SetState(TROOPA_STATE_ROLL_LEFT);
 			}
-			else shell->SetState(TROOPA_STATE_ROLL_LEFT);
 		}
 	}
 
@@ -682,7 +684,7 @@ void CMario::Render()
 	RenderBoundingBox();
 	float x, y;
 	tail->GetPosition(x, y);
-	DebugOutTitle(L"Y: %f",y);
+	DebugOutTitle(L"X: %f",x);
 }
 
 void CMario::SetState(int state)

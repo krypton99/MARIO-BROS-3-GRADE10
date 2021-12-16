@@ -15,7 +15,7 @@ CKoopas::CKoopas(float x, float y, float type) : CGameObject(x, y)
 	timeStartJump->Start();
 	type = OBJECT_TYPE_KOOPAS;
 	die_start = -1;
-	SetState(TROOPA_STATE_DIE);
+	SetState(TROOPA_STATE_WALKING);
 	start_vx = vx;
 	isGhostFollow = true;
 	/*ghost = new CGhost(x+16, y);*/
@@ -119,6 +119,17 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			timeStartJump->Start();
 		}
 	}
+	if (state == TROOPA_STATE_DIE) {
+		if (timeReborn->IsTimeUp() && timeReborn->GetStartTime()) { // bd tinh time hoi sinh
+			timeReborn->Stop();
+			if (!isMariohold) {
+				SetState(TROOPA_STATE_WALKING);
+				y -= 10;
+				ghost->SetPosition(x + 16, y);
+			}
+			//timeStartJump->Start();
+		}
+	}
 	if (ghost->isOnGround == false && (state!=TROOPA_STATE_DIE && state!=TROOPA_STATE_ROLL_LEFT && state!=TROOPA_STATE_ROLL_RIGHT)) {
 		vx = -vx;
 		if (vx > 0) {
@@ -143,7 +154,9 @@ void CKoopas::Render()
 		
 		//int ani = KOOPA_TROOPA_ANI_WALKING_LEFT;
 		if (state == TROOPA_STATE_DIE && vx == 0) {
-			aniId = ID_ANI_RED_TROOPA_DIE_DOWN_IDLE;
+			if (timeReborn->Timeleft() > 4000) {
+				aniId = ID_ANI_RED_TROOPA_DIE_DOWN_SHAKE;
+			} else aniId = ID_ANI_RED_TROOPA_DIE_DOWN_IDLE;
 		}
 		else if (state == TROOPA_STATE_ROLL_LEFT || state == TROOPA_STATE_ROLL_RIGHT) {
 			aniId = ID_ANI_RED_TROOPA_DIE_DOWN_RUN;
@@ -166,7 +179,10 @@ void CKoopas::Render()
 		int aniId = ID_ANI_GREEN_TROOPA_WALKING_LEFT;
 		//int ani = KOOPA_TROOPA_ANI_WALKING_LEFT;
 		if (state == TROOPA_STATE_DIE && vx == 0) {
-			aniId = ID_ANI_GREEN_TROOPA_DIE_DOWN_IDLE;
+			if (timeReborn->Timeleft() > 4000) {
+				aniId = ID_ANI_GREEN_TROOPA_DIE_DOWN_SHAKE;
+			}
+			else aniId = ID_ANI_GREEN_TROOPA_DIE_DOWN_IDLE;
 		}
 		else if (state == TROOPA_STATE_ROLL_LEFT || state== TROOPA_STATE_ROLL_RIGHT) {
 			aniId = ID_ANI_GREEN_TROOPA_DIE_DOWN_RUN;
@@ -192,8 +208,12 @@ void CKoopas::SetState(int state)
 		y += ((TROOPA_BBOX_HEIGHT - TROOPA_BBOX_HEIGHT_DIE) / 2)-20;
 		vx = 0;
 		vy = 0;
+		ax = 0;
 		//ay = 0;
 		//timeStartJump->Stop();
+		
+		timeReborn->Start();
+		
 		break;
 	case TROOPA_STATE_WALKING:
 		vx = TROOPA_WALKING_SPEED;

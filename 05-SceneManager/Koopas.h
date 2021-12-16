@@ -30,6 +30,7 @@
 #define ID_ANI_RED_TROOPA_WALKING_RIGHT 6100
 #define ID_ANI_RED_TROOPA_DIE_UP_RUN 6105
 #define ID_ANI_RED_TROOPA_DIE_DOWN_RUN 6104
+#define ID_ANI_RED_TROOPA_DIE_DOWN_SHAKE 6106
 
 #define ID_ANI_GREEN_TROOPA_FLY_LEFT 6202
 #define ID_ANI_GREEN_TROOPA_FLY_RIGHT 6201
@@ -39,6 +40,7 @@
 #define ID_ANI_GREEN_TROOPA_WALKING_RIGHT 6203
 #define ID_ANI_GREEN_TROOPA_DIE_UP_RUN 6208
 #define ID_ANI_GREEN_TROOPA_DIE_DOWN_RUN 6207
+#define ID_ANI_GREEN_TROOPA_DIE_DOWN_SHAKE 6209
 
 #define KOOPA_LEVEL_WING 2
 
@@ -76,6 +78,7 @@ public:
 	void SetType(int type) { this->type = type; };
 	virtual void SetState(int state);
 	Timer* timeStartJump = new Timer(2000);
+	Timer* timeReborn = new Timer(5000);
 	bool isOnGround = false;
 	BOOLEAN isMariohold = false;
 };
