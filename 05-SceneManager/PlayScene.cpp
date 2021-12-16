@@ -174,7 +174,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CBrick(x, y, brickType,itemType); break;
 	}
 	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
-	case OBJECT_TYPE_FUNNEL: obj = new CFunnel(x, y); break;
+	case OBJECT_TYPE_FUNNEL: {
+		float funnelType = (int)atof(tokens[3].c_str());
+		obj = new CFunnel(x, y, funnelType); break;
+	}
 	case OBJECT_TYPE_VENUS:obj = new CVenusFireTrap(x, y); break;
 	case OBJECT_TYPE_TROOPA:
 	{
@@ -445,7 +448,7 @@ void CPlayScene::Update(DWORD dt)
 
 	if (cx < 0) cx = 0;
 
-	CGame::GetInstance()->SetCamPos(cx, 286 /*cy*/);
+	CGame::GetInstance()->SetCamPos(cx, cy /*cy*/);
 	grid->UpdateOnGrid(listMoving);
 	PurgeDeletedObjects();
 }
