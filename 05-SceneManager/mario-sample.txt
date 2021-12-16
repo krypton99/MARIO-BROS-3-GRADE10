@@ -1,5 +1,5 @@
 [SETTINGS]
-start	3
+start	1
 width	320
 height	240
 
@@ -24,4 +24,5 @@ height	240
 60	textures\board.png
 70	textures\speedbar.png
 80	textures\black.png
+90	textures\mario-holding-shell.png
 10000	map\tile_background_1-1.png

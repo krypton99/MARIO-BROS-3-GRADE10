@@ -15,7 +15,7 @@ CKoopas::CKoopas(float x, float y, float type) : CGameObject(x, y)
 	timeStartJump->Start();
 	type = OBJECT_TYPE_KOOPAS;
 	die_start = -1;
-	SetState(TROOPA_STATE_WALKING);
+	SetState(TROOPA_STATE_DIE);
 	start_vx = vx;
 	isGhostFollow = true;
 	/*ghost = new CGhost(x+16, y);*/
@@ -154,6 +154,10 @@ void CKoopas::Render()
 		
 		//int ani = KOOPA_TROOPA_ANI_WALKING_LEFT;
 		if (state == TROOPA_STATE_DIE && vx == 0) {
+			if (isMariohold) {
+				RenderBoundingBox();
+				return;
+			} else
 			if (timeReborn->Timeleft() > 4000) {
 				aniId = ID_ANI_RED_TROOPA_DIE_DOWN_SHAKE;
 			} else aniId = ID_ANI_RED_TROOPA_DIE_DOWN_IDLE;

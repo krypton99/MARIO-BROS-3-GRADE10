@@ -76,6 +76,8 @@ public:
 	void SetLevel(int level) { this->level = level; };
 	int GetType() { return type; };
 	void SetType(int type) { this->type = type; };
+	int GetKoopasType() { return koopa_type; };
+	void SetKoopasType(int koopa_type) { this->koopa_type = koopa_type; };
 	virtual void SetState(int state);
 	Timer* timeStartJump = new Timer(2000);
 	Timer* timeReborn = new Timer(5000);
