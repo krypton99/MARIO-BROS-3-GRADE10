@@ -36,7 +36,7 @@ void CBrick::Render()
 			}
 		animations->Get(ani)->Render(x, y);
 	}
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CBrick::GetBoundingBox(float &l, float &t, float &r, float &b)
@@ -67,21 +67,7 @@ void CBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 }
 void CBrick::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (dynamic_cast<CMario*>(e->obj)) {
-		//isBlocking = 0;
-		/*CBrick* brick = dynamic_cast<CBrick*>(e->obj);*/
-		//isBlocking = 0;
-	}
-	else 
-	if (dynamic_cast<CKoopas*>(e->obj)) {
-		CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
-		if (koopas->GetState() == TROOPA_STATE_ROLL_LEFT || koopas->GetState() == TROOPA_STATE_ROLL_RIGHT) {
-			if (brickType == BRICK_TYPE_HIDDEN) {
-				isBlocking = 0;
-			}
-		}
-		else isBlocking = 1;
-	} else isBlocking = 1;
+	
 
 }
 void CBrick::SetState(int state) {

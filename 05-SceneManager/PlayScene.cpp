@@ -386,16 +386,6 @@ void CPlayScene::Update(DWORD dt)
 				}*/
 			}
 		} 
-		if (objects[i]->GetType() == OBJECT_TYPE_BRICK) {
-			CBrick* brick = dynamic_cast<CBrick*>(objects[i]);
-			if (brick->GetBrickType() == BRICK_TYPE_HIDDEN) {
-
-				brick->isBlocking = 0;
-
-			}
-			else
-				brick->isBlocking = 1;
-		}
 		if (objects[i]->GetType() == OBJECT_TYPE_TROOPA) {
 			CKoopas* koopas = dynamic_cast<CKoopas*>(objects[i]);
 			float x, y;
@@ -455,7 +445,7 @@ void CPlayScene::Update(DWORD dt)
 
 	if (cx < 0) cx = 0;
 
-	CGame::GetInstance()->SetCamPos(cx, cy /*cy*/);
+	CGame::GetInstance()->SetCamPos(cx, 286 /*cy*/);
 	grid->UpdateOnGrid(listMoving);
 	PurgeDeletedObjects();
 }

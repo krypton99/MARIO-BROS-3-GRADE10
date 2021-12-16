@@ -111,19 +111,9 @@ void CMario::OnNoCollision(DWORD dt)
 
 void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (dynamic_cast<CBrick*>(e->obj)) {
-		//isBlocking = 0;
-		//if(brick->)
-		CBrick* brick = dynamic_cast<CBrick*>(e->obj);
-		if (brick->GetBrickType() == BRICK_TYPE_HIDDEN) {
-			collideX = 1;
-			collideY = 1;
-		}
-	}
-	else {
-		collideX = 0;
-		collideY = 0;
-	}
+	
+
+	
 	if (e->ny != 0 && e->obj->IsBlockingY())
 	{
 		vy = 0;
@@ -394,7 +384,7 @@ void CMario::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 
 		}
 	}
-	else brick->isBlocking = 0;
+	
 	
 }
 void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
