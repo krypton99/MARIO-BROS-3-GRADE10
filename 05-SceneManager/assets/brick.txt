@@ -11,6 +11,14 @@
 21004	185	30	202	47	30
 #empty
 21005	205	30	222	47	30
+
+#gold brick
+#active
+21101	244	30	261	47	30
+21102	263	30	280	47	30
+21103	282	30	299	47	30
+21104	301	30	318	47	30
+
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 #normal brick
@@ -19,4 +27,10 @@
 #question brick
 #active
 11001	21001	100	21002	100	21003	100	21004	100
+#broken
 11002	21005	100
+
+#gold brick
+#active
+11010	21101	100	21102	100	21103	100	21104	100
+

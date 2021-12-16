@@ -17,12 +17,23 @@ CBrick::CBrick(float x, float y, float brickType,float itemType) :CGameObject(x,
 void CBrick::Render()
 {
 	if (brickType != BRICK_TYPE_HIDDEN) {
-		CAnimations* animations = CAnimations::GetInstance();
-		int ani = ID_ANI_QUESTION_BRICK_ACTIVE;
-		if (state == BRICK_STATE_EMPTY) {
-			ani = ID_ANI_QUESTION_BRICK_EMPTY;
-		}
-		else ani = ID_ANI_QUESTION_BRICK_ACTIVE;
+		
+			CAnimations* animations = CAnimations::GetInstance();
+			int ani=0;
+			if (brickType==BRICK_TYPE_QUESTION) {
+			ani = ID_ANI_QUESTION_BRICK_ACTIVE;
+			if (state == BRICK_STATE_EMPTY) {
+				ani = ID_ANI_QUESTION_BRICK_EMPTY;
+			}
+			else ani = ID_ANI_QUESTION_BRICK_ACTIVE;
+			}
+			else if (brickType==BRICK_TYPE_GOLD) {
+				ani = ID_ANI_GOLD_BRICK_ACTIVE;
+				if (state == BRICK_STATE_EMPTY) {
+					ani = ID_ANI_QUESTION_BRICK_EMPTY;
+				}
+				else ani = ID_ANI_GOLD_BRICK_ACTIVE;
+			}
 		animations->Get(ani)->Render(x, y);
 	}
 	//RenderBoundingBox();
