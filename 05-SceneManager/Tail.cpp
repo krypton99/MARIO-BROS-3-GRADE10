@@ -107,8 +107,8 @@ void CTail::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (dynamic_cast<CGoomba*>(e->obj) && isAttack) {
 		OnCollisionWithGoomba(e);
 	}
-	if (dynamic_cast<CBrick*>(e->obj)) {
-		return;
+	if (dynamic_cast<CBrick*>(e->obj) ) {
+		OnCollisionWithBrick(e);
 	}
 
 }
@@ -123,6 +123,13 @@ void CTail::OnCollisionWithGoomba(LPCOLLISIONEVENT e) {
 	else 
 	{
 		goomba->SetState(GOOMBA_STATE_DIE_BY_OBJECT);
+	}
+}
+
+void CTail::OnCollisionWithBrick(LPCOLLISIONEVENT e) {
+	CBrick* brick = dynamic_cast<CBrick*>(e->obj);
+	if (brick->GetBrickType() == BRICK_TYPE_GOLD) {
+		brick->SetState(BRICK_STATE_BROKEN);
 	}
 }
 void CTail::SetState(int state) {

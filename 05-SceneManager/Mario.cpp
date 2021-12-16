@@ -373,7 +373,7 @@ void CMario::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 	// jump on top >> kill Goomba and deflect a bit 
 
 	//Mario hit Venus
-	if (brick->GetBrickType() != BRICK_TYPE_HIDDEN) {
+	if (brick->GetBrickType() != BRICK_TYPE_HIDDEN && brick->GetBrickType() != BRICK_TYPE_GOLD) {
 		if (brick->GetState() == BRICK_STATE_ACTIVE) {
 			if (e->ny > 0) {
 
@@ -386,6 +386,13 @@ void CMario::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 
 		}
 	}
+	else if (brick->GetBrickType() == BRICK_TYPE_GOLD) {
+		if (isAttack) {
+			brick->SetState(BRICK_STATE_BROKEN);
+		}
+			//brick->Delete();
+	}
+	
 	
 	
 }

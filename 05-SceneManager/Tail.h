@@ -16,13 +16,14 @@ private:
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 	virtual void OnNoCollision(DWORD dt);
 	virtual void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
+	virtual void OnCollisionWithBrick(LPCOLLISIONEVENT e);
 public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects, float x, float y, float nx);
 	CTail(float x, float y);
 	void Render();
 	virtual int IsCollidable() { return 1; };
-	virtual int IsBlockingX() { return 0; };
-	virtual int IsBlockingY() { return 0; };
+	virtual int IsBlockingX() { return 1; };
+	virtual int IsBlockingY() { return 1; };
 	virtual void SetState(int state);
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
 	static CTail* GetInstance(float x, float y);

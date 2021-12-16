@@ -3,8 +3,9 @@
 #include "AssetIDs.h"
 #include "Mario.h"
 #include "Koopas.h"
+#include "BrickBroken.h"
 #define BRICK_BOUNDING_X 5.0f
-
+#define BROKEN_DISTANCE_X	8.0f
 CBrick::CBrick(float x, float y, float brickType,float itemType) :CGameObject(x, y)
 {
 	this->type = OBJECT_TYPE_BRICK;
@@ -16,6 +17,11 @@ CBrick::CBrick(float x, float y, float brickType,float itemType) :CGameObject(x,
 }
 void CBrick::Render()
 {
+	if (brokenPieces.size() > 0) {
+		for (int i=0;i<brokenPieces.size();i++)
+			brokenPieces[i]->Render();
+		return;
+	}
 	if (brickType != BRICK_TYPE_HIDDEN) {
 		
 			CAnimations* animations = CAnimations::GetInstance();
@@ -53,6 +59,19 @@ void CBrick::OnNoCollision(DWORD dt)
 }
 void CBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 	//CGameObject::Update(dt);
+	if ((state == BRICK_STATE_BROKEN) && (GetTickCount64() - brickBroken_start > 400))
+	{
+		isDeleted = true;
+		return;
+	}
+	if (brokenPieces.size() > 0) { // state broken
+		if (brokenPieces.size() == 4) {
+			for (int i = 0;i < brokenPieces.size();i++)
+				brokenPieces[i]->Update(dt, coObjects);
+				//piece->Update(dt, coObjects);
+		}
+		
+	}
 	if (state == BRICK_STATE_BOUND) {
 		if (y < (start_y - BRICK_BOUNDING_X) && vy < 0) {
 			vy = -vy;
@@ -90,6 +109,17 @@ void CBrick::SetState(int state) {
 	case BRICK_STATE_EMPTY:
 		vy = 0;
 		break;
+	case BRICK_STATE_BROKEN:
+	{
+		brickBroken_start = GetTickCount64();
+		isBroken = true;
+		CBrickBroken* piece1 = new CBrickBroken(start_x,start_y, 1, 2.2); //PHAI DUOI
+		CBrickBroken* piece2 = new CBrickBroken(start_x + BROKEN_DISTANCE_X, start_y + BROKEN_DISTANCE_X, 1, 1); // PHAI TREN
+		CBrickBroken* piece3 = new CBrickBroken( start_x, start_y , -1, 2.2); // TRAI DUOI
+		CBrickBroken* piece4 = new CBrickBroken( start_x, start_y + BROKEN_DISTANCE_X, -1, 1); // TRAI TREN
+		brokenPieces = { piece1, piece2, piece3, piece4 };
+	}
+	break;
 	}
 
 }

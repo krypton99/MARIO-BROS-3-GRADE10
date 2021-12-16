@@ -16,6 +16,7 @@
 #define BRICK_STATE_ACTIVE 1
 #define BRICK_STATE_EMPTY 0
 #define BRICK_STATE_BOUND 2
+#define BRICK_STATE_BROKEN 3
 
 #define BRICK_WIDTH 16
 #define BRICK_BBOX_WIDTH 16
@@ -29,12 +30,12 @@ class CBrick : public CGameObject {
 private:
 	float brickType;
 	float itemType;
-	
+	vector<LPGAMEOBJECT> brokenPieces;
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 	virtual void OnNoCollision(DWORD dt);
 public:
-	
+	ULONGLONG brickBroken_start;
 	bool isFallingItem = false;
 	CBrick(float x, float y, float type, float itemType);
 	void Render();
@@ -50,4 +51,5 @@ public:
 	virtual void SetState(int state);
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
 	boolean isBlocking=1;
+	bool isBroken = false;
 };
