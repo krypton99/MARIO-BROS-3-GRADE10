@@ -17,6 +17,7 @@
 #define BRICK_STATE_EMPTY 0
 #define BRICK_STATE_BOUND 2
 #define BRICK_STATE_BROKEN 3
+#define BRICK_STATE_INVISIBLE 4
 
 #define BRICK_WIDTH 16
 #define BRICK_BBOX_WIDTH 16
@@ -25,6 +26,7 @@
 #define CONTAIN_NONE			0
 #define CONTAIN_MUSHROOM		1 
 #define CONTAIN_LEAF	2
+#define CONTAIN_PSWITCH	3
 
 class CBrick : public CGameObject {
 private:

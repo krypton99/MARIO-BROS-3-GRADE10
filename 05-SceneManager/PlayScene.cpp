@@ -18,6 +18,7 @@
 #include "Mushroom.h"
 #include "Ghost.h"
 #include "Leaf.h"
+#include "Pswitch.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath):
@@ -166,6 +167,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			for (int col = left; col < right; col++)
 				grid->PushObjectsIntoGrid(obj, row, col);
 		}
+		/*objects.push_back(obj);*/
 		break;
 	}
 	case OBJECT_TYPE_BRICK: {
@@ -323,21 +325,24 @@ void CPlayScene::GetObjectToGrid() {
 	//listItems.clear();
 	//objects.clear();
 	listGrid.clear();
-
+	listObject.clear();
 	grid->GetObjectFromGrid(listGrid);
 
 	for (UINT i = 0; i < listGrid.size(); i++) {
-			objects.push_back(listGrid[i]);
+		listObject.push_back(listGrid[i]);
 	}
 }
 void CPlayScene::Update(DWORD dt)
 {
-	//grid->ResetGrid(listMoving);
+	grid->ResetGrid(listMoving);
 	GetObjectToGrid();
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 	for (size_t i = 0; i < objects.size(); i++) {
-
+		if (objects[i]->GetType() == OBJECT_TYPE_PSWITCH) {
+			CPswitch* p_switch = dynamic_cast<CPswitch*>(objects[i]);
+			p_switch->Update(dt, &objects, &listItems);
+		} else
 		if (objects[i]->GetType() == OBJECT_TYPE_BRICK) {
 			CBrick* brick = dynamic_cast<CBrick*>(objects[i]);
 
@@ -345,16 +350,22 @@ void CPlayScene::Update(DWORD dt)
 			if (brick->isFallingItem) {
 				//CREATE ITEM FOLLOW MARIO LEVEL
 				Item* item=NULL;
+				CGameObject* obj = NULL;
 				if (brick->GetItemType() == CONTAIN_MUSHROOM) {
 				if (player->GetLevel() == MARIO_LEVEL_BIG)
 						item = new CLeaf({ brick->GetPosX(), brick->GetPosY() - ITEM_BBOX*3 , ITEM_LEAF });
 				else item = new CMushroom(brick->GetPosX(), brick->GetPosY() - ITEM_BBOX, ITEM_RED_MUSHROOM);
 				}
+				else if (brick->GetItemType() == CONTAIN_PSWITCH) {
+					obj = new CPswitch(brick->GetPosX(), brick->GetPosY());
+				}
 				
 				if (item != NULL) {
 					listItems.push_back(item);
 				}
-				else return;
+				if (obj != NULL) {
+					objects.push_back(obj);
+				} else return;
 				brick->isFallingItem = false;
 			}
 		}
@@ -421,9 +432,17 @@ void CPlayScene::Update(DWORD dt)
 	{
 		coObjects.push_back(listItems[i]);
 	}
+	for (size_t i = 0; i < listObject.size(); i++)
+	{
+		coObjects.push_back(listObject[i]);
+	}
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		objects[i]->Update(dt, &coObjects);
+	}
+	for (size_t i = 0; i < listObject.size(); i++)
+	{
+		listObject[i]->Update(dt, &coObjects);
 	}
 	for (size_t i = 0; i < listItems.size(); i++) {
 		listItems[i]->Update(dt, &coObjects);
@@ -448,7 +467,7 @@ void CPlayScene::Update(DWORD dt)
 
 	if (cx < 0) cx = 0;
 
-	CGame::GetInstance()->SetCamPos(cx, cy /*cy*/);
+	CGame::GetInstance()->SetCamPos(cx, 286 /*cy*/);
 	grid->UpdateOnGrid(listMoving);
 	PurgeDeletedObjects();
 }
@@ -458,9 +477,11 @@ void CPlayScene::Render()
 	map->Render();
 	DebugOut(L"objects %d \n", objects.size());
 	for (int i = 0; i < objects.size(); i++)
-		objects[i]->Render();
+			objects[i]->Render();
 	for (int i = 0; i < listItems.size(); i++)
 		listItems[i]->Render();
+	for (int i = 0;i < listObject.size();i++)
+		listObject[i]->Render();
 	hud->Render(CGame::GetInstance()->GetCamPosX(), CGame::GetInstance()->GetCamPosY() , player);
 }
 
@@ -499,7 +520,7 @@ bool CPlayScene::IsGameObjectDeleted(const LPGAMEOBJECT& o) { return o == NULL; 
 void CPlayScene::PurgeDeletedObjects()
 {
 	vector<LPGAMEOBJECT>::iterator it;
-	for (it = listMoving.begin(); it != listMoving.end(); it++)
+	for (it = listObject.begin(); it != listObject.end(); it++)
 	{
 		LPGAMEOBJECT o = *it;
 		if (o->IsDeleted())
@@ -529,12 +550,13 @@ void CPlayScene::PurgeDeletedObjects()
 	
 	// NOTE: remove_if will swap all deleted items to the end of the vector
 	// then simply trim the vector, this is much more efficient than deleting individual items
-	listMoving.erase(
-		std::remove_if(listMoving.begin(), listMoving.end(), CPlayScene::IsGameObjectDeleted),
-		listMoving.end());
+	//LPGAMEOBJECT* temp = CPlayScene::IsGameObjectDeleted;
+	listObject.erase(
+		std::remove_if(listObject.begin(), listObject.end(), CPlayScene::IsGameObjectDeleted),
+		listObject.end());
 	objects.erase(
-		std::remove_if(objects.begin(), objects.end(), CPlayScene::IsGameObjectDeleted),
-		objects.end());
+			std::remove_if(objects.begin(), objects.end(), CPlayScene::IsGameObjectDeleted),
+			objects.end());
 	listItems.erase(
 			std::remove_if(listItems.begin(), listItems.end(), CPlayScene::IsGameObjectDeleted),
 		listItems.end());

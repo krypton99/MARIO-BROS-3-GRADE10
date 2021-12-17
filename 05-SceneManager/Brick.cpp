@@ -22,7 +22,7 @@ void CBrick::Render()
 			brokenPieces[i]->Render();
 		return;
 	}
-	if (brickType != BRICK_TYPE_HIDDEN) {
+	if (brickType != BRICK_TYPE_HIDDEN && state!=BRICK_STATE_INVISIBLE ) {
 		
 			CAnimations* animations = CAnimations::GetInstance();
 			int ani=0;
@@ -47,10 +47,16 @@ void CBrick::Render()
 
 void CBrick::GetBoundingBox(float &l, float &t, float &r, float &b)
 {
-	l = x - BRICK_BBOX_WIDTH/2;
-	t = y - BRICK_BBOX_HEIGHT/2;
-	r = l + BRICK_BBOX_WIDTH;
-	b = t + BRICK_BBOX_HEIGHT;
+	if (state == BRICK_STATE_INVISIBLE)
+	{
+		l = t = r = b = 0;
+	}
+	else {
+		l = x - BRICK_BBOX_WIDTH / 2;
+		t = y - BRICK_BBOX_HEIGHT / 2;
+		r = l + BRICK_BBOX_WIDTH;
+		b = t + BRICK_BBOX_HEIGHT;
+	}
 }
 void CBrick::OnNoCollision(DWORD dt)
 {
@@ -94,7 +100,7 @@ void CBrick::SetState(int state) {
 	switch (state) {
 	case BRICK_STATE_BOUND:
 	{
-		if (itemType==CONTAIN_MUSHROOM) {
+		if (itemType==CONTAIN_MUSHROOM ) {
 			isFallingItem = true;
 		}
 		else
@@ -111,6 +117,11 @@ void CBrick::SetState(int state) {
 		break;
 	case BRICK_STATE_BROKEN:
 	{
+		if (itemType == CONTAIN_PSWITCH) {
+			isFallingItem = true;
+		}
+		else
+			isFallingItem = false;
 		brickBroken_start = GetTickCount64();
 		isBroken = true;
 		CBrickBroken* piece1 = new CBrickBroken(start_x,start_y, 1, 2.2); //PHAI DUOI

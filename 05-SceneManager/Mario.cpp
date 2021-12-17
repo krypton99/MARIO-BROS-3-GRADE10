@@ -15,6 +15,7 @@
 #include "Brick.h"
 #include "Item.h"
 #include "Mushroom.h"
+#include "Pswitch.h"
 CMario::CMario(float x, float y) : CGameObject(x, y)
 {
 	isSitting = false;
@@ -144,6 +145,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithBrick(e);
 	else if (dynamic_cast<CMushroom*>(e->obj))
 		OnCollisionWithMushroom(e);
+	else if(dynamic_cast<CPswitch*>(e->obj))
+		OnCollisionWithPswitch(e);
 	/*else if (dynamic_cast<CPlatform*>(e->obj))
 		OnCollisionWithPlatform(e);*/
 		
@@ -364,6 +367,12 @@ void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e) {
 			SetLevel(MARIO_LEVEL_BIG);
 			
 		}
+	}
+}
+void CMario::OnCollisionWithPswitch(LPCOLLISIONEVENT e) {
+	CPswitch* pswitch = dynamic_cast<CPswitch*>(e->obj);
+	if (e->ny < 0) {
+		pswitch->SetState(SWITCH_STATE_OFF);
 	}
 }
 void CMario::OnCollisionWithBrick(LPCOLLISIONEVENT e)
