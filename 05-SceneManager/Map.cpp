@@ -77,7 +77,7 @@ void CMap::Render()
 	
 
 	for (int i = 0; i < numRow; i++) {
-		for (int j = 0; j < col_end; j++) {
+		for (int j = col_begin; j < col_end; j++) {
 			float x = TILE_SIZE * (j - col_begin) - (int)game->GetCamPosX() % TILE_SIZE + game->GetCamPosX();
 			float y = TILE_SIZE * i;
 
