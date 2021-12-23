@@ -36,6 +36,7 @@ CMario::CMario(float x, float y) : CGameObject(x, y)
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	if (portal != nullptr && canGoPipe==true) {
+		CGame::GetInstance()->SetPlayerPosition(portal->player_x, portal->player_y);
 		CGame::GetInstance()->InitiateSwitchScene(portal->GetSceneId());
 	}
 	if (getInPipe->GetStartTime() != 0 && getInPipe->IsTimeUp()) {

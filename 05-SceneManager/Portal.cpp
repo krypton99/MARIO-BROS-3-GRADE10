@@ -3,7 +3,7 @@
 #include "Textures.h"
 #include "AssetIDs.h"
 
-CPortal::CPortal(float l, float t, float r, float b, int scene_id, int portal_type)
+CPortal::CPortal(float l, float t, float r, float b, int scene_id, int portal_type, float player_x, float player_y)
 {
 	this->scene_id = scene_id;
 	x = l;
@@ -12,6 +12,8 @@ CPortal::CPortal(float l, float t, float r, float b, int scene_id, int portal_ty
 	height = b - t;
 	type = OBJECT_TYPE_PORTAL;
 	this->portal_type = portal_type;
+	this->player_x = player_x;
+	this->player_y = player_y;
 }
 
 void CPortal::RenderBoundingBox()

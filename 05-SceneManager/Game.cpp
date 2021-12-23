@@ -519,9 +519,13 @@ void CGame::SwitchScene()
 	CSprites::GetInstance()->Clear();
 	CAnimations::GetInstance()->Clear();
 
+	cam_x = 0;
+	cam_y = 0;
 	current_scene = next_scene;
 	LPSCENE s = scenes[next_scene];
 	this->SetKeyHandler(s->GetKeyEventHandler());
+	s->player_x = player_x;
+	s->player_y = player_y;
 	s->Load();
 }
 
@@ -530,6 +534,10 @@ void CGame::InitiateSwitchScene(int scene_id)
 	next_scene = scene_id;
 }
 
+void CGame::SetPlayerPosition(float player_x, float player_y) {
+	this->player_x = player_x;
+	this->player_y = player_y;
+}
 
 void CGame::_ParseSection_TEXTURES(string line)
 {

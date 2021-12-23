@@ -19,7 +19,8 @@ public:
 		this->sceneFilePath = filePath;
 		this->key_handler = NULL;
 	}
-
+	float player_x = NULL;
+	float player_y = NULL;
 	LPKEYEVENTHANDLER GetKeyEventHandler() { return key_handler; }
 	virtual void Load() = 0;
 	virtual void Unload() = 0;

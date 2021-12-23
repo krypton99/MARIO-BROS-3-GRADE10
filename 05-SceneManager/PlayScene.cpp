@@ -144,7 +144,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		obj = new CMario(x, y);
 		player = (CMario*)obj;
-		obj->SetPosition(x, y);
+		if (player_x == NULL && player_y == NULL) {
+			obj->SetPosition(x, y);
+		}
+		else {
+			obj->SetPosition(player_x, player_y);
+		}
 		objects.push_back(obj);
 		player->tail->GetInstance(x, y);
 		/*player->tail->SetPosition(x, y);*/
@@ -213,7 +218,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		float b = (float)atof(tokens[4].c_str());
 		int scene_id = atoi(tokens[5].c_str());
 		int portal_type = atoi(tokens[6].c_str());
-		obj = new CPortal(x, y, r, b, scene_id,portal_type);
+		float player_x = (float) atof(tokens[7].c_str());
+		float player_y = (float) atof(tokens[8].c_str());
+		obj = new CPortal(x, y, r, b, scene_id,portal_type,player_x,player_y);
 	}
 	break;
 

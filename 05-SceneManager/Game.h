@@ -110,7 +110,7 @@ public:
 	void Load(LPCWSTR gameFile);
 	void SwitchScene();
 	void InitiateSwitchScene(int scene_id);
-
+	void SetPlayerPosition(float player_x, float player_y);
 	void _ParseSection_TEXTURES(string line);
 
 	void SetCamX(float x) { cam_x = x; }
@@ -119,6 +119,8 @@ public:
 	float GetCamPosX() { return cam_x; }
 	float GetCamPosY() { return cam_y; }
 
+	float player_x;
+	float player_y;
 
 	~CGame();
 };
