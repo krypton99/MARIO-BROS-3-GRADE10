@@ -8,6 +8,8 @@
 #include "Timer.h"
 #include "Tail.h"
 #include "Koopas.h"
+#include "Portal.h"
+
 #define MARIO_WALKING_SPEED		0.1f
 #define MARIO_RUNNING_SPEED		0.2f
 
@@ -37,6 +39,7 @@
 #define MARIO_STATE_SIT_RELEASE		601
 
 #define MARIO_STATE_ATTACK	700
+#define MARIO_STATE_PIPE	900
 
 #define MARIO_STATE_FLY		800
 
@@ -73,7 +76,7 @@
 #define ID_ANI_MARIO_WALK_HOLDING_LEFT_RED 1122
 #define ID_ANI_MARIO_WALK_HOLDING_RIGHT_GREEN 1123
 #define ID_ANI_MARIO_WALK_HOLDING_LEFT_GREEN 1124
-
+#define ID_ANI_MARIO_PIPE 1125
 #define ID_ANI_MARIO_DIE 999
 
 // SMALL MARIO
@@ -104,6 +107,7 @@
 #define ID_ANI_MARIO_SMALL_WALK_HOLDING_LEFT_RED 1621
 #define ID_ANI_MARIO_SMALL_WALK_HOLDING_RIGHT_GREEN 1622
 #define ID_ANI_MARIO_SMALL_WALK_HOLDING_LEFT_GREEN 1623
+#define ID_ANI_MARIO_SMALL_PIPE 1624
 // RACOON MARIO
 
 #define ID_ANI_RACOON_MARIO_IDLE_RIGHT 1701
@@ -136,6 +140,7 @@
 #define ID_ANI_MARIO_RACOON_WALK_HOLDING_LEFT_RED 2421
 #define ID_ANI_MARIO_RACOON_WALK_HOLDING_RIGHT_GREEN 2422
 #define ID_ANI_MARIO_RACOON_WALK_HOLDING_LEFT_GREEN 2423
+#define ID_ANI_MARIO_RACOON_PIPE 2424
 
 #define ID_ANI_RACOON_MARIO_ATTACK_RIGHT	2301
 #define ID_ANI_RACOON_MARIO_ATTACK_LEFT		2300
@@ -169,7 +174,7 @@
 
 class CMario : public CGameObject
 {
-	BOOLEAN isSitting;
+	//BOOLEAN isSitting;
 	
 	float ax;				// acceleration on x 
 	float ay;				// acceleration on y 
@@ -180,8 +185,8 @@ class CMario : public CGameObject
 	ULONGLONG untouchable_start;
 	BOOLEAN isOnPlatform;
 	int coin; 
-	
-	
+	Timer* getInPipe;
+	CPortal* portal=nullptr;
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
@@ -243,4 +248,7 @@ public:
 	CKoopas* shell;
 	BOOLEAN holding=false;
 	BOOLEAN isHolding = false;
+	BOOLEAN isSitting = false;
+	BOOLEAN isInPipe = false;
+	BOOLEAN canGoPipe = false;
 };

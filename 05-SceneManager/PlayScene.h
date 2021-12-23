@@ -22,7 +22,7 @@ protected:
 	vector<LPGAMEOBJECT> objects;
 	vector<LPGAMEOBJECT> listItems;
 	vector<LPGAMEOBJECT> listGrid;
-
+	vector<LPGAMEOBJECT> listObject;
 	vector<LPGAMEOBJECT> listMoving;
 	LPGRID grid;
 	void _ParseSection_SPRITES(string line);

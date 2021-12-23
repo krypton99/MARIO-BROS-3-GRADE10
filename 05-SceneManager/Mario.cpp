@@ -30,10 +30,19 @@ CMario::CMario(float x, float y) : CGameObject(x, y)
 	coin = 0;
 	attackTime = new Timer(500);
 	tail = new CTail(x,y);
+	getInPipe = new Timer(2000);
 	
 }
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	if (portal != nullptr && canGoPipe==true) {
+		CGame::GetInstance()->InitiateSwitchScene(portal->GetSceneId());
+	}
+	if (getInPipe->GetStartTime() != 0 && getInPipe->IsTimeUp()) {
+		getInPipe->Stop();
+		isInPipe = false;
+		canGoPipe = true;
+	}
 	vy += ay * dt;
 	vx += ax * dt;
 	if (shell != nullptr) {
@@ -71,8 +80,22 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 		}
 	}
+	if (getInPipe->Timeleft() < 1000 && getInPipe > 0) {
+		if (portal!=nullptr) {
+			if (portal->GetPortalType() == 1) {
+				y -= 1.0f;
+			}
+			else {
+				y += 1.0f;
+			}
+			ay = 0;
+		}
+	}
+	/*if (isInPipe) {
+		y += 1;
+	}*/
 
-
+	/*else { canGoPipe = false; }*/
 	// Xu ly mario attack bang duoi
 	if (attackTime->GetStartTime() != 0 && attackTime->IsTimeUp()) {
 		attackTime->Stop();
@@ -135,8 +158,27 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithGoomba(e);
 	else if (dynamic_cast<CCoin*>(e->obj))
 		OnCollisionWithCoin(e);
-	else if (dynamic_cast<CPortal*>(e->obj))
-		OnCollisionWithPortal(e);
+	else if (dynamic_cast<CPortal*>(e->obj)) {
+		CPortal* p = (CPortal*)e->obj;
+		if (p->GetPortalType() == 1) {
+			CPortal* p = (CPortal*)e->obj;
+			portal = p;
+			getInPipe->Start();
+			isInPipe = true;
+		}
+		else {
+			if (isSitting) {
+				isInPipe = true;
+				getInPipe->Start();
+				CPortal* p = (CPortal*)e->obj;
+				portal = p;
+			}
+		}
+		
+		/*if (canGoPipe==true) {
+			OnCollisionWithPortal(e);
+		}*/
+	}
 	else if (dynamic_cast<CVenusFireTrap*>(e->obj))
 		OnCollisionWithVenusPlant(e);
 	else if (dynamic_cast<CKoopas*>(e->obj))
@@ -415,6 +457,7 @@ void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 {
 	CPortal* p = (CPortal*)e->obj;
 	CGame::GetInstance()->InitiateSwitchScene(p->GetSceneId());
+	
 }
 
 //
@@ -423,7 +466,7 @@ void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 int CMario::GetAniIdSmall()
 {
 	int aniId = -1;
-	if (!isOnPlatform && !isHolding)
+	if (!isOnPlatform && !isHolding && !isInPipe)
 	{
 		if (abs(ax) == MARIO_ACCEL_RUN_X )
 		{
@@ -482,6 +525,9 @@ int CMario::GetAniIdSmall()
 				}
 			}
 		}
+		else if (isInPipe) {
+			aniId = ID_ANI_MARIO_SMALL_PIPE;
+		}
 		else
 			if (vx == 0)
 			{
@@ -528,7 +574,7 @@ int CMario::GetAniIdSmall()
 int CMario::GetAniIdBig()
 {
 	int aniId = -1;
-	if (!isOnPlatform && !isHolding)
+	if (!isOnPlatform && !isHolding && !isInPipe)
 	{
 		if (abs(ax) == MARIO_ACCEL_RUN_X )
 		{
@@ -587,7 +633,9 @@ int CMario::GetAniIdBig()
 				}
 			}
 		}
-		else
+		else if (isInPipe) {
+			aniId = ID_ANI_MARIO_PIPE;
+		} else
 			if (vx == 0)
 			{
 				if (nx > 0) aniId = ID_ANI_MARIO_IDLE_RIGHT;
@@ -628,7 +676,7 @@ int CMario::GetAniIdBig()
 int CMario::GetAniIdRacoon()
 {
 	int aniId = -1;
-	if (!isOnPlatform && !isAttack && !isHolding)
+	if (!isOnPlatform && !isAttack && !isHolding && !isInPipe)
 	{
 		if (abs(ax) == MARIO_ACCEL_RUN_X )
 		{
@@ -693,6 +741,8 @@ int CMario::GetAniIdRacoon()
 					else aniId = ID_ANI_MARIO_RACOON_WALK_HOLDING_RIGHT_GREEN;
 				}
 			}
+		} else if (isInPipe) {
+			aniId = ID_ANI_MARIO_RACOON_PIPE;
 		} else
 			if (vx == 0)
 			{
@@ -812,6 +862,7 @@ void CMario::SetState(int state)
 			vx = 0.0f; vy = 0.0f;
 			ax = 0.0f;
 			y +=MARIO_SIT_HEIGHT_ADJUST;
+			
 		}
 		break;
 
@@ -863,6 +914,12 @@ void CMario::SetState(int state)
 				ay = -0.0002f;
 				vy = 0;
 		}
+		break;
+	case MARIO_STATE_PIPE:
+		ay = 0;
+		y += 1.0f;
+		vx = 0;
+		break;
 	}
 	
 

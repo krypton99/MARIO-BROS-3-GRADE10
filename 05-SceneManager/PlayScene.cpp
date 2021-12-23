@@ -212,7 +212,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		float r = (float)atof(tokens[3].c_str());
 		float b = (float)atof(tokens[4].c_str());
 		int scene_id = atoi(tokens[5].c_str());
-		obj = new CPortal(x, y, r, b, scene_id);
+		int portal_type = atoi(tokens[6].c_str());
+		obj = new CPortal(x, y, r, b, scene_id,portal_type);
 	}
 	break;
 
@@ -326,7 +327,7 @@ void CPlayScene::GetObjectToGrid() {
 	//objects.clear();
 	listGrid.clear();
 	listObject.clear();
-	grid->GetObjectFromGrid(listGrid);
+	grid->GetObjectFromGrid(listGrid,player);
 
 	for (UINT i = 0; i < listGrid.size(); i++) {
 		listObject.push_back(listGrid[i]);
@@ -466,7 +467,10 @@ void CPlayScene::Update(DWORD dt)
 	cy -= game->GetBackBufferHeight() / 2;
 
 	if (cx < 0) cx = 0;
-
+	if (player->GetLevel() == MARIO_LEVEL_RACOON && cy< 286-100)
+	{
+		CGame::GetInstance()->SetCamPos(cx, cy /*cy*/);
+	} else
 	CGame::GetInstance()->SetCamPos(cx, 286 /*cy*/);
 	grid->UpdateOnGrid(listMoving);
 	PurgeDeletedObjects();
