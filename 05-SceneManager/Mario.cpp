@@ -31,13 +31,23 @@ CMario::CMario(float x, float y) : CGameObject(x, y)
 	attackTime = new Timer(500);
 	tail = new CTail(x,y);
 	getInPipe = new Timer(2000);
+	getOutPipe = new Timer(1000);
 	
 }
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	if (getOutPipe->GetStartTime() != 0 && getOutPipe->IsTimeUp()) {
+		getOutPipe->Stop();
+		isOutPipe = false;
+		ay = MARIO_GRAVITY;
+	}
+	
 	if (portal != nullptr && canGoPipe==true) {
 		CGame::GetInstance()->SetPlayerPosition(portal->player_x, portal->player_y);
+		CGame::GetInstance()->switchByPortal = true;
+		CGame::GetInstance()->SetInOutSceneType(portal->GetPortalInType(), portal->GetPortalOutType());
 		CGame::GetInstance()->InitiateSwitchScene(portal->GetSceneId());
+		
 	}
 	if (getInPipe->GetStartTime() != 0 && getInPipe->IsTimeUp()) {
 		getInPipe->Stop();
@@ -81,16 +91,32 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 		}
 	}
-	if (getInPipe->Timeleft() < 1000 && getInPipe > 0) {
+	if (getInPipe->Timeleft() < 1000 && getInPipe->Timeleft() > 0) {
 		if (portal!=nullptr) {
-			if (portal->GetPortalType() == 1) {
+			if (portal->GetPortalInType() == 1) {
+				
 				y -= 1.0f;
 			}
 			else {
 				y += 1.0f;
 			}
 			ay = 0;
+			vy = 0;
 		}
+	}
+	if (getOutPipe->Timeleft() < 1000 && getOutPipe->Timeleft() > 0) {
+		if (OutPipeType == 1) {
+			collideX = 1;
+			collideY = 1;
+			y-= 1.0f;
+			/*ay = 0;*/
+		}
+		else {
+			y += 1.0f;
+			
+		}
+		ay = 0;
+		vy = 0;
 	}
 	/*if (isInPipe) {
 		y += 1;
@@ -161,7 +187,7 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithCoin(e);
 	else if (dynamic_cast<CPortal*>(e->obj)) {
 		CPortal* p = (CPortal*)e->obj;
-		if (p->GetPortalType() == 1) {
+		if (p->GetPortalInType() == 1) {
 			CPortal* p = (CPortal*)e->obj;
 			portal = p;
 			getInPipe->Start();
@@ -467,7 +493,7 @@ void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 int CMario::GetAniIdSmall()
 {
 	int aniId = -1;
-	if (!isOnPlatform && !isHolding && !isInPipe)
+	if (!isOnPlatform && !isHolding && !isInPipe && !isOutPipe)
 	{
 		if (abs(ax) == MARIO_ACCEL_RUN_X )
 		{
@@ -526,7 +552,7 @@ int CMario::GetAniIdSmall()
 				}
 			}
 		}
-		else if (isInPipe) {
+		else if (isInPipe || isOutPipe) {
 			aniId = ID_ANI_MARIO_SMALL_PIPE;
 		}
 		else
@@ -575,7 +601,7 @@ int CMario::GetAniIdSmall()
 int CMario::GetAniIdBig()
 {
 	int aniId = -1;
-	if (!isOnPlatform && !isHolding && !isInPipe)
+	if (!isOnPlatform && !isHolding && !isInPipe && !isOutPipe)
 	{
 		if (abs(ax) == MARIO_ACCEL_RUN_X )
 		{
@@ -634,7 +660,7 @@ int CMario::GetAniIdBig()
 				}
 			}
 		}
-		else if (isInPipe) {
+		else if (isInPipe || isOutPipe) {
 			aniId = ID_ANI_MARIO_PIPE;
 		} else
 			if (vx == 0)
@@ -677,7 +703,7 @@ int CMario::GetAniIdBig()
 int CMario::GetAniIdRacoon()
 {
 	int aniId = -1;
-	if (!isOnPlatform && !isAttack && !isHolding && !isInPipe)
+	if (!isOnPlatform && !isAttack && !isHolding && !isInPipe && !isOutPipe)
 	{
 		if (abs(ax) == MARIO_ACCEL_RUN_X )
 		{
@@ -742,7 +768,7 @@ int CMario::GetAniIdRacoon()
 					else aniId = ID_ANI_MARIO_RACOON_WALK_HOLDING_RIGHT_GREEN;
 				}
 			}
-		} else if (isInPipe) {
+		} else if (isInPipe || isOutPipe) {
 			aniId = ID_ANI_MARIO_RACOON_PIPE;
 		} else
 			if (vx == 0)
@@ -805,7 +831,7 @@ void CMario::Render()
 	RenderBoundingBox();
 	float x, y;
 	tail->GetPosition(x, y);
-	DebugOutTitle(L"X: %f",x);
+	DebugOutTitle(L"Y: %f",y);
 }
 
 void CMario::SetState(int state)

@@ -186,6 +186,7 @@ class CMario : public CGameObject
 	BOOLEAN isOnPlatform;
 	int coin; 
 	Timer* getInPipe;
+	
 	CPortal* portal=nullptr;
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
@@ -250,5 +251,8 @@ public:
 	BOOLEAN isHolding = false;
 	BOOLEAN isSitting = false;
 	BOOLEAN isInPipe = false;
+	BOOLEAN isOutPipe = false;
 	BOOLEAN canGoPipe = false;
+	Timer* getOutPipe;
+	int OutPipeType;
 };
