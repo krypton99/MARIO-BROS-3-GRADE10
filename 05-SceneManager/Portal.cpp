@@ -3,7 +3,7 @@
 #include "Textures.h"
 #include "AssetIDs.h"
 
-CPortal::CPortal(float l, float t, float r, float b, int scene_id, int portal_type, float player_x, float player_y)
+CPortal::CPortal(float l, float t, float r, float b, int scene_id, int portal_in_type, float player_x, float player_y, int portal_out_type)
 {
 	this->scene_id = scene_id;
 	x = l;
@@ -11,7 +11,8 @@ CPortal::CPortal(float l, float t, float r, float b, int scene_id, int portal_ty
 	width = r - l;
 	height = b - t;
 	type = OBJECT_TYPE_PORTAL;
-	this->portal_type = portal_type;
+	this->portal_in_type = portal_in_type;
+	this->portal_out_type = portal_out_type;
 	this->player_x = player_x;
 	this->player_y = player_y;
 }

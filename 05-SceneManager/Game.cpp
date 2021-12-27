@@ -526,6 +526,9 @@ void CGame::SwitchScene()
 	this->SetKeyHandler(s->GetKeyEventHandler());
 	s->player_x = player_x;
 	s->player_y = player_y;
+	s->inType = in;
+	s->outType = out;
+	s->switchByPortal = this->switchByPortal;
 	s->Load();
 }
 
@@ -533,7 +536,11 @@ void CGame::InitiateSwitchScene(int scene_id)
 {
 	next_scene = scene_id;
 }
-
+void CGame::SetInOutSceneType(int in, int out)
+{
+	this->in = in;
+	this->out = out;
+}
 void CGame::SetPlayerPosition(float player_x, float player_y) {
 	this->player_x = player_x;
 	this->player_y = player_y;

@@ -111,6 +111,7 @@ public:
 	void SwitchScene();
 	void InitiateSwitchScene(int scene_id);
 	void SetPlayerPosition(float player_x, float player_y);
+	void SetInOutSceneType(int in, int out);
 	void _ParseSection_TEXTURES(string line);
 
 	void SetCamX(float x) { cam_x = x; }
@@ -119,8 +120,13 @@ public:
 	float GetCamPosX() { return cam_x; }
 	float GetCamPosY() { return cam_y; }
 
+	BOOLEAN switchByPortal = false;
+
 	float player_x;
 	float player_y;
+
+	int in;
+	int out;
 
 	~CGame();
 };
