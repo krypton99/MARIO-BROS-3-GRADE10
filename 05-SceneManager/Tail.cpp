@@ -110,6 +110,9 @@ void CTail::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (dynamic_cast<CBrick*>(e->obj) ) {
 		OnCollisionWithBrick(e);
 	}
+	if (dynamic_cast<CKoopas*>(e->obj) && isAttack) {
+		OnCollisionWithKoopas(e);
+	}
 
 }
 void CTail::OnCollisionWithGoomba(LPCOLLISIONEVENT e) {
@@ -125,7 +128,14 @@ void CTail::OnCollisionWithGoomba(LPCOLLISIONEVENT e) {
 		goomba->SetState(GOOMBA_STATE_DIE_BY_OBJECT);
 	}
 }
-
+void CTail::OnCollisionWithKoopas(LPCOLLISIONEVENT e) {
+	CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
+	koopas->n = this->nx;
+	float x, y;
+	koopas->GetPosition(x, y);
+	koopas->temp_x = x;
+	koopas->SetState(TROOPA_STATE_DIE_UP);
+}
 void CTail::OnCollisionWithBrick(LPCOLLISIONEVENT e) {
 	CBrick* brick = dynamic_cast<CBrick*>(e->obj);
 	if (brick->GetBrickType() == BRICK_TYPE_GOLD) {

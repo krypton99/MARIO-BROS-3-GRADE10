@@ -130,6 +130,21 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			//timeStartJump->Start();
 		}
 	}
+	if (state == TROOPA_STATE_DIE_UP) {
+		if (n > 0) {
+			if ( x>temp_x + 20) {
+				vx = 0;
+				
+			}
+		}
+		else 
+			if(n<0) {
+			if (x < temp_x - 20 ) {
+				vx = 0;
+				
+			}
+		}
+	}
 	if (ghost->isOnGround == false && (state!=TROOPA_STATE_DIE && state!=TROOPA_STATE_ROLL_LEFT && state!=TROOPA_STATE_ROLL_RIGHT)) {
 		vx = -vx;
 		if (vx > 0) {
@@ -153,17 +168,32 @@ void CKoopas::Render()
 		int	aniId = ID_ANI_RED_TROOPA_WALKING_LEFT;
 		
 		//int ani = KOOPA_TROOPA_ANI_WALKING_LEFT;
-		if (state == TROOPA_STATE_DIE && vx == 0) {
+		if ((state == TROOPA_STATE_DIE || state==TROOPA_STATE_DIE_UP) && vx == 0) {
 			if (isMariohold) {
 				RenderBoundingBox();
 				return;
 			} else
-			if (timeReborn->Timeleft() > 4000) {
-				aniId = ID_ANI_RED_TROOPA_DIE_DOWN_SHAKE;
-			} else aniId = ID_ANI_RED_TROOPA_DIE_DOWN_IDLE;
+				if (state == TROOPA_STATE_DIE_UP) {
+					aniId = ID_ANI_RED_TROOPA_DIE_UP_IDLE;
+				}
+				else {
+					if (timeReborn->Timeleft() > 4000) {
+
+						aniId = ID_ANI_RED_TROOPA_DIE_DOWN_SHAKE;
+					}
+					else aniId = ID_ANI_RED_TROOPA_DIE_DOWN_IDLE;
+
+				}
+			
 		}
 		else if (state == TROOPA_STATE_ROLL_LEFT || state == TROOPA_STATE_ROLL_RIGHT) {
+			if (isShellUp) {
+				aniId = ID_ANI_RED_TROOPA_DIE_UP_RUN;
+			} else
 			aniId = ID_ANI_RED_TROOPA_DIE_DOWN_RUN;
+		}
+		else if (state == TROOPA_STATE_DIE_UP) {
+			aniId = ID_ANI_RED_TROOPA_DIE_UP_IDLE;
 		}
 		else if (vx > 0) aniId = ID_ANI_RED_TROOPA_WALKING_RIGHT;
 		else if (vx < 0) aniId = ID_ANI_RED_TROOPA_WALKING_LEFT;
@@ -178,18 +208,36 @@ void CKoopas::Render()
 			else if(vx<0){
 				aniId = ID_ANI_GREEN_TROOPA_FLY_LEFT;
 			}
+
 			CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	} else if(koopa_type == KOOPAS_TYPE_GREEN){
 		int aniId = ID_ANI_GREEN_TROOPA_WALKING_LEFT;
 		//int ani = KOOPA_TROOPA_ANI_WALKING_LEFT;
-		if (state == TROOPA_STATE_DIE && vx == 0) {
-			if (timeReborn->Timeleft() > 4000) {
-				aniId = ID_ANI_GREEN_TROOPA_DIE_DOWN_SHAKE;
+		if ((state == TROOPA_STATE_DIE || state == TROOPA_STATE_DIE_UP) && vx == 0) {
+			if (isMariohold) {
+				RenderBoundingBox();
+				return;
+			} else
+			if (state == TROOPA_STATE_DIE_UP) {
+				aniId = ID_ANI_GREEN_TROOPA_DIE_UP_IDLE;
 			}
-			else aniId = ID_ANI_GREEN_TROOPA_DIE_DOWN_IDLE;
+			else {
+				if (timeReborn->Timeleft() > 4000) {
+
+					aniId = ID_ANI_GREEN_TROOPA_DIE_DOWN_SHAKE;
+				}
+				else aniId = ID_ANI_GREEN_TROOPA_DIE_DOWN_IDLE;
+
+			}
 		}
 		else if (state == TROOPA_STATE_ROLL_LEFT || state== TROOPA_STATE_ROLL_RIGHT) {
+			if (isShellUp) {
+				aniId = ID_ANI_GREEN_TROOPA_DIE_UP_RUN;
+			}
 			aniId = ID_ANI_GREEN_TROOPA_DIE_DOWN_RUN;
+		}
+		else if (state == TROOPA_STATE_DIE_UP) {
+			aniId = ID_ANI_GREEN_TROOPA_DIE_UP_IDLE;
 		}
 		else if (vx > 0) aniId = ID_ANI_GREEN_TROOPA_WALKING_RIGHT;
 		else if (vx < 0) aniId = ID_ANI_GREEN_TROOPA_WALKING_LEFT;
@@ -213,6 +261,7 @@ void CKoopas::SetState(int state)
 		vx = 0;
 		vy = 0;
 		ax = 0;
+		isShellUp = false;
 		//ay = 0;
 		//timeStartJump->Stop();
 		
@@ -231,6 +280,21 @@ void CKoopas::SetState(int state)
 	case TROOPA_STATE_JUMP:
 		isOnGround = false;
 		vy = -TROOPA_JUMP_SPEED;
+		break;
+	case TROOPA_STATE_DIE_UP:
+		vy = -0.4f;
+		if (n > 0) {	
+			vx = 0.05f;			
+		}
+		else {
+			 vx = -0.05f;
+			
+			//x-= 0.5f;
+		}
+
+		/*vx = 0;*/
+		/*ax = 0.1f;*/
+		isShellUp = true;
 		break;
 	}
 }

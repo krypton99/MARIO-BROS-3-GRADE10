@@ -358,13 +358,13 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 			koopas->SetState(TROOPA_STATE_DIE);
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
 		}
-		else {
+		else if (koopas->GetState() == TROOPA_STATE_DIE || koopas->GetState() == TROOPA_STATE_DIE_UP) {
 			if (e->nx<=0) {
 				koopas->SetState(TROOPA_STATE_ROLL_RIGHT);
 			} else { koopas->SetState(TROOPA_STATE_ROLL_LEFT); }
 		}
 	}
-	else if(koopas->GetState()==TROOPA_STATE_DIE)
+	else if(koopas->GetState()==TROOPA_STATE_DIE || koopas->GetState() == TROOPA_STATE_DIE_UP)
 	{
 		if (holding == true) {
 			isHolding = true;

@@ -19,6 +19,7 @@
 #define TROOPA_STATE_ROLL_LEFT 400
 #define TROOPA_STATE_ROLL_RIGHT 600
 #define TROOPA_STATE_JUMP 500
+#define TROOPA_STATE_DIE_UP	700
 
 #define KOOPAS_TYPE_RED 1000
 #define KOOPAS_TYPE_GREEN 2000
@@ -49,7 +50,7 @@ class CKoopas : public CGameObject
 protected:
 	float ax;
 	float ay;
-
+	
 	float start_vx;
 	int level;
 	float koopa_type;
@@ -83,4 +84,8 @@ public:
 	Timer* timeReborn = new Timer(5000);
 	bool isOnGround = false;
 	BOOLEAN isMariohold = false;
+	BOOLEAN isShellUp = false;
+	int n; //0: left, 1:right
+	float temp_x;
+	float temp_y;
 };

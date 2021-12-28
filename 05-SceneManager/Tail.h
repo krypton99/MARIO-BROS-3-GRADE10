@@ -17,6 +17,7 @@ private:
 	virtual void OnNoCollision(DWORD dt);
 	virtual void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	virtual void OnCollisionWithBrick(LPCOLLISIONEVENT e);
+	virtual void OnCollisionWithKoopas(LPCOLLISIONEVENT e);
 public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects, float x, float y, float nx);
 	CTail(float x, float y);
