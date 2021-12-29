@@ -16,6 +16,7 @@
 #include "Item.h"
 #include "Mushroom.h"
 #include "Pswitch.h"
+#include "Leaf.h"
 CMario::CMario(float x, float y) : CGameObject(x, y)
 {
 	isSitting = false;
@@ -214,6 +215,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithBrick(e);
 	else if (dynamic_cast<CMushroom*>(e->obj))
 		OnCollisionWithMushroom(e);
+	else if (dynamic_cast<CLeaf*>(e->obj))
+		OnCollisionWithLeaf(e);
 	else if(dynamic_cast<CPswitch*>(e->obj))
 		OnCollisionWithPswitch(e);
 	/*else if (dynamic_cast<CPlatform*>(e->obj))
@@ -435,6 +438,21 @@ void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e) {
 			e->obj->SetState(STATE_ERASE);
 			SetLevel(MARIO_LEVEL_BIG);
 			
+		}
+	}
+}
+void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e) {
+	CLeaf* item = dynamic_cast<CLeaf*>(e->obj);
+	if (item->GetItemType() == ITEM_LEAF) {
+		if (level > MARIO_LEVEL_BIG)
+		{
+			item->SetState(STATE_ERASE);
+			return;
+		}
+		else
+		{
+			level=MARIO_LEVEL_RACOON;
+			item->SetState(STATE_ERASE);
 		}
 	}
 }
@@ -831,7 +849,7 @@ void CMario::Render()
 	RenderBoundingBox();
 	float x, y;
 	tail->GetPosition(x, y);
-	DebugOutTitle(L"Y: %f",y);
+	//DebugOutTitle(L"Y: %f",y);
 }
 
 void CMario::SetState(int state)

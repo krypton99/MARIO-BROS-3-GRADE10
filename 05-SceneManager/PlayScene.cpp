@@ -192,7 +192,19 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_TROOPA:
 	{
 		float type= (float)atof(tokens[3].c_str());
-		obj = new CKoopas(x, y, type); break;
+		int top = atoi(tokens[4].c_str());
+		int bot = atoi(tokens[5].c_str());
+		int left = atoi(tokens[6].c_str());
+		int right = atoi(tokens[7].c_str());
+		obj = new CKoopas(x, y, type);
+		obj->SetPosition(x, y);
+		listMoving.push_back(obj);
+		for (int row = top; row < bot; row++) {
+			for (int col = left; col < right; col++)
+				grid->PushObjectsIntoGrid(obj, row, col);
+		}
+		/*objects.push_back(obj);*/
+
 		break;
 	}
 	
@@ -377,7 +389,7 @@ void CPlayScene::Update(DWORD dt)
 				}
 				if (obj != NULL) {
 					objects.push_back(obj);
-				} else return;
+				} /*else return;*/
 				brick->isFallingItem = false;
 			}
 		}

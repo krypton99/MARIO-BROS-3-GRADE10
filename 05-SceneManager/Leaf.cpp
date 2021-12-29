@@ -21,7 +21,7 @@ void CLeaf::OnNoCollision(DWORD dt)
 
 void CLeaf::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	//if (!e->obj->IsBlockingX() && !e->obj->IsBlockingY()) return;
+	if (!e->obj->IsBlockingX() && !e->obj->IsBlockingY()) return;
 	if (dynamic_cast<CLeaf*>(e->obj)) return;
 
 	if (e->ny != 0)
@@ -46,9 +46,8 @@ void CLeaf::OnCollisionWithMario(LPCOLLISIONEVENT e)
 		}
 		else
 		{
-			e->obj->SetState(STATE_ERASE);
 			mario->SetLevel(MARIO_LEVEL_RACOON);
-
+			e->obj->SetState(STATE_ERASE);
 		}
 	}
 }

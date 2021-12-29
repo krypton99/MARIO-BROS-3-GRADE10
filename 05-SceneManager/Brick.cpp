@@ -77,7 +77,7 @@ void CBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 				//piece->Update(dt, coObjects);
 		}
 		
-	}
+	} 
 	if (state == BRICK_STATE_BOUND) {
 		if (y < (start_y - BRICK_BOUNDING_X) && vy < 0) {
 			vy = -vy;
