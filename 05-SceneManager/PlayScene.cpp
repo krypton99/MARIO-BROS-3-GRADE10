@@ -483,7 +483,17 @@ void CPlayScene::Update(DWORD dt)
 		CGame::GetInstance()->SetCamPos(cx, cy /*cy*/);
 	} else
 	CGame::GetInstance()->SetCamPos(cx, 286 /*cy*/);
+	DebugOutTitle(L"listMoving: %d", int(listMoving.size()));
 	grid->UpdateOnGrid(listMoving);
+
+	for (size_t i = 0; i < listObject.size(); i++) {
+		if (listObject[i]->GetState() == STATE_ERASE) {
+
+			listObject.erase(listObject.begin() + i);
+			i--;
+		}
+	}
+
 	PurgeDeletedObjects();
 }
 
@@ -535,7 +545,7 @@ bool CPlayScene::IsGameObjectDeleted(const LPGAMEOBJECT& o) { return o == NULL; 
 void CPlayScene::PurgeDeletedObjects()
 {
 	vector<LPGAMEOBJECT>::iterator it;
-	for (it = listObject.begin(); it != listObject.end(); it++)
+	/*for (it = listObject.begin(); it != listObject.end(); it++)
 	{
 		LPGAMEOBJECT o = *it;
 		if (o->IsDeleted())
@@ -543,7 +553,7 @@ void CPlayScene::PurgeDeletedObjects()
 			delete o;
 			*it = NULL;
 		}
-	}
+	}*/
 	for (it = objects.begin(); it != objects.end(); it++)
 	{
 		LPGAMEOBJECT o = *it;
@@ -566,9 +576,9 @@ void CPlayScene::PurgeDeletedObjects()
 	// NOTE: remove_if will swap all deleted items to the end of the vector
 	// then simply trim the vector, this is much more efficient than deleting individual items
 	//LPGAMEOBJECT* temp = CPlayScene::IsGameObjectDeleted;
-	listObject.erase(
+	/*listObject.erase(
 		std::remove_if(listObject.begin(), listObject.end(), CPlayScene::IsGameObjectDeleted),
-		listObject.end());
+		listObject.end());*/
 	objects.erase(
 			std::remove_if(objects.begin(), objects.end(), CPlayScene::IsGameObjectDeleted),
 			objects.end());

@@ -2,7 +2,7 @@
 #include "Map.h"
 #include "debug.h"
 #include "AssetIDs.h"
-
+#include "PlayScene.h"
 CGrid::CGrid(int map_width, int map_height) {
 	this->map_height = map_height;
 	this->map_width = map_width;
@@ -33,7 +33,7 @@ void CGrid::UpdateOnGrid(vector<LPGAMEOBJECT> objects) {
 	
 		if (b > map_height|| l < 0 || r >map_width)
 		{
-			objects[i]->SetState(STATE_REMOVE);
+			objects[i]->SetState(STATE_ERASE);
 		}
 
 		int top = int(t / (CELL_HEIGHT * BRICK_BBOX));
@@ -58,11 +58,17 @@ void CGrid::ResetGrid(vector<LPGAMEOBJECT>& objects) {
 		objects[i]->isInGrid = false;
 }
 
-void CGrid::GetObjectFromGrid(vector<LPGAMEOBJECT>& objects) {
+void CGrid::GetObjectFromGrid(vector<LPGAMEOBJECT>& objects, CMario* player) {
+	float xx = CGame::GetInstance()->GetCamPosX();
+	float x, y;
+	player->GetPosition(x, y);
 
 	int firstCol = (int)(CGame::GetInstance()->GetCamPosX() / (CELL_WIDTH * BRICK_BBOX));
 	int lastCol = ceil((CGame::GetInstance()->GetCamPosX() + SCREEN_WIDTH) / (CELL_WIDTH * BRICK_BBOX));
-
+	/*float x, y;
+	player->GetPosition(x, y);
+	int firstCol = (int)(x / (CELL_WIDTH * BRICK_BBOX));
+	int lastCol = ceil((x + SCREEN_WIDTH) / (CELL_WIDTH * BRICK_BBOX));*/
 	// check firstCol co nam o dau map? ( 1 : 0) 
 	firstCol = (firstCol >= 1) ? firstCol - 1 : firstCol;
 	lastCol = (lastCol < num_col) ? lastCol + 1 : lastCol;
@@ -74,7 +80,7 @@ void CGrid::GetObjectFromGrid(vector<LPGAMEOBJECT>& objects) {
 		for (int j = firstCol; j < lastCol; j++) {
 			for (int k = 0; k < cells[i][j].size(); k++) {
 				if (!cells[i][j][k]->isInGrid
-					&& cells[i][j][k]->GetState() != STATE_REMOVE)
+					&& cells[i][j][k]->GetState() != STATE_ERASE)
 				{
 					cells[i][j][k]->isInGrid = true;
 					objects.push_back(cells[i][j][k]);
@@ -101,7 +107,7 @@ void CGrid::PushNewObjIntoGrid(LPGAMEOBJECT obj) {
 	int left = int(l / (CELL_WIDTH * BRICK_BBOX));
 	int right = ceil(r / (CELL_WIDTH * BRICK_BBOX));
 
-	if (obj->GetState() != STATE_REMOVE) {
+	if (obj->GetState() != STATE_ERASE) {
 		for (int row = top; row < bottom; row++)
 			for (int col = left; col < right; col++)
 				cells[row][col].push_back(obj);	

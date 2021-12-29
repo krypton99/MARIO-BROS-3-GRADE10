@@ -88,6 +88,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	if ( (state==GOOMBA_STATE_DIE)  && (GetTickCount64() - die_start > GOOMBA_DIE_TIMEOUT) )
 	{
 		isDeleted = true;
+		state = STATE_ERASE;
 		return;
 	}
 	if (type== GOOMBA_TYPE_RED_WING) {
@@ -138,7 +139,7 @@ void CGoomba::Render()
 
 void CGoomba::SetState(int state)
 {
-	if (this->state == GOOMBA_STATE_DIE|| this->state==GOOMBA_STATE_DIE_BY_OBJECT) return;
+	if (/*this->state == GOOMBA_STATE_DIE|| this->state==GOOMBA_STATE_DIE_BY_OBJECT ||*/ this->state==STATE_REMOVE) return;
 	CGameObject::SetState(state);
 	switch (state)
 	{
