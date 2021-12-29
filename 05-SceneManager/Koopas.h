@@ -20,6 +20,7 @@
 #define TROOPA_STATE_ROLL_RIGHT 600
 #define TROOPA_STATE_JUMP 500
 #define TROOPA_STATE_DIE_UP	700
+#define TROOPA_STATE_FLYING 800
 
 #define KOOPAS_TYPE_RED 1000
 #define KOOPAS_TYPE_GREEN 2000
@@ -54,7 +55,7 @@ protected:
 	float start_vx;
 	int level;
 	float koopa_type;
-	
+	BOOLEAN isFly = false;
 	ULONGLONG die_start;
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);

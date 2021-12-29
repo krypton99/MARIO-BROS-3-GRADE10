@@ -247,7 +247,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 
 	// General object setup
-	if (object_type != OBJECT_TYPE_GOOMBA && object_type !=OBJECT_TYPE_MARIO) {
+	if (object_type != OBJECT_TYPE_GOOMBA && object_type != OBJECT_TYPE_TROOPA && object_type !=OBJECT_TYPE_MARIO) {
 		obj->SetPosition(x, y);
 
 		objects.push_back(obj);

@@ -15,7 +15,12 @@ CKoopas::CKoopas(float x, float y, float type) : CGameObject(x, y)
 	timeStartJump->Start();
 	type = OBJECT_TYPE_KOOPAS;
 	die_start = -1;
-	SetState(TROOPA_STATE_DIE);
+	if (koopa_type == KOOPAS_TYPE_RED) {
+		SetState(TROOPA_STATE_WALKING);
+	}
+	else {
+		SetState(TROOPA_STATE_FLYING);
+	}
 	start_vx = vx;
 	isGhostFollow = true;
 	/*ghost = new CGhost(x+16, y);*/
@@ -66,6 +71,9 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 		if (e->ny < 0) // va cham ground
 		{
 			isOnGround = true;
+			if (isFly) {
+				vy = -TROOPA_JUMP_SPEED;
+			}
 		}
 	}
 	else if (e->nx != 0)
@@ -145,6 +153,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 		}
 	}
+	if(ghost!=nullptr){
 	if (ghost->isOnGround == false && (state!=TROOPA_STATE_DIE && state!=TROOPA_STATE_ROLL_LEFT && state!=TROOPA_STATE_ROLL_RIGHT)) {
 		vx = -vx;
 		if (vx > 0) {
@@ -155,6 +164,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			ghost->SetSpeed(vx, vy);
 			ghost->SetPos(this->x - 17, y+4);
 		}
+	}
 	}
 	//CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
@@ -295,6 +305,11 @@ void CKoopas::SetState(int state)
 		/*vx = 0;*/
 		/*ax = 0.1f;*/
 		isShellUp = true;
+		break;
+	case TROOPA_STATE_FLYING:
+		isFly = true;
+		vy = -0.15f;
+		vx = -0.05f;
 		break;
 	}
 }
