@@ -1,7 +1,7 @@
 #pragma once
 #include "Sprites.h"
 #define TILE_SIZE 16
-#define SCREEN_WIDTH 320
+#define SCREEN_WIDTH 272
 #define SCREEN_HEIGHT 240
 class CMap
 {
