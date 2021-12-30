@@ -189,8 +189,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CFunnel(x, y, funnelType); break;
 	}
 	case OBJECT_TYPE_VENUS: {
-		
-		obj = new CVenusFireTrap(x, y);
+		int plant_type = (int)atof(tokens[3].c_str());
+		obj = new CVenusFireTrap(x, y,plant_type);
 		break;
 	}
 	case OBJECT_TYPE_TROOPA:

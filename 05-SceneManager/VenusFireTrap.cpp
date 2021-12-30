@@ -5,7 +5,7 @@
 #include "debug.h"
 #include "AssetIDs.h"
 
-CVenusFireTrap::CVenusFireTrap(float x, float y) :CGameObject(x, y)
+CVenusFireTrap::CVenusFireTrap(float x, float y, int plant_type) :CGameObject(x, y)
 {
 	this->ax = 0;
 	hiddenTimer = new Timer(HIDDEN_TIME);
@@ -13,6 +13,7 @@ CVenusFireTrap::CVenusFireTrap(float x, float y) :CGameObject(x, y)
 	GetPosition(this->start_x, this->start_y);
 	SetState(VENUS_STATE_UP);
 	type = OBJECT_TYPE_VENUS;
+	this->plant_type = plant_type;
 }
 
 void CVenusFireTrap::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -91,8 +92,15 @@ void CVenusFireTrap::Render()
 	{
 		aniId = ID_ANI_GOOMBA_DIE;
 	}*/
-
-	CAnimations::GetInstance()->Get(ID_ANI_REDVENUS_MOVE)->Render(x, y);
+	if (plant_type == PLANT_TYPE_RED_VENUS) {
+		CAnimations::GetInstance()->Get(ID_ANI_REDVENUS_MOVE)->Render(x, y);
+	}
+	else if(plant_type==PLANT_TYPE_GREEN_VENUS){
+		CAnimations::GetInstance()->Get(ID_ANI_GREENVENUS_MOVE)->Render(x, y);
+	}
+	else {
+		CAnimations::GetInstance()->Get(ID_ANI_PIRANHA)->Render(x, y);
+	}
 	//RenderBoundingBox();
 }
 

@@ -24,6 +24,18 @@
 #define ID_ANI_REDVENUS_LEFT_UP 6003
 #define ID_ANI_REDVENUS_MOVE 6004
 
+#define ID_ANI_GREENVENUS_RIGHT_DOWN 6010
+#define ID_ANI_GREENVENUS_RIGHT_UP 6011
+#define ID_ANI_GREENVENUS_LEFT_DOWN 6012
+#define ID_ANI_GREENVENUS_LEFT_UP 6013
+#define ID_ANI_GREENVENUS_MOVE 6014
+
+#define ID_ANI_PIRANHA 6020
+
+#define PLANT_TYPE_RED_VENUS 10
+#define PLANT_TYPE_GREEN_VENUS 20
+#define PLANT_TYPE_PIRANHA	30
+
 #define ID_ANI_SET_REDVENUS 1
 class CVenusFireTrap : public CGameObject
 {
@@ -33,7 +45,7 @@ protected:
 	Timer* hiddenTimer;
 	Timer* attackTimer;
 	ULONGLONG die_start;
-
+	int plant_type;
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
@@ -46,6 +58,6 @@ protected:
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 
 public:
-	CVenusFireTrap(float x, float y);
+	CVenusFireTrap(float x, float y, int plant_type);
 	virtual void SetState(int state);
 };
