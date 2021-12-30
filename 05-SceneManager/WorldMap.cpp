@@ -10,7 +10,7 @@
 #include "WorldMap.h"
 #include "Scene.h"
 #include "SampleKeyEventHandler.h"
-
+#include "WorldMapObject.h"
 using namespace std;
 
 CWorldMap::CWorldMap(int id, LPCWSTR filePath) : CScene(id, filePath)
@@ -121,7 +121,16 @@ void CWorldMap::_ParseSection_OBJECTS(string line)
 		hud = new HUD();
 		break;
 	}
-	
+	case OBJECT_TYPE_WORLDMAPOBJ:
+	{
+		int type = atoi(tokens[3].c_str());
+		obj = new CWorldMapObject(x,y, type);
+
+		// General object setup
+		obj->SetPosition(x, y);
+		listObjects.push_back(obj);
+	}
+	break;
 
 	case OBJECT_TYPE_PORTAL:
 	{
