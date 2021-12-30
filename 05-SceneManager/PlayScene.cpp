@@ -154,6 +154,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			player->OutPipeType = outType;
 		}
 		objects.push_back(obj);
+		player->SetStage(this->id);
 		player->tail->GetInstance(x, y);
 		/*player->tail->SetPosition(x, y);*/
 		objects.push_back(player->tail);

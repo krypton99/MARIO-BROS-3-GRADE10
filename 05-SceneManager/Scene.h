@@ -1,7 +1,7 @@
 #pragma once
 
 #include "KeyEventHandler.h"
-
+#define WORLD_MAP_SCENE 4
 /*
 *  Abstract class for a game scene
 */
