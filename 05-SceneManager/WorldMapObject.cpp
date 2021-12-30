@@ -1,0 +1,51 @@
+#include "WorldMapObject.h"
+#include "AssetIDs.h"
+#include "Grid.h"
+
+CWorldMapObject::CWorldMapObject(float x, float y, float object_type) :CGameObject(x, y) {
+	this->object_type = object_type;
+	this->type = OBJECT_TYPE_WORLDMAPOBJ;
+
+}
+
+void CWorldMapObject::Render()
+{
+	CAnimations* animations = CAnimations::GetInstance();
+	int aniId = 0;
+	if (GetObjectType() == PLANT_OBJECT)
+		aniId = ANI_PLANT_OBJECT;
+	else if (GetObjectType() == TEXT_OBJECT)
+		aniId = ANI_TEXT_HELP;
+	else
+	{
+		if (vx < 0)
+			aniId = ANI_GUARD_WALK_LEFT;
+		else
+			aniId = ANI_GUARD_WALK_RIGHT;
+	}
+	animations->Get(aniId)->Render(x, y);
+
+	//RenderBoundingBox();
+}
+
+void CWorldMapObject::Update(DWORD dt, vector<LPGAMEOBJECT>* objects)
+{
+	CGameObject::Update(dt);
+	if (GetObjectType() == GUARD_OBJECT)
+	{
+		x += vx*dt;
+		if (x > start_x + BRICK_BBOX || x < start_x)
+		{
+			if (x > start_x + BRICK_BBOX)
+				x = start_x + BRICK_BBOX;
+			if (x < start_x)
+				x = start_x;
+			vx = -vx;
+		}
+	}
+
+}
+void CWorldMapObject::GetBoundingBox(float& l, float& t, float& r, float& b)
+{
+	
+}
