@@ -142,7 +142,7 @@ void CWorldMap::_ParseSection_OBJECTS(string line)
 		int portal_in_type = atoi(tokens[6].c_str());
 		float playerx = (float)atof(tokens[7].c_str());
 		float playery = (float)atof(tokens[8].c_str());
-		int portal_out_type = (float)atoi(tokens[9].c_str());
+		int portal_out_type = (int)atoi(tokens[9].c_str());
 		obj = new CPortal(x, y, r, b, scene_id, portal_in_type, playerx, playery, portal_out_type);
 	}
 	break;
@@ -297,38 +297,6 @@ void CWorldMap::Render()
 	hud->Render(CGame::GetInstance()->GetCamPosX(), CGame::GetInstance()->GetCamPosY() , player);
 }
 
-/*
-	Unload scene
-
-	TODO: Beside objects, we need to clean up sprites, animations and textures as well
-
-*/
-
-void CWorldMapKeyHandler::OnKeyDown(int KeyCode)
-{
-	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
-	CMario* mario = ((CWorldMap*)scence)->GetPlayer();
-
-	switch (KeyCode)
-	{
-	/*case DIK_RIGHT:
-		if (mario->canWalkRight)
-			mario->SetState(MARIO_STATE_WALKING_RIGHT);
-		break;
-	case DIK_LEFT:
-		if (mario->canWalkLeft)
-			mario->SetState(MARIO_STATE_WALKING_LEFT);
-		break;
-	case DIK_UP:
-		if (mario->canWalkUp)
-			mario->SetState(MARIO_STATE_WALKING_UP);
-		break;
-	case DIK_DOWN:
-		if (mario->canWalkDown)
-			mario->SetState(MARIO_STATE_WALKING_DOWN);
-		break;*/
-	}
-}
 
 void CWorldMapKeyHandler::KeyState(BYTE* states)
 {
