@@ -149,9 +149,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		else {
 			obj->SetPosition(player_x, player_y);
-			player->isOutPipe = true;
-			player->getOutPipe->Start();
-			player->OutPipeType = outType;
+			player->SetIsOutPipe(true);
+			player->GetGetOutPipe()->Start();
+			player->SetOutPipeType(outType);
 		}
 		objects.push_back(obj);
 		player->SetStage(this->id);

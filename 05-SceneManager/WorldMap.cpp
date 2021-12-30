@@ -112,9 +112,9 @@ void CWorldMap::_ParseSection_OBJECTS(string line)
 		}
 		else {
 			obj->SetPosition(player_x, player_y);
-			player->isOutPipe = true;
-			player->getOutPipe->Start();
-			player->OutPipeType = outType;
+			player->SetIsOutPipe(true);
+			player->GetGetOutPipe()->Start();
+			player->SetOutPipeType(outType);
 		}
 		listObjects.push_back(obj);
 		DebugOut(L"[INFO] Player object has been created!\n");
