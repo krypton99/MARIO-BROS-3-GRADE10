@@ -8,16 +8,16 @@ class Timer
 public:
 	Timer(int endTime) { this->endTime = endTime; startTime = 0; }
 
-	void Start() { startTime = GetTickCount(); }
-	void Reset() { startTime = GetTickCount(); }
+	void Start() { startTime = GetTickCount64(); }
+	void Reset() { startTime = GetTickCount64(); }
 	void Stop() { startTime = 0; }
 
 	bool IsTimeUp() {
 
-		return (GetTickCount() - startTime) > endTime;
+		return (GetTickCount64() - startTime) > endTime;
 	}
 	DWORD Timeleft() {
-		return GetTickCount() - startTime;
+		return GetTickCount64() - startTime;
 	}
 	DWORD GetStartTime() { return startTime; }
 	DWORD GetEndTime() { return endTime; }

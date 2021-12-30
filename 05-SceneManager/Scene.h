@@ -22,8 +22,8 @@ public:
 	float player_x = NULL;
 	float player_y = NULL;
 	BOOLEAN switchByPortal = false;
-	int inType;
-	int outType;
+	int inType=NULL;
+	int outType=NULL;
 	LPKEYEVENTHANDLER GetKeyEventHandler() { return key_handler; }
 	virtual void Load() = 0;
 	virtual void Unload() = 0;
