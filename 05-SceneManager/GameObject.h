@@ -37,8 +37,8 @@ public:
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
 	void GetPosition(float& x, float& y) { x = this->x; y = this->y; }
 	void GetSpeed(float& vx, float& vy) { vx = this->vx; vy = this->vy; }
-	int GetType() { return this->type; }
-	void SetType(int type) { this->type = type; }
+	float GetType() { return this->type; }
+	void SetType(float type) { this->type = type; }
 	void SetAnimationSet(LPANIMATION_SET ani_set) { animation_set = ani_set; }
 	int GetState() { return this->state; }
 	virtual void Delete() { isDeleted = true; }

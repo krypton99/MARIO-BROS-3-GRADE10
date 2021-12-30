@@ -31,7 +31,7 @@
 class CBrick : public CGameObject {
 private:
 	float brickType;
-	float itemType;
+	int itemType;
 	vector<LPGAMEOBJECT> brokenPieces;
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
@@ -41,8 +41,8 @@ public:
 	bool isFallingItem = false;
 	CBrick(float x, float y, float type, float itemType);
 	void Render();
-	int GetBrickType() { return brickType; };
-	void SetBrickType(int brickType) { this->brickType = brickType; }
+	float GetBrickType() { return brickType; };
+	void SetBrickType(float brickType) { this->brickType = brickType; }
 	int GetItemType() { return itemType; };
 	void SetItemType(int itemType) { this->itemType = itemType; };
 	float GetPosX() { return x; };

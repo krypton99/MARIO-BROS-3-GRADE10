@@ -3,8 +3,8 @@
 #include "Utils.h"
 class Timer
 {
-	DWORD startTime;
-	DWORD endTime;
+	ULONGLONG startTime;
+	ULONGLONG endTime;
 public:
 	Timer(int endTime) { this->endTime = endTime; startTime = 0; }
 
@@ -16,10 +16,10 @@ public:
 
 		return (GetTickCount64() - startTime) > endTime;
 	}
-	DWORD Timeleft() {
+	ULONGLONG Timeleft() {
 		return GetTickCount64() - startTime;
 	}
-	DWORD GetStartTime() { return startTime; }
-	DWORD GetEndTime() { return endTime; }
+	ULONGLONG GetStartTime() { return startTime; }
+	ULONGLONG GetEndTime() { return endTime; }
 	void SetEndTime(int temp) { endTime = temp; }
 };
