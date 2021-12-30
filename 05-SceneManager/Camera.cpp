@@ -46,7 +46,7 @@ void Camera::Update(DWORD dt, D3DXVECTOR2 playerPos, D3DXVECTOR2 start, D3DXVECT
 	// Update pos_cam_y
 	if (!islockY) { // pos_mario in center cam  < end.y (map) -> pos_cam = pos_mario...
 		if (int(playerPos.y - height / 2 + HUD_HEIGHT) < end.y)
-			position.y = int(playerPos.y - height / 2 + HUD_HEIGHT);
+			position.y = float(int(playerPos.y - height / 2 + HUD_HEIGHT));
 	}
 	else if (islockY) { // id pos_cam in end-bbox of map-> pos_cam = end_map_y
 		position.y = end.y;

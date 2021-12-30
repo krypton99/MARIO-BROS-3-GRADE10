@@ -14,9 +14,9 @@
 
 class HUD
 {
-	CAnimations* board;
-	CSpeedBar* speedBar;
-	CAnimations* background;
+	CAnimations* board=nullptr;
+	CSpeedBar* speedBar= nullptr;
+	CAnimations* background= nullptr;
 public:
 	HUD() {};
 

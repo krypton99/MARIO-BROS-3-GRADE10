@@ -4,7 +4,7 @@
 #include "Utils.h"
 #include "Game.h"
 #include "Mario.h"
-#define SCREEN_WIDTH 320
+#define SCREEN_WIDTH 272
 #define SCREEN_HEIGHT 240
 class Camera
 {

@@ -24,6 +24,9 @@ using namespace std;
 CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 	CScene(id, filePath)
 {
+	map = NULL;
+	grid = NULL;
+	hud = NULL;
 	player = NULL;
 	key_handler = new CSampleKeyHandler(this);
 }
@@ -181,16 +184,16 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_BRICK: {
 		float brickType = (float)atof(tokens[3].c_str());
-		float itemType = (float)atof(tokens[4].c_str());
+		int itemType = (int)atoi(tokens[4].c_str());
 		obj = new CBrick(x, y, brickType,itemType); break;
 	}
 	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
 	case OBJECT_TYPE_FUNNEL: {
-		float funnelType = (int)atof(tokens[3].c_str());
+		int funnelType = (int)atoi(tokens[3].c_str());
 		obj = new CFunnel(x, y, funnelType); break;
 	}
 	case OBJECT_TYPE_VENUS: {
-		int plant_type = (int)atof(tokens[3].c_str());
+		int plant_type = (int)atoi(tokens[3].c_str());
 		obj = new CVenusFireTrap(x, y,plant_type);
 		break;
 	}
@@ -240,7 +243,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int portal_in_type = atoi(tokens[6].c_str());
 		float playerx = (float) atof(tokens[7].c_str());
 		float playery = (float) atof(tokens[8].c_str());
-		int portal_out_type = (float)atoi(tokens[9].c_str());
+		int portal_out_type = (int)atoi(tokens[9].c_str());
 		obj = new CPortal(x, y, r, b, scene_id,portal_in_type,playerx,playery,portal_out_type);
 	}
 	break;

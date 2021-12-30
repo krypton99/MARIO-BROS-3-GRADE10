@@ -24,13 +24,13 @@
 class Item : public CGameObject
 {
 public:
-	int ItemType;
+	float ItemType;
 
 	Item();
 	~Item() {};
 
 	Timer* disapperTimer = new Timer(ITEM_DISAPPEAR_TIME);
-	int GetItemType() { return ItemType; }
+	float GetItemType() { return ItemType; }
 
 	virtual void Render() = 0;
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

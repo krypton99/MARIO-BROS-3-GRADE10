@@ -197,16 +197,16 @@ class CMario : public CGameObject
 	float maxVx;
 	BOOLEAN isFly=false;
 	CKoopas* shell=nullptr;
-	BOOLEAN holding = false;
-	BOOLEAN isHolding = false;
-	BOOLEAN isSitting = false;
-	BOOLEAN isInPipe = false;
-	BOOLEAN isOutPipe = false;
-	BOOLEAN canGoPipe = false;
-	boolean isThrough = 0;
-	boolean collideX = 0;
-	boolean collideY = 0;
-	boolean isBlocking = 1;
+	bool holding = false;
+	bool isHolding = false;
+	bool isSitting = false;
+	bool isInPipe = false;
+	bool isOutPipe = false;
+	bool canGoPipe = false;
+	bool isThrough = 0;
+	bool collideX = 0;
+	bool collideY = 0;
+	bool isBlocking = 1;
 	Timer* getOutPipe;
 	int OutPipeType=NULL;
 	LPGAMEOBJECT collidePlatform=NULL;
@@ -268,16 +268,16 @@ public:
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 	
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
-	BOOLEAN GetHolding() { return holding; }
-	void SetHolding(BOOLEAN holding) { this->holding = holding; }
-	BOOLEAN GetIsHolding() { return isHolding; }
-	BOOLEAN GetIsSitting() { return isSitting; }
-	BOOLEAN GetIsInPipe() { return isInPipe; }
-	BOOLEAN GetIsOutPipe() { return isOutPipe; }
-	void SetIsOutPipe(BOOLEAN isOutPipe) { this->isOutPipe = isOutPipe; }
+	bool GetHolding() { return holding; }
+	void SetHolding(bool holding) { this->holding = holding; }
+	bool GetIsHolding() { return isHolding; }
+	bool GetIsSitting() { return isSitting; }
+	bool GetIsInPipe() { return isInPipe; }
+	bool GetIsOutPipe() { return isOutPipe; }
+	void SetIsOutPipe(bool isOutPipe) { this->isOutPipe = isOutPipe; }
 	int GetOutPipeType() { return OutPipeType; }
 	void SetOutPipeType(int outPipeType) { this->OutPipeType = OutPipeType; }
-	BOOLEAN GetCanGoPipe() { return canGoPipe; }
-	BOOLEAN GetIsFly() { return isFly; }
+	bool GetCanGoPipe() { return canGoPipe; }
+	bool GetIsFly() { return isFly; }
 	Timer* GetGetOutPipe() { return getOutPipe; }
 };

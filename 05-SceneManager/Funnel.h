@@ -27,7 +27,7 @@ class CFunnel : public CGameObject
 protected:
 	int funnelType;
 public:
-	CFunnel(float x, float y, float funnelType) : CGameObject(x, y) {
+	CFunnel(float x, float y, int funnelType) : CGameObject(x, y) {
 		type = OBJECT_TYPE_FUNNEL;
 		this->funnelType = funnelType;
 	}

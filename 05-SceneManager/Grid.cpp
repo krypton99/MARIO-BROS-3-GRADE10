@@ -7,8 +7,8 @@ CGrid::CGrid(int map_width, int map_height) {
 	this->map_height = map_height;
 	this->map_width = map_width;
 	
-	this->num_col = ceil(float(this->map_width / BRICK_BBOX) / CELL_WIDTH);
-	this->num_row = ceil(float(this->map_height / BRICK_BBOX) / CELL_HEIGHT);
+	this->num_col = int(ceil(float(this->map_width / BRICK_BBOX) / CELL_WIDTH));
+	this->num_row = int(ceil(float(this->map_height / BRICK_BBOX) / CELL_HEIGHT));
 	cells.resize(num_row);
 	for (int i = 0;i < num_row;i++) {
 		cells[i].resize(num_col);
@@ -37,9 +37,9 @@ void CGrid::UpdateOnGrid(vector<LPGAMEOBJECT> objects) {
 		}
 
 		int top = int(t / (CELL_HEIGHT * BRICK_BBOX));
-		int bottom = ceil(b / (CELL_HEIGHT * BRICK_BBOX));
+		int bottom = int(ceil(b / (CELL_HEIGHT * BRICK_BBOX)));
 		int left = int(l / (CELL_WIDTH * BRICK_BBOX));
-		int right = ceil(r / (CELL_WIDTH * BRICK_BBOX));
+		int right = int(ceil(r / (CELL_WIDTH * BRICK_BBOX)));
 
 		if (objects[i]->GetState() != STATE_REMOVE) {
 			for (int row = top; row < bottom; row++)
@@ -64,7 +64,7 @@ void CGrid::GetObjectFromGrid(vector<LPGAMEOBJECT>& objects, CMario* player) {
 	player->GetPosition(x, y);
 
 	int firstCol = (int)(CGame::GetInstance()->GetCamPosX() / (CELL_WIDTH * BRICK_BBOX));
-	int lastCol = ceil((CGame::GetInstance()->GetCamPosX() + SCREEN_WIDTH) / (CELL_WIDTH * BRICK_BBOX));
+	int lastCol = (int)ceil((CGame::GetInstance()->GetCamPosX() + SCREEN_WIDTH) / (CELL_WIDTH * BRICK_BBOX));
 	/*float x, y;
 	player->GetPosition(x, y);
 	int firstCol = (int)(x / (CELL_WIDTH * BRICK_BBOX));
@@ -103,9 +103,9 @@ void CGrid::PushNewObjIntoGrid(LPGAMEOBJECT obj) {
 	obj->GetBoundingBox(l, t, r, b);
 
 	int top = int(t / (CELL_HEIGHT * BRICK_BBOX));
-	int bottom = ceil(b / (CELL_HEIGHT * BRICK_BBOX));
+	int bottom = (int)ceil(b / (CELL_HEIGHT * BRICK_BBOX));
 	int left = int(l / (CELL_WIDTH * BRICK_BBOX));
-	int right = ceil(r / (CELL_WIDTH * BRICK_BBOX));
+	int right = (int)ceil(r / (CELL_WIDTH * BRICK_BBOX));
 
 	if (obj->GetState() != STATE_ERASE) {
 		for (int row = top; row < bottom; row++)

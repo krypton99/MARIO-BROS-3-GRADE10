@@ -15,6 +15,8 @@ using namespace std;
 
 CWorldMap::CWorldMap(int id, LPCWSTR filePath) : CScene(id, filePath)
 {
+	hud = NULL;
+	map = NULL;
 	player = NULL;
 	key_handler = new CWorldMapKeyHandler(this);
 }
@@ -123,7 +125,7 @@ void CWorldMap::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_WORLDMAPOBJ:
 	{
-		int type = atoi(tokens[3].c_str());
+		float type = (float)atof(tokens[3].c_str());
 		obj = new CWorldMapObject(x,y, type);
 
 		// General object setup
