@@ -56,8 +56,8 @@ protected:
 	void OnCollisionWithKoopa(LPCOLLISIONEVENT e);
 public: 	
 	CGoomba(float x, float y,float type);
-	int GetType() { return type; };
-	void SetType(int type) { this->type = type; };
+	float GetType() { return type; };
+	void SetType(float type) { this->type = type; };
 	bool GetIsBlocking() { return isBlocking; };
 	void SetIsBlocking(bool isBlocking) { this->isBlocking = isBlocking; };
 	virtual void SetState(int state);

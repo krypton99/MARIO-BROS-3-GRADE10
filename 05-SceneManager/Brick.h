@@ -39,7 +39,7 @@ private:
 public:
 	ULONGLONG brickBroken_start;
 	bool isFallingItem = false;
-	CBrick(float x, float y, float type, float itemType);
+	CBrick(float x, float y, float type, int itemType);
 	void Render();
 	float GetBrickType() { return brickType; };
 	void SetBrickType(float brickType) { this->brickType = brickType; }

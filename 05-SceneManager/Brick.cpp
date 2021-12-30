@@ -6,7 +6,7 @@
 #include "BrickBroken.h"
 #define BRICK_BOUNDING_X 5.0f
 #define BROKEN_DISTANCE_X	8.0f
-CBrick::CBrick(float x, float y, float brickType,float itemType) :CGameObject(x, y)
+CBrick::CBrick(float x, float y, float brickType,int itemType) :CGameObject(x, y)
 {
 	this->type = OBJECT_TYPE_BRICK;
 	this->brickType = brickType;
