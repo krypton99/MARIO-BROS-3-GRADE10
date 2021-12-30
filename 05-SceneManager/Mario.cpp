@@ -22,7 +22,7 @@ CMario::CMario(float x, float y) : CGameObject(x, y)
 	isSitting = false;
 	maxVx = 2.0f;
 	ax = 0.0f;
-	ay = MARIO_GRAVITY;
+	ay = 0.0f;
 	type = OBJECT_TYPE_MARIO;
 	level = MARIO_LEVEL_RACOON;
 	untouchable = 0;
@@ -34,6 +34,11 @@ CMario::CMario(float x, float y) : CGameObject(x, y)
 	getInPipe = new Timer(2000);
 	getOutPipe = new Timer(1000);
 	
+}
+void CMario::UpdateWorldMap(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
+	vy += ay * dt;
+	vx += ax * dt;
+	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
@@ -830,9 +835,18 @@ int CMario::GetAniIdRacoon()
 
 void CMario::Render()
 {
+
 	CAnimations* animations = CAnimations::GetInstance();
 	int aniId = -1;
-
+	if (stage==WORLD_MAP_SCENE) {
+		if (GetLevel() == MARIO_LEVEL_RACOON)
+			aniId = ID_ANI_MARIO_RACOON_WORLDMAP;
+		else if (GetLevel() == MARIO_LEVEL_BIG)
+			aniId = ID_ANI_MARIO_BIG_WORLDMAP;
+		else
+			aniId = ID_ANI_MARIO_SMALL_WORLDMAP;
+		
+	}else
 	if (state == MARIO_STATE_DIE)
 		aniId = ID_ANI_MARIO_DIE;
 	else if (level == MARIO_LEVEL_BIG)
@@ -939,6 +953,9 @@ void CMario::SetState(int state)
 		else {
 			vx = 0;
 			ax = 0;
+			if (stage == WORLD_MAP_SCENE) {
+				vy = 0;
+			}
 		}
 		break;
 	case MARIO_STATE_ATTACK:
@@ -965,6 +982,16 @@ void CMario::SetState(int state)
 		ay = 0;
 		y += 1.0f;
 		vx = 0;
+		break;
+	case MARIO_STATE_IDLE_WORLD_MAP:
+		vx = 0;
+		vy = 0;
+		break;
+	case MARIO_STATE_WALKING_UP:
+		vy = -MARIO_WALKING_SPEED;
+		break;
+	case MARIO_STATE_WALKING_DOWN:
+		vy = MARIO_WALKING_SPEED;
 		break;
 	}
 	

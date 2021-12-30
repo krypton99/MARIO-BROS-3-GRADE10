@@ -28,6 +28,9 @@
 #define MARIO_STATE_IDLE			0
 #define MARIO_STATE_WALKING_RIGHT	100
 #define MARIO_STATE_WALKING_LEFT	200
+#define MARIO_STATE_WALKING_UP		150 //mario in world map
+#define MARIO_STATE_WALKING_DOWN	250 //mario in world map
+#define MARIO_STATE_IDLE_WORLD_MAP	350
 
 #define MARIO_STATE_JUMP			300
 #define MARIO_STATE_RELEASE_JUMP    301
@@ -42,7 +45,6 @@
 #define MARIO_STATE_PIPE	900
 
 #define MARIO_STATE_FLY		800
-
 
 #pragma region ANIMATION_ID
 
@@ -78,6 +80,8 @@
 #define ID_ANI_MARIO_WALK_HOLDING_LEFT_GREEN 1124
 #define ID_ANI_MARIO_PIPE 1125
 #define ID_ANI_MARIO_DIE 999
+#define ID_ANI_MARIO_BIG_WORLDMAP			2501
+
 
 // SMALL MARIO
 #define ID_ANI_MARIO_SMALL_IDLE_RIGHT 1100
@@ -108,6 +112,7 @@
 #define ID_ANI_MARIO_SMALL_WALK_HOLDING_RIGHT_GREEN 1622
 #define ID_ANI_MARIO_SMALL_WALK_HOLDING_LEFT_GREEN 1623
 #define ID_ANI_MARIO_SMALL_PIPE 1624
+#define ID_ANI_MARIO_SMALL_WORLDMAP			2500
 // RACOON MARIO
 
 #define ID_ANI_RACOON_MARIO_IDLE_RIGHT 1701
@@ -144,6 +149,7 @@
 
 #define ID_ANI_RACOON_MARIO_ATTACK_RIGHT	2301
 #define ID_ANI_RACOON_MARIO_ATTACK_LEFT		2300
+#define ID_ANI_MARIO_RACOON_WORLDMAP		2502
 #pragma endregion
 
 #define GROUND_Y 160.0f
@@ -175,7 +181,7 @@
 class CMario : public CGameObject
 {
 	//BOOLEAN isSitting;
-	
+	int stage;
 	float ax;				// acceleration on x 
 	float ay;				// acceleration on y 
 	BOOLEAN isAttack;
@@ -186,7 +192,7 @@ class CMario : public CGameObject
 	BOOLEAN isOnPlatform;
 	int coin; 
 	Timer* getInPipe;
-	
+	BOOLEAN canSwitchScene = false;
 	CPortal* portal=nullptr;
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
@@ -217,6 +223,7 @@ public:
 	//	coin = 0;*/
 	//}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	void UpdateWorldMap(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
 	void SetState(int state);
 	int IsCollidableX()
@@ -239,6 +246,10 @@ public:
 	CTail* tail = CTail::GetInstance(x, y);
 	void SetLevel(int l);
 	int GetLevel() { return level; };
+	void SetStage(int stage) { this->stage = stage; }
+	int GetStage() { return this->stage; }
+	void SetCanSwitchScene(BOOLEAN canSwitchScene) { this->canSwitchScene = canSwitchScene; }
+	BOOLEAN GetCanSwitchScene() { return this->canSwitchScene; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 	boolean isThrough=0;
 	boolean collideX = 0;
@@ -254,6 +265,10 @@ public:
 	BOOLEAN isInPipe = false;
 	BOOLEAN isOutPipe = false;
 	BOOLEAN canGoPipe = false;
+	BOOLEAN canWalkUp=true;
+	BOOLEAN canWalkDown=true;
+	BOOLEAN canWalkRight=true;
+	BOOLEAN canWalkLeft=true;
 	Timer* getOutPipe;
 	int OutPipeType;
 };
