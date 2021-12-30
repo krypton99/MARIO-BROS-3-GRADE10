@@ -15,14 +15,15 @@ CKoopas::CKoopas(float x, float y, float type) : CGameObject(x, y)
 	timeStartJump->Start();
 	type = OBJECT_TYPE_KOOPAS;
 	die_start = -1;
-	if (koopa_type == KOOPAS_TYPE_RED) {
+	if (koopa_type == KOOPAS_TYPE_RED || koopa_type== KOOPAS_TYPE_GREEN) {
 		SetState(TROOPA_STATE_WALKING);
+		isGhostFollow = true;
 	}
-	else {
+	else  {
 		SetState(TROOPA_STATE_FLYING);
 	}
 	start_vx = vx;
-	isGhostFollow = true;
+	
 	/*ghost = new CGhost(x+16, y);*/
 	//ghost->Render();
 }
@@ -133,7 +134,9 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (!isMariohold) {
 				SetState(TROOPA_STATE_WALKING);
 				y -= 10;
-				ghost->SetPosition(x + 16, y);
+				if (koopa_type == KOOPAS_TYPE_RED) {
+					ghost->SetPosition(x + 16, y);
+				}
 			}
 			//timeStartJump->Start();
 		}
@@ -153,7 +156,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 		}
 	}
-	if(ghost!=nullptr){
+	if(koopa_type==KOOPAS_TYPE_RED){
 	if (ghost->isOnGround == false && (state!=TROOPA_STATE_DIE && state!=TROOPA_STATE_ROLL_LEFT && state!=TROOPA_STATE_ROLL_RIGHT)) {
 		vx = -vx;
 		if (vx > 0) {
@@ -220,7 +223,7 @@ void CKoopas::Render()
 			}
 
 			CAnimations::GetInstance()->Get(aniId)->Render(x, y);
-	} else if(koopa_type == KOOPAS_TYPE_GREEN){
+	} else/* if(koopa_type == KOOPAS_TYPE_GREEN)*/{
 		int aniId = ID_ANI_GREEN_TROOPA_WALKING_LEFT;
 		//int ani = KOOPA_TROOPA_ANI_WALKING_LEFT;
 		if ((state == TROOPA_STATE_DIE || state == TROOPA_STATE_DIE_UP) && vx == 0) {
@@ -279,6 +282,7 @@ void CKoopas::SetState(int state)
 		
 		break;
 	case TROOPA_STATE_WALKING:
+		isFly = false;
 		vx = TROOPA_WALKING_SPEED;
 		break;
 	case TROOPA_STATE_ROLL_LEFT:

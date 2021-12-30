@@ -327,13 +327,14 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 	CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
 	shell = koopas;
 	// jump on top >> kill Goomba and deflect a bit 
-	if (koopas->GetType() == KOOPAS_TYPE_GREEN_WING) {
+	if (koopas->GetKoopasType() == KOOPAS_TYPE_GREEN_WING) {
 		
 		if (e->ny < 0)
 		{
 			if (koopas->GetState() != TROOPA_STATE_DIE)
 			{
-				koopas->SetType(KOOPAS_TYPE_GREEN);
+				koopas->SetKoopasType(KOOPAS_TYPE_GREEN);
+				koopas->SetState(TROOPA_STATE_WALKING);
 				vy = -MARIO_JUMP_DEFLECT_SPEED;
 			}
 		} else if (untouchable == 0)

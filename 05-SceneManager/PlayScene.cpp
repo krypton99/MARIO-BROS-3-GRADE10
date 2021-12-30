@@ -188,7 +188,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		float funnelType = (int)atof(tokens[3].c_str());
 		obj = new CFunnel(x, y, funnelType); break;
 	}
-	case OBJECT_TYPE_VENUS:obj = new CVenusFireTrap(x, y); break;
+	case OBJECT_TYPE_VENUS: {
+		
+		obj = new CVenusFireTrap(x, y);
+		break;
+	}
 	case OBJECT_TYPE_TROOPA:
 	{
 		float type= (float)atof(tokens[3].c_str());
@@ -424,8 +428,12 @@ void CPlayScene::Update(DWORD dt)
 				}*/
 			}
 		} 
-		if (objects[i]->GetType() == OBJECT_TYPE_TROOPA) {
-			CKoopas* koopas = dynamic_cast<CKoopas*>(objects[i]);
+		
+		
+	}
+	for (size_t i = 0; i < listObject.size(); i++) {
+		if (listObject[i]->GetType() == OBJECT_TYPE_TROOPA) {
+			CKoopas* koopas = dynamic_cast<CKoopas*>(listObject[i]);
 			float x, y;
 			koopas->GetPosition(x, y);
 			if (koopas->isGhostFollow) {
@@ -437,7 +445,6 @@ void CPlayScene::Update(DWORD dt)
 				koopas->isGhostFollow = false;
 			}
 		}
-		
 	}
 	vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 1; i < objects.size(); i++)
