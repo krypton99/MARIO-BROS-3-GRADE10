@@ -60,6 +60,7 @@ CMario::CMario(float x, float y, int stage) : CGameObject(x, y)
 void CMario::UpdateWorldMap(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 	vy += ay * dt;
 	vx += ax * dt;
+
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
@@ -223,6 +224,9 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithCoin(e);
 	else if (dynamic_cast<CPortal*>(e->obj)) {
 		CPortal* p = (CPortal*)e->obj;
+		if (stage == WORLD_MAP_SCENE) {
+			OnCollisionWithPortal(e);
+		}
 		if (p->GetPortalInType() == 1) {
 			CPortal* p = (CPortal*)e->obj;
 			portal = p;
@@ -533,8 +537,11 @@ void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
 
 void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 {
-	CPortal* p = (CPortal*)e->obj;
-	CGame::GetInstance()->InitiateSwitchScene(p->GetSceneId());
+	CPortal* port = dynamic_cast<CPortal*>(e->obj);
+	CGame::GetInstance()->SetPlayerPosition(port->player_x, port->player_y);
+	CGame::GetInstance()->switchByPortal = true;
+	//CGame::GetInstance()->SetInOutSceneType(portal->GetPortalInType(), portal->GetPortalOutType());
+	CGame::GetInstance()->InitiateSwitchScene(port->GetSceneId());
 	
 }
 

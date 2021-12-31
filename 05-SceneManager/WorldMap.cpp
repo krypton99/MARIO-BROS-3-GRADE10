@@ -180,7 +180,7 @@ void CWorldMap::_ParseSection_OBJECTS(string line)
 	}
 
 	// General object setup
-	if (object_type != OBJECT_TYPE_MARIO) {
+	if (object_type != OBJECT_TYPE_MARIO && object_type!=OBJECT_TYPE_WORLDMAPOBJ) {
 		obj->SetPosition(x, y);
 
 		listObjects.push_back(obj);

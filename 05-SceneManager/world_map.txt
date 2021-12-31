@@ -111,3 +111,6 @@ assets\hud.txt
 
 #guard
 11	144	112	3
+
+#Portal 
+50	16	48	32	80	1	0	0	0	0
