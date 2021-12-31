@@ -260,6 +260,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		objects.push_back(obj);
 	}
+	cam = Camera::GetInstance();
 }
 
 void CPlayScene::LoadAssets(LPCWSTR assetFile)
@@ -491,7 +492,7 @@ void CPlayScene::Update(DWORD dt)
 	}
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return; 
-	
+	//cam->SetUnLockUpdate();
 	// Update camera to follow mario
 	float cx, cy;
 	player->GetPosition(cx, cy);
@@ -501,11 +502,12 @@ void CPlayScene::Update(DWORD dt)
 	cy -= game->GetBackBufferHeight() / 2;
 
 	if (cx < 0) cx = 0;
-	if (player->GetLevel() == MARIO_LEVEL_RACOON && cy< 286-100)
-	{
-		CGame::GetInstance()->SetCamPos(cx, cy /*cy*/);
-	} else
-	CGame::GetInstance()->SetCamPos(cx, 286 /*cy*/);
+	//if (player->GetLevel() == MARIO_LEVEL_RACOON && cy< 186 /*&& player->GetIsFlying()==true*/)
+	//{
+	//	CGame::GetInstance()->SetCamPos(cx, cy/*+SCREEN_HEIGHT/2*/ /*cy*/);
+	//} else
+	//CGame::GetInstance()->SetCamPos(cx, 286 /*cy*/);
+	cam->Update(dt, { cx,cy }, { 0,0 }, { float(map->getWidthMap() - SCREEN_WIDTH) , float(map->getHeighthMap() - SCREEN_HEIGHT + 92) }, player->GetIsFlying(), player->GetIsOnPlatform());
 	DebugOutTitle(L"listMoving: %d", int(listMoving.size()));
 	grid->UpdateOnGrid(listMoving);
 

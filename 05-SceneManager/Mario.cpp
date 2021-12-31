@@ -47,6 +47,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		isOutPipe = false;
 		ay = MARIO_GRAVITY;
 	}
+	/*if (isOnPlatform ) {
+		isFlying = false;
+	}*/
 	
 	if (portal != nullptr && canGoPipe==true) {
 		CGame::GetInstance()->SetPlayerPosition(portal->player_x, portal->player_y);
@@ -147,7 +150,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		vx = maxVx;
 		
 	}
-	if (abs(vx) >= 0.2f && isOnPlatform) {
+	if (abs(vx) >= 0.2f && isOnPlatform && level==MARIO_LEVEL_RACOON) {
 		isFly = true;
 	}
 	else isFly = false;
@@ -878,7 +881,7 @@ void CMario::Render()
 	RenderBoundingBox();
 	float x, y;
 	tail->GetPosition(x, y);
-	//DebugOutTitle(L"Y: %f",y);
+	DebugOutTitle(L"isFlying: %d",isFlying);
 }
 
 void CMario::SetState(int state)
@@ -973,6 +976,7 @@ void CMario::SetState(int state)
 				vy = 0;
 			}
 		}
+		isFlying = false;
 		break;
 	case MARIO_STATE_ATTACK:
 		if (level == MARIO_LEVEL_RACOON) {
@@ -990,8 +994,10 @@ void CMario::SetState(int state)
 	case MARIO_STATE_FLY:
 		if (isSitting) break;
 		if (level == MARIO_LEVEL_RACOON ) {
+				isFlying = true;
 				ay = -0.0002f;
 				vy = 0;
+				
 		}
 		break;
 	case MARIO_STATE_PIPE:

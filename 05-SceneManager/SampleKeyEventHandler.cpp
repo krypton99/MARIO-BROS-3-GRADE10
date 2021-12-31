@@ -24,7 +24,12 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		if (!mario->GetIsFly()) {
 			mario->SetState(MARIO_STATE_JUMP);
 		}
-		else { mario->GetFlyTimeOut()->Start(); }
+		else if (mario->GetIsFly()) { 
+			mario->GetFlyTimeOut()->Start(); 
+			/*float x, y;
+			mario->GetPosition(x, y);
+			mario->SetPosition(x, y - 10);*/
+		}
 		break;
 	case DIK_1:
 		mario->SetLevel(MARIO_LEVEL_SMALL);
@@ -93,8 +98,9 @@ void CSampleKeyHandler::KeyState(BYTE *states)
 			mario->SetState(MARIO_STATE_WALKING_LEFT);
 	}
 	else if (game->IsKeyDown(DIK_S) && mario->GetIsFly() ) {
+		mario->SetIsFlying(true);
 		mario->SetState(MARIO_STATE_FLY);
-	
+		
 	}
 	else 
 		if (mario->GetState() != MARIO_STATE_PIPE) {

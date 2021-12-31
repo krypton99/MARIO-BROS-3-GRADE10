@@ -9,6 +9,7 @@
 #include "Map.h"
 #include "Grid.h"
 #include "HUD.h"
+#include "Camera.h"
 //#include "Koopas.h"
 
 
@@ -25,6 +26,7 @@ protected:
 	vector<LPGAMEOBJECT> listObject;
 	vector<LPGAMEOBJECT> listMoving;
 	LPGRID grid;
+	LPCAMERA cam = nullptr;
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_ANIMATIONS(string line);
 	void _ParseSection_ANIMATION_SETS(string line);

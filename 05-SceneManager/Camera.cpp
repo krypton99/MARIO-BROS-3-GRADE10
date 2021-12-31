@@ -1,7 +1,7 @@
 #include "Camera.h"
 #include "Utils.h"
 
-#define HUD_HEIGHT	30
+#define HUD_HEIGHT	96
 
 Camera* Camera::__instance = nullptr;
 Camera* Camera::GetInstance() {
@@ -24,24 +24,21 @@ void Camera::Update(DWORD dt, D3DXVECTOR2 playerPos, D3DXVECTOR2 start, D3DXVECT
 		return;
 
 	// vi tri camera lun nam giua Mario
-	position.x = playerPos.x - width / 2 + MARIO_BIG_BBOX_WIDTH;
+	position.x = playerPos.x ;/*- width / 2 + MARIO_BIG_BBOX_WIDTH;*/
 
-	/*DebugOut(L"playerPos X ==== %f \n", playerPos.x);
-	DebugOut(L"playerPos y ==== %f \n", playerPos.y);
-	DebugOut(L"position X ==== %f \n", position.x);
-	DebugOut(L"position y ==== %f \n", position.y);*/
+	
 
 	// Check if camera out of screen map
-	//if (position.x > end.x)
-	//	position.x = end.x;
-	//if (position.x < start.x)
-	//	position.x = start.x;
+	if (position.x > end.x)
+		position.x = end.x;
+	if (position.x < start.x)
+		position.x = start.x;
 
 	// Check lock_y
-	/*if (playerPos.y < end.y && isFlying)
+	if (playerPos.y < end.y && isFlying)
 		islockY = false;
 	if (playerPos.y > end.y && isOnGround && !isFlying)
-		islockY = true;*/
+		islockY = true;
 
 	// Update pos_cam_y
 	if (!islockY) { // pos_mario in center cam  < end.y (map) -> pos_cam = pos_mario...
@@ -53,6 +50,10 @@ void Camera::Update(DWORD dt, D3DXVECTOR2 playerPos, D3DXVECTOR2 start, D3DXVECT
 	}
 	if (position.y < start.y)
 		position.y = start.y;
+	DebugOut(L"playerPos X ==== %f \n", playerPos.x);
+	DebugOut(L"playerPos y ==== %f \n", playerPos.y);
+	DebugOut(L"position X ==== %f \n", position.x);
+	DebugOut(L"position y ==== %f \n", position.y);
 	CGame::GetInstance()->SetCamPos(position.x, position.y);
 
 }

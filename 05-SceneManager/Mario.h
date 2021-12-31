@@ -213,6 +213,7 @@ class CMario : public CGameObject
 	bool isFallLower = false;
 	Timer* getOutPipe;
 	Timer* flyTimeOut;
+	bool isFlying = false;
 	int OutPipeType=NULL;
 	LPGAMEOBJECT collidePlatform=NULL;
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
@@ -290,4 +291,6 @@ public:
 	bool GetFallLower() { return isFallLower; }
 	void SetFallLower(bool isFallLower) { this->isFallLower = isFallLower; }
 	bool GetIsOnPlatform() { return isOnPlatform; }
+	bool GetIsFlying() { return isFlying; }
+	void SetIsFlying(bool isFlying) { this->isFlying=isFlying; }
 };
