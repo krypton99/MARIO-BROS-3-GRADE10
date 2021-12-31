@@ -84,8 +84,8 @@ public:
 	Timer* timeStartJump = new Timer(2000);
 	Timer* timeReborn = new Timer(5000);
 	bool isOnGround = false;
-	BOOLEAN isMariohold = false;
-	BOOLEAN isShellUp = false;
+	bool isMariohold = false;
+	bool isShellUp = false;
 	int n; //0: left, 1:right
 	float temp_x;
 	float temp_y;

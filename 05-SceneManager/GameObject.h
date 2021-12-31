@@ -21,17 +21,17 @@ protected:
 
 	float x;
 	float y;
-	float start_x;
-	float start_y;
+	float start_x=NULL;
+	float start_y=NULL;
 	float vx;
 	float vy;
-	float type;
+	float type=NULL;
 	int nx;
 
 	int state;
 
 	bool isDeleted;
-	LPANIMATION_SET animation_set;
+	LPANIMATION_SET animation_set=NULL;
 public:
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
@@ -43,7 +43,7 @@ public:
 	int GetState() { return this->state; }
 	virtual void Delete() { isDeleted = true; }
 	bool IsDeleted() { return isDeleted; }
-	bool isInGrid;
+	bool isInGrid=false;
 	void RenderBoundingBox();
 
 	CGameObject();
