@@ -17,9 +17,10 @@ LPANIMATION_SET CAnimationSets::Get(unsigned int id)
 {
 	LPANIMATION_SET ani_set = animation_sets[id];
 	if (ani_set == NULL)
-		
 
-	return ani_set;
+
+		return ani_set;
+	else return NULL;
 }
 
 void CAnimationSets::Add(int id, LPANIMATION_SET ani_set)
