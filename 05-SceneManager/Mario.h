@@ -272,7 +272,7 @@ public:
 	bool GetIsOutPipe() { return isOutPipe; }
 	void SetIsOutPipe(bool isOutPipe) { this->isOutPipe = isOutPipe; }
 	int GetOutPipeType() { return OutPipeType; }
-	void SetOutPipeType(int outPipeType) { this->OutPipeType = OutPipeType; }
+	void SetOutPipeType(int outPipeType) { this->OutPipeType = outPipeType; }
 	bool GetCanGoPipe() { return canGoPipe; }
 	bool GetIsFly() { return isFly; }
 	Timer* GetGetOutPipe() { return getOutPipe; }
