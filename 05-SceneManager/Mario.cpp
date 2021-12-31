@@ -22,7 +22,7 @@ CMario::CMario(float x, float y) : CGameObject(x, y)
 	isSitting = false;
 	maxVx = 2.0f;
 	ax = 0.0f;
-	ay = 0.0f;
+	ay = MARIO_GRAVITY;
 	type = OBJECT_TYPE_MARIO;
 	level = MARIO_LEVEL_RACOON;
 	untouchable = 0;
@@ -33,7 +33,7 @@ CMario::CMario(float x, float y) : CGameObject(x, y)
 	tail = new CTail(x,y);
 	getInPipe = new Timer(2000);
 	getOutPipe = new Timer(1000);
-	
+	flyTimeOut = new Timer(2000);
 }
 void CMario::UpdateWorldMap(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 	vy += ay * dt;
@@ -54,6 +54,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		CGame::GetInstance()->SetInOutSceneType(portal->GetPortalInType(), portal->GetPortalOutType());
 		CGame::GetInstance()->InitiateSwitchScene(portal->GetSceneId());
 		
+	}
+	if (flyTimeOut->GetStartTime() != 0 && flyTimeOut->IsTimeUp()) {
+		flyTimeOut->Stop();
+		isFly = false;
+		ay = MARIO_GRAVITY;
 	}
 	if (getInPipe->GetStartTime() != 0 && getInPipe->IsTimeUp()) {
 		getInPipe->Stop();
@@ -142,7 +147,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		vx = maxVx;
 		
 	}
-	if (abs(vx) >= 0.2f) {
+	if (abs(vx) >= 0.2f && isOnPlatform) {
 		isFly = true;
 	}
 	else isFly = false;
@@ -911,7 +916,9 @@ void CMario::SetState(int state)
 		break;
 
 	case MARIO_STATE_RELEASE_JUMP:
-		if (vy < 0) { vy += MARIO_JUMP_SPEED_Y / 2; ay = MARIO_GRAVITY; }
+		if (vy < 0) { 
+			vy += MARIO_JUMP_SPEED_Y / 2; ay = MARIO_GRAVITY; 
+		}
 		break;
 
 	case MARIO_STATE_SIT:
