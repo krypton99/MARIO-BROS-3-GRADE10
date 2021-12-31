@@ -511,6 +511,10 @@ void CMario::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 	//Mario hit Venus
 	if (brick->GetBrickType() != BRICK_TYPE_HIDDEN && brick->GetBrickType() != BRICK_TYPE_GOLD) {
 		if (brick->GetState() == BRICK_STATE_ACTIVE) {
+			if (isAttack) {
+				brick->isFallingItem=true;
+				brick->SetState(BRICK_STATE_EMPTY);
+			}
 			if (e->ny > 0) {
 
 				//brick->SetState(BRICK_STATE_EMPTY);
