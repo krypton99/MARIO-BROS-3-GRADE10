@@ -84,9 +84,9 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 	if (dynamic_cast<CGoomba*>(e->obj))
 		OnCollisionWithGoomba(e);
-	/*else 
+	else 
 	if (dynamic_cast<CBrick*>(e->obj))
-		if (type == KOOPAS_TYPE_RED) { OnCollisionWithBrick(e); }*/
+	 { OnCollisionWithBrick(e); }
 }
 void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e) {
 	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
@@ -96,14 +96,9 @@ void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e) {
 
 }
 void CKoopas::OnCollisionWithBrick(LPCOLLISIONEVENT e) {
-	//vx = -vx;
-	/*CBrick* brick = dynamic_cast<CBrick*>(e->obj);
-	if (state == TROOPA_STATE_ROLL_LEFT || state == TROOPA_STATE_ROLL_RIGHT) {
-		if (brick->GetBrickType() == BRICK_TYPE_HIDDEN) {
-			brick->isBlocking = 0;
-		}
-	}*/
-	/*else brick->isBlocking = 1;*/
+	CBrick* brick = dynamic_cast<CBrick*>(e->obj);
+	brick->isFallingItem = true;
+	brick->SetState(BRICK_STATE_EMPTY);
 }
 //void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e) {
 //	CMario* goomba = dynamic_cast<CMario*>(e->obj);
