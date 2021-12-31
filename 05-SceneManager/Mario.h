@@ -45,6 +45,7 @@
 #define MARIO_STATE_PIPE	900
 
 #define MARIO_STATE_FLY		800
+//#define MARIO_STATE_FALL_LOWER   850
 
 #pragma region ANIMATION_ID
 
@@ -146,6 +147,8 @@
 #define ID_ANI_MARIO_RACOON_WALK_HOLDING_RIGHT_GREEN 2422
 #define ID_ANI_MARIO_RACOON_WALK_HOLDING_LEFT_GREEN 2423
 #define ID_ANI_MARIO_RACOON_PIPE 2424
+#define ID_ANI_MARIO_RACOON_FALL_SLOW_LEFT 2425
+#define ID_ANI_MARIO_RACOON_FALL_SLOW_RIGHT 2426
 
 #define ID_ANI_RACOON_MARIO_ATTACK_RIGHT	2301
 #define ID_ANI_RACOON_MARIO_ATTACK_LEFT		2300
@@ -175,7 +178,7 @@
 #define MARIO_RACOON_BBOX_HEIGHT 28
 #define MARIO_RACOON_SITTING_BBOX_WIDTH  14
 #define MARIO_RACOON_SITTING_BBOX_HEIGHT 18
-
+#define MARIO_RACOON_FALLING_SLOW_SPEED -0.04f
 #define MARIO_UNTOUCHABLE_TIME 2500
 
 class CMario : public CGameObject
@@ -189,13 +192,13 @@ class CMario : public CGameObject
 	int level; 
 	int untouchable; 
 	ULONGLONG untouchable_start;
-	BOOLEAN isOnPlatform;
+	bool isOnPlatform;
 	int coin; 
 	Timer* getInPipe;
-	BOOLEAN canSwitchScene = false;
+	bool canSwitchScene = false;
 	CPortal* portal=nullptr;
 	float maxVx;
-	BOOLEAN isFly=false;
+	bool isFly=false;
 	CKoopas* shell=nullptr;
 	bool holding = false;
 	bool isHolding = false;
@@ -207,7 +210,9 @@ class CMario : public CGameObject
 	bool collideX = 0;
 	bool collideY = 0;
 	bool isBlocking = 1;
+	bool isFallLower = false;
 	Timer* getOutPipe;
+	Timer* flyTimeOut;
 	int OutPipeType=NULL;
 	LPGAMEOBJECT collidePlatform=NULL;
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
@@ -264,9 +269,10 @@ public:
 	void SetStage(int stage) { this->stage = stage; }
 	int GetStage() { return this->stage; }
 	void SetCanSwitchScene(BOOLEAN canSwitchScene) { this->canSwitchScene = canSwitchScene; }
-	BOOLEAN GetCanSwitchScene() { return this->canSwitchScene; }
+	bool GetCanSwitchScene() { return this->canSwitchScene; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
-	
+	float GetVy() { return vy; }
+	void SetVy(float vy) { this->vy = vy; }
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	bool GetHolding() { return holding; }
 	void SetHolding(bool holding) { this->holding = holding; }
@@ -280,4 +286,8 @@ public:
 	bool GetCanGoPipe() { return canGoPipe; }
 	bool GetIsFly() { return isFly; }
 	Timer* GetGetOutPipe() { return getOutPipe; }
+	Timer* GetFlyTimeOut() { return flyTimeOut; }
+	bool GetFallLower() { return isFallLower; }
+	void SetFallLower(bool isFallLower) { this->isFallLower = isFallLower; }
+	bool GetIsOnPlatform() { return isOnPlatform; }
 };
