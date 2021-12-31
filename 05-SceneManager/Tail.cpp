@@ -68,7 +68,7 @@ void CTail::OnNoCollision(DWORD dt)
 	/*x += vx * dt;
 	y += vy * dt;*/
 }
-void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects, float x, float y, float nx) {
+void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects, float x, float y, int nx) {
 	CGameObject::Update(dt);
 	if (ani) {
 		CAnimations* animations = CAnimations::GetInstance();

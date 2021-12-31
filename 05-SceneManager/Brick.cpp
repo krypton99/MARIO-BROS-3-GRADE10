@@ -124,10 +124,10 @@ void CBrick::SetState(int state) {
 			isFallingItem = false;
 		brickBroken_start = GetTickCount64();
 		isBroken = true;
-		CBrickBroken* piece1 = new CBrickBroken(start_x,start_y, 1, 2.2); //PHAI DUOI
-		CBrickBroken* piece2 = new CBrickBroken(start_x + BROKEN_DISTANCE_X, start_y + BROKEN_DISTANCE_X, 1, 1); // PHAI TREN
-		CBrickBroken* piece3 = new CBrickBroken( start_x, start_y , -1, 2.2); // TRAI DUOI
-		CBrickBroken* piece4 = new CBrickBroken( start_x, start_y + BROKEN_DISTANCE_X, -1, 1); // TRAI TREN
+		CBrickBroken* piece1 = new CBrickBroken(start_x,start_y, 1, 2.2f); //PHAI DUOI
+		CBrickBroken* piece2 = new CBrickBroken(start_x + BROKEN_DISTANCE_X, start_y + BROKEN_DISTANCE_X, 1, 1.0f); // PHAI TREN
+		CBrickBroken* piece3 = new CBrickBroken( start_x, start_y , -1, 2.2f); // TRAI DUOI
+		CBrickBroken* piece4 = new CBrickBroken( start_x, start_y + BROKEN_DISTANCE_X, -1, 1.0f); // TRAI TREN
 		brokenPieces = { piece1, piece2, piece3, piece4 };
 	}
 	break;

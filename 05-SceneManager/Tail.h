@@ -19,7 +19,7 @@ private:
 	virtual void OnCollisionWithBrick(LPCOLLISIONEVENT e);
 	virtual void OnCollisionWithKoopas(LPCOLLISIONEVENT e);
 public:
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects, float x, float y, float nx);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects, float x, float y, int nx);
 	CTail(float x, float y);
 	void Render();
 	virtual int IsCollidable() { return 1; };
