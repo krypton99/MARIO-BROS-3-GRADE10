@@ -231,18 +231,7 @@ class CMario : public CGameObject
 	int GetAniIdRacoon();
 public:
 	CMario(float x, float y);
-	//{
-	//	/*isSitting = false;
-	//	maxVx = 0.0f;
-	//	ax = 0.0f;
-	//	ay = MARIO_GRAVITY;
-	//	type = OBJECT_TYPE_MARIO;
-	//	level = MARIO_LEVEL_BIG;
-	//	untouchable = 0;
-	//	untouchable_start = -1;
-	//	isOnPlatform = false;
-	//	coin = 0;*/
-	//}
+	CMario(float x, float y, int stage);
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void UpdateWorldMap(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();

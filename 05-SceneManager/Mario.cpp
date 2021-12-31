@@ -22,10 +22,7 @@ CMario::CMario(float x, float y) : CGameObject(x, y)
 	isSitting = false;
 	maxVx = 2.0f;
 	ax = 0.0f;
-	
-	if (stage == WORLD_MAP_SCENE) {
-		ay = 0;
-	} else ay = MARIO_GRAVITY;
+	ay = MARIO_GRAVITY;
 	type = OBJECT_TYPE_MARIO;
 	level = MARIO_LEVEL_RACOON;
 	untouchable = 0;
@@ -34,6 +31,28 @@ CMario::CMario(float x, float y) : CGameObject(x, y)
 	coin = 0;
 	attackTime = new Timer(500);
 	tail = new CTail(x,y);
+	getInPipe = new Timer(2000);
+	getOutPipe = new Timer(1000);
+	flyTimeOut = new Timer(2000);
+}
+CMario::CMario(float x, float y, int stage) : CGameObject(x, y)
+{
+	isSitting = false;
+	maxVx = 2.0f;
+	ax = 0.0f;
+	this->stage = stage;
+	if (stage == WORLD_MAP_SCENE) {
+		ay = 0;
+	}
+	else ay = MARIO_GRAVITY;
+	type = OBJECT_TYPE_MARIO;
+	level = MARIO_LEVEL_RACOON;
+	untouchable = 0;
+	untouchable_start = -1;
+	isOnPlatform = false;
+	coin = 0;
+	attackTime = new Timer(500);
+	tail = new CTail(x, y);
 	getInPipe = new Timer(2000);
 	getOutPipe = new Timer(1000);
 	flyTimeOut = new Timer(2000);
@@ -881,7 +900,7 @@ void CMario::Render()
 	RenderBoundingBox();
 	float x, y;
 	tail->GetPosition(x, y);
-	DebugOutTitle(L"isFlying: %d",isFlying);
+	DebugOutTitle(L"y: %f",y);
 }
 
 void CMario::SetState(int state)
@@ -905,12 +924,18 @@ void CMario::SetState(int state)
 		break;
 	case MARIO_STATE_WALKING_RIGHT:
 		if (isSitting) break;
+		if (stage == WORLD_MAP_SCENE) {
+			maxVx = MARIO_WALKING_SPEED/2;
+		} else
 		maxVx = MARIO_WALKING_SPEED;
 		ax = MARIO_ACCEL_WALK_X;
 		nx = 1;
 		break;
 	case MARIO_STATE_WALKING_LEFT:
 		if (isSitting) break;
+		if (stage == WORLD_MAP_SCENE) {
+			maxVx = -MARIO_WALKING_SPEED / 2;
+		} else
 		maxVx = -MARIO_WALKING_SPEED;
 		ax = -MARIO_ACCEL_WALK_X;
 		nx = -1;
@@ -1010,10 +1035,10 @@ void CMario::SetState(int state)
 		vy = 0;
 		break;
 	case MARIO_STATE_WALKING_UP:
-		vy = -MARIO_WALKING_SPEED;
+		vy = -MARIO_WALKING_SPEED/2;
 		break;
 	case MARIO_STATE_WALKING_DOWN:
-		vy = MARIO_WALKING_SPEED;
+		vy = MARIO_WALKING_SPEED/2;
 		break;
 	}
 	
@@ -1023,6 +1048,12 @@ void CMario::SetState(int state)
 
 void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
+	if (stage == WORLD_MAP_SCENE) {
+		left = x - (BRICK_BBOX_WIDTH-1) / 2;
+		top = y - (BRICK_BBOX_HEIGHT-1) / 2;
+		right = left + BRICK_BBOX_WIDTH-1;
+		bottom = top + BRICK_BBOX_HEIGHT-1;
+	} else
 	if (level==MARIO_LEVEL_BIG)
 	{
 		if (isSitting)
