@@ -1,6 +1,7 @@
 #include "WorldMapObject.h"
 #include "AssetIDs.h"
 #include "Grid.h"
+#include "Brick.h"
 
 CWorldMapObject::CWorldMapObject(float x, float y, float object_type) :CGameObject(x, y) {
 	this->object_type = object_type;
@@ -47,5 +48,8 @@ void CWorldMapObject::Update(DWORD dt, vector<LPGAMEOBJECT>* objects)
 }
 void CWorldMapObject::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	
+	l = x - BRICK_BBOX_WIDTH / 2;
+	t = y - BRICK_BBOX_HEIGHT / 2;
+	r = l + BRICK_BBOX_WIDTH;
+	b = t + BRICK_BBOX_HEIGHT;
 }

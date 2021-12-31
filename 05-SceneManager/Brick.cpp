@@ -65,6 +65,10 @@ void CBrick::OnNoCollision(DWORD dt)
 }
 void CBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 	//CGameObject::Update(dt);
+	if (brickType == BRICK_TYPE_HIDDEN) {
+		x = start_x;
+		y = start_y;
+	}
 	if ((state == BRICK_STATE_BROKEN) && (GetTickCount64() - brickBroken_start > 400))
 	{
 		isDeleted = true;

@@ -11,6 +11,7 @@
 #include "Scene.h"
 #include "SampleKeyEventHandler.h"
 #include "WorldMapObject.h"
+#include "Platform.h"
 using namespace std;
 
 CWorldMap::CWorldMap(int id, LPCWSTR filePath) : CScene(id, filePath)
@@ -106,9 +107,11 @@ void CWorldMap::_ParseSection_OBJECTS(string line)
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
 		}
-		obj = new CMario(x, y);
+		
+		obj = new CMario(x, y, this->id);
+		//player->SetStage(this->id);
 		player = (CMario*)obj;
-		player->SetStage(this->id);
+		
 		if (switchByPortal == false) {
 			obj->SetPosition(x, y);
 		}
@@ -121,6 +124,29 @@ void CWorldMap::_ParseSection_OBJECTS(string line)
 		listObjects.push_back(obj);
 		DebugOut(L"[INFO] Player object has been created!\n");
 		hud = new HUD();
+		break;
+	}
+	case OBJECT_TYPE_BRICK: {
+		float brickType = (float)atof(tokens[3].c_str());
+		int itemType = (int)atoi(tokens[4].c_str());
+		obj = new CBrick(x, y, brickType, itemType); break;
+	}
+	case OBJECT_TYPE_PLATFORM:
+	{
+
+		float cell_width = (float)atof(tokens[3].c_str());
+		float cell_height = (float)atof(tokens[4].c_str());
+		int length = atoi(tokens[5].c_str());
+		int sprite_begin = atoi(tokens[6].c_str());
+		int sprite_middle = atoi(tokens[7].c_str());
+		int sprite_end = atoi(tokens[8].c_str());
+		bool isThrough = atoi(tokens[9].c_str());
+		obj = new CPlatform(
+			x, y,
+			cell_width, cell_height, length,
+			sprite_begin, sprite_middle, sprite_end, isThrough
+		);
+
 		break;
 	}
 	case OBJECT_TYPE_WORLDMAPOBJ:

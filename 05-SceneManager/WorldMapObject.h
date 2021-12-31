@@ -25,6 +25,6 @@ public:
 	void Render();
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* objects);
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
-	virtual int IsBlockingX() { return 0; };
-	virtual int IsBlockingY() { return 0; };
+	virtual int IsBlockingX() { return 1; };
+	virtual int IsBlockingY() { return 1; };
 };
