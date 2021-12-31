@@ -22,7 +22,10 @@ CMario::CMario(float x, float y) : CGameObject(x, y)
 	isSitting = false;
 	maxVx = 2.0f;
 	ax = 0.0f;
-	ay = MARIO_GRAVITY;
+	
+	if (stage == WORLD_MAP_SCENE) {
+		ay = 0;
+	} else ay = MARIO_GRAVITY;
 	type = OBJECT_TYPE_MARIO;
 	level = MARIO_LEVEL_RACOON;
 	untouchable = 0;
@@ -488,9 +491,6 @@ void CMario::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 			if (e->ny > 0) {
 
 				//brick->SetState(BRICK_STATE_EMPTY);
-				switch (brick->GetItemType()) {
-
-				}
 				brick->SetState(BRICK_STATE_BOUND);
 			}
 

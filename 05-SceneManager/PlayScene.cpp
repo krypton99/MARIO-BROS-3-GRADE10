@@ -507,7 +507,7 @@ void CPlayScene::Update(DWORD dt)
 	//	CGame::GetInstance()->SetCamPos(cx, cy/*+SCREEN_HEIGHT/2*/ /*cy*/);
 	//} else
 	//CGame::GetInstance()->SetCamPos(cx, 286 /*cy*/);
-	cam->Update(dt, { cx,cy }, { 0,0 }, { float(map->getWidthMap() - SCREEN_WIDTH) , float(map->getHeighthMap() - SCREEN_HEIGHT + 92) }, player->GetIsFlying(), player->GetIsOnPlatform());
+	cam->Update(dt, cx,cy, 0,0 , float(map->getWidthMap() - SCREEN_WIDTH) , float(map->getHeighthMap() - SCREEN_HEIGHT + 92) , player->GetIsFlying(), player->GetIsOnPlatform());
 	DebugOutTitle(L"listMoving: %d", int(listMoving.size()));
 	grid->UpdateOnGrid(listMoving);
 

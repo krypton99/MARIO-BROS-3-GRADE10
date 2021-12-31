@@ -1,6 +1,4 @@
 #pragma once
-#include <d3dx9.h>
-#include <d3d9.h>
 #include "Utils.h"
 #include "Game.h"
 #include "Mario.h"
@@ -10,7 +8,8 @@ class Camera
 {
 private:
 	static Camera* __instance;
-	D3DXVECTOR2 position;
+	float position_x;
+	float position_y;
 
 	int width;
 	int height;
@@ -24,10 +23,10 @@ public:
 	Camera();
 	~Camera() {}
 
-	// D3DXVECTOR2 start, D3DXVECTOR2 end : (2 map: main / hidden map) mario o map nao -> start vi tri map
-	void Update(DWORD dt, D3DXVECTOR2 playerPos, D3DXVECTOR2 start, D3DXVECTOR2 end, bool isFlying, bool isOnGround);
+	
+	void Update(DWORD dt, float playerPosX, float playerPosY, float start_x, float start_y, float end_x, float end_y, bool isFlying, bool isOnGround);
 
-	void ResetPosition() { position.x = 0; position.y = 0; }
+	void ResetPosition() { position_x = 0; position_y = 0; }
 
 	int GetWidth() { return this->width; }
 	int GetHeight() { return this->height; }

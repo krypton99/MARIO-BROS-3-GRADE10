@@ -18,42 +18,42 @@ Camera::Camera() {
 }
 
 
-void Camera::Update(DWORD dt, D3DXVECTOR2 playerPos, D3DXVECTOR2 start, D3DXVECTOR2 end, bool isFlying, bool isOnGround) {
+void Camera::Update(DWORD dt, float playerPosX, float playerPosY, float start_x , float start_y, float end_x, float end_y, bool isFlying, bool isOnGround) {
 
 	if (islockUpdate)
 		return;
 
 	// vi tri camera lun nam giua Mario
-	position.x = playerPos.x ;/*- width / 2 + MARIO_BIG_BBOX_WIDTH;*/
+	position_x = playerPosX ;/*- width / 2 + MARIO_BIG_BBOX_WIDTH;*/
 
 	
 
 	// Check if camera out of screen map
-	if (position.x > end.x)
-		position.x = end.x;
-	if (position.x < start.x)
-		position.x = start.x;
+	if (position_x > end_x)
+		position_x = end_x;
+	if (position_x < start_x)
+		position_x = start_x;
 
 	// Check lock_y
-	if (playerPos.y < end.y && isFlying)
+	if (playerPosY < end_y && isFlying)
 		islockY = false;
-	if (playerPos.y > end.y && isOnGround && !isFlying)
+	if (playerPosY > end_y && isOnGround && !isFlying)
 		islockY = true;
 
 	// Update pos_cam_y
 	if (!islockY) { // pos_mario in center cam  < end.y (map) -> pos_cam = pos_mario...
-		if (int(playerPos.y - height / 2 + HUD_HEIGHT) < end.y)
-			position.y = float(int(playerPos.y - height / 2 + HUD_HEIGHT));
+		if (int(playerPosY - height / 2 + HUD_HEIGHT) < end_y)
+			position_y = float(int(playerPosY - height / 2 + HUD_HEIGHT));
 	}
 	else if (islockY) { // id pos_cam in end-bbox of map-> pos_cam = end_map_y
-		position.y = end.y;
+		position_y = end_y;
 	}
-	if (position.y < start.y)
-		position.y = start.y;
-	DebugOut(L"playerPos X ==== %f \n", playerPos.x);
-	DebugOut(L"playerPos y ==== %f \n", playerPos.y);
-	DebugOut(L"position X ==== %f \n", position.x);
-	DebugOut(L"position y ==== %f \n", position.y);
-	CGame::GetInstance()->SetCamPos(position.x, position.y);
+	if (position_y < start_y)
+		position_y = start_y;
+	DebugOut(L"playerPos X ==== %f \n", playerPosX);
+	DebugOut(L"playerPos y ==== %f \n", playerPosY);
+	DebugOut(L"position X ==== %f \n", position_x);
+	DebugOut(L"position y ==== %f \n", position_y);
+	CGame::GetInstance()->SetCamPos(position_x, position_y);
 
 }
