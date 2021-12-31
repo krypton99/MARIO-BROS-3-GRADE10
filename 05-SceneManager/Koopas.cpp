@@ -97,8 +97,13 @@ void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e) {
 }
 void CKoopas::OnCollisionWithBrick(LPCOLLISIONEVENT e) {
 	CBrick* brick = dynamic_cast<CBrick*>(e->obj);
-	brick->isFallingItem = true;
-	brick->SetState(BRICK_STATE_EMPTY);
+	
+	if (state == TROOPA_STATE_ROLL_LEFT || state == TROOPA_STATE_ROLL_RIGHT) {
+		if (brick->GetBrickType() == BRICK_TYPE_QUESTION) {
+			brick->isFallingItem = true;
+			brick->SetState(BRICK_STATE_EMPTY);
+		}
+	}
 }
 
 void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)

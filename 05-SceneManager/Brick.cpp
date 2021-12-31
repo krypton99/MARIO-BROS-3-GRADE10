@@ -65,7 +65,7 @@ void CBrick::OnNoCollision(DWORD dt)
 }
 void CBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 	//CGameObject::Update(dt);
-	if (brickType == BRICK_TYPE_HIDDEN) {
+	if (brickType == BRICK_TYPE_HIDDEN || brickType==BRICK_TYPE_GOLD) {
 		x = start_x;
 		y = start_y;
 	}
