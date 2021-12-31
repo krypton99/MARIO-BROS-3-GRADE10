@@ -145,7 +145,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		if (OutPipeType == 1) {
 			collideX = 1;
 			collideY = 1;
-			y-= 0.5f;
+			y-= 0.8f;
 			/*ay = 0;*/
 		}
 		else {
