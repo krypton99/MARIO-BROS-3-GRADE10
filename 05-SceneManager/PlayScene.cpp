@@ -206,10 +206,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int right = atoi(tokens[7].c_str());
 		obj = new CKoopas(x, y, type);
 		obj->SetPosition(x, y);
-		listMoving.push_back(obj);
-		for (int row = top; row < bot; row++) {
-			for (int col = left; col < right; col++)
-				grid->PushObjectsIntoGrid(obj, row, col);
+		if (type == KOOPAS_TYPE_RED) {
+			objects.push_back(obj);
+		}
+		else {
+			listMoving.push_back(obj);
+			for (int row = top; row < bot; row++) {
+				for (int col = left; col < right; col++)
+					grid->PushObjectsIntoGrid(obj, row, col);
+			}
 		}
 		/*objects.push_back(obj);*/
 
@@ -436,9 +441,9 @@ void CPlayScene::Update(DWORD dt)
 		
 		
 	}
-	for (size_t i = 0; i < listObject.size(); i++) {
-		if (listObject[i]->GetType() == OBJECT_TYPE_TROOPA) {
-			CKoopas* koopas = dynamic_cast<CKoopas*>(listObject[i]);
+	for (size_t i = 0; i < objects.size(); i++) {
+		if (objects[i]->GetType() == OBJECT_TYPE_TROOPA) {
+			CKoopas* koopas = dynamic_cast<CKoopas*>(objects[i]);
 			float x, y;
 			koopas->GetPosition(x, y);
 			if (koopas->isGhostFollow) {
