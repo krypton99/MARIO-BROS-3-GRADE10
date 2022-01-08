@@ -50,8 +50,8 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		mario->SetState(MARIO_STATE_ATTACK);
 		break;
 	case DIK_F:
-		if (mario->GetHolding() == true) {
-			mario->SetHolding(false);
+		if (mario->GetIsHolding() == true) {
+			mario->SetIsHolding(false);
 		} else
 			mario->SetHolding(true);;
 		break;
@@ -73,7 +73,7 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 		mario->SetState(MARIO_STATE_SIT_RELEASE);
 		break;
 	case DIK_F:
-		mario->SetHolding(true);
+		mario->SetHolding(false);
 		break;
 	}
 }

@@ -267,6 +267,7 @@ public:
 	bool GetHolding() { return holding; }
 	void SetHolding(bool holding) { this->holding = holding; }
 	bool GetIsHolding() { return isHolding; }
+	void SetIsHolding(bool isHolding) { this->isHolding = isHolding; }
 	bool GetIsSitting() { return isSitting; }
 	bool GetIsInPipe() { return isInPipe; }
 	bool GetIsOutPipe() { return isOutPipe; }
